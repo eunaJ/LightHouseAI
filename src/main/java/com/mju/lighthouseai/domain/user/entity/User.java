@@ -33,10 +33,10 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column
     private String birth;
 
-    @Column(nullable = false)
+    @Column
     private String profile_img_url;
 
     @Column(nullable = false)
