@@ -34,7 +34,7 @@ public class OtherService extends BaseEntity
     private int price;
 
     @Column
-    private String mennu;
+    private String menu;
 
 
 
@@ -44,12 +44,12 @@ public class OtherService extends BaseEntity
         final String title,
         final String location,
         final int price,
-        final String mennu
+        final String menu
     ) {
         this.title = title;
         this.location = location;
         this.price = price;
-        this.mennu = mennu;
+        this.menu = menu;
     }
 
 }
