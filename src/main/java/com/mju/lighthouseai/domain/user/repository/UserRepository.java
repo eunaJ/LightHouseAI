@@ -1,6 +1,6 @@
-package com.mju.lighthouseai.sample.repository;
+package com.mju.lighthouseai.domain.user.repository;
 
-import com.mju.lighthouseai.sample.entity.User;
+import com.mju.lighthouseai.domain.user.entity.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -3,7 +3,7 @@ package com.mju.lighthouseai.sample.service;
 
 import com.mju.lighthouseai.sample.dto.service.TestCreateServiceRequestDto;
 import com.mju.lighthouseai.sample.dto.service.TestReadResponseDto;
-import com.mju.lighthouseai.sample.entity.User;
+import com.mju.lighthouseai.domain.user.entity.User;
 import java.util.List;
 
 

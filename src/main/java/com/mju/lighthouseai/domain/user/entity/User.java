@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.sample.entity;
+package com.mju.lighthouseai.domain.user.entity;
 
 import com.mju.lighthouseai.global.entity.BaseEntity;
 import jakarta.persistence.Column;
@@ -30,8 +30,14 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nickname;
+
+    @Column
+    private String birth;
+
+    @Column
+    private String profile_img_url;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -42,12 +48,16 @@ public class User extends BaseEntity {
         final String email,
         final String password,
         final String nickname,
-        final UserRole role
+        final UserRole role,
+        final String birth,
+        final String profile_img_url
     ) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.role = role;
+        this.birth = birth;
+        this.profile_img_url = profile_img_url;
     }
 
     // 롤 변경 메소드

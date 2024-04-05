@@ -41,8 +41,6 @@ public class TestController {
     ) {
         List<TestReadResponseDto> responseDto = testService.getAll(pageNumber);
         return ResponseEntity.ok(responseDto);
-
-        // 테스트 중입니다.
     }
 
 

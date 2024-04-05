@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.sample.entity;
+package com.mju.lighthouseai.domain.user.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
