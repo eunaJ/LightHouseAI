@@ -7,8 +7,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = PasswordTranslator.class)
 public interface UserEntityMapper {
+    @Mapping(source = "serviceRequestDto.password", target = "password", qualifiedBy = EncoderPassword.class)
     @Mapping(source = "userRole", target = "role")
     User toUser(UserSignUpServiceRequestDto serviceRequestDto, UserRole userRole);
 }
