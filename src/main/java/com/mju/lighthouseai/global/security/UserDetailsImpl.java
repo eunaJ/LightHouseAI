@@ -1,7 +1,7 @@
 package com.mju.lighthouseai.global.security;
 
-import com.mju.lighthouseai.sample.entity.User;
-import com.mju.lighthouseai.sample.entity.UserRole;
+import com.mju.lighthouseai.domain.user.entity.User;
+import com.mju.lighthouseai.domain.user.entity.UserRole;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;

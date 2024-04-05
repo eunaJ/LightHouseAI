@@ -1,7 +1,7 @@
 package com.mju.lighthouseai.global.security;
 
-import com.mju.lighthouseai.sample.entity.User;
-import com.mju.lighthouseai.sample.repository.UserRepository;
+import com.mju.lighthouseai.domain.user.entity.User;
+import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
