@@ -1,6 +1,7 @@
 package com.mju.lighthouseai.domain.user.mapper.entity;
 
-import com.mju.lighthouseai.domain.user.dto.service.UserSignUpServiceRequestDto;
+import com.mju.lighthouseai.domain.user.dto.service.request.UserSignUpServiceRequestDto;
+import com.mju.lighthouseai.domain.user.dto.service.response.UserLoginResponseDto;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.domain.user.entity.UserRole;
 import org.mapstruct.Mapper;
@@ -12,4 +13,6 @@ public interface UserEntityMapper {
     @Mapping(source = "serviceRequestDto.password", target = "password", qualifiedBy = EncoderPassword.class)
     @Mapping(source = "userRole", target = "role")
     User toUser(UserSignUpServiceRequestDto serviceRequestDto, UserRole userRole);
+
+    UserLoginResponseDto toUserLoginResponseDto(User user);
 }
