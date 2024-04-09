@@ -4,7 +4,6 @@ import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.domain.user.entity.UserRole;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 import io.jsonwebtoken.security.Keys;
@@ -26,13 +23,9 @@ public class JwtUtil {
     public static final String AUTHORIZATION_KEY = "auth";
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String ACCESS_TOKEN_HEADER = "Access-Token";
-    public static final String REFRESH_TOKEN_HEADER = "Refresh-Token";
 
     @Value("${spring.jwt.access.expiration-period}")
     private Long accessTokenExpirationPeriod;
-
-    @Value("${spring.jwt.refresh.expiration-period}")
-    private Long refreshTokenExpirationPeriod;
 
     @Value("${spring.jwt.secret-key}") // Base64 Encode 한 SecretKey
     private String secretKey;
@@ -55,37 +48,6 @@ public class JwtUtil {
                         .issuedAt(date)
                         .signWith(key, Jwts.SIG.HS256)
                         .compact();
-    }
-
-    public String createRefreshToken(String email, UserRole role) {
-        Date date = new Date();
-        return BEARER_PREFIX +
-                Jwts.builder()
-                        .subject(email)
-                        .claim(AUTHORIZATION_KEY, role)
-                        .expiration(new Date(date.getTime() + refreshTokenExpirationPeriod))
-                        .issuedAt(date)
-                        .signWith(key, Jwts.SIG.HS256)
-                        .compact();
-    }
-
-    // JWT Cookie 에 저장
-    public void addJwtToCookie(String token, HttpServletResponse res) {
-        token = URLEncoder.encode(token, StandardCharsets.UTF_8).replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
-
-        Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token); // Name-Value
-        cookie.setPath("/");
-
-        // Response 객체에 Cookie 추가
-        res.addCookie(cookie);
-    }
-
-    public String substringToken(String tokenValue) {
-        if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
-            return tokenValue.substring(7);
-        }
-        logger.error("Not Found Token");
-        throw new NullPointerException("Not Found Token");
     }
 
     public boolean validateToken(String token) {
@@ -122,9 +84,22 @@ public class JwtUtil {
         httpServletResponse.addHeader(ACCESS_TOKEN_HEADER, token);
     }
 
-    public void addRefreshTokenToHeader(final User user, final HttpServletResponse httpServletResponse) {
-        String token = createRefreshToken(user.getEmail(), user.getRole());
-        logger.info("header에 RefreshToken 추가");
-        httpServletResponse.addHeader(REFRESH_TOKEN_HEADER, token);
-    }
+    // JWT Cookie 에 저장
+//    public void addJwtToCookie(String token, HttpServletResponse res) {
+//        token = URLEncoder.encode(token, StandardCharsets.UTF_8).replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
+//
+//        Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token); // Name-Value
+//        cookie.setPath("/");
+//
+//        // Response 객체에 Cookie 추가
+//        res.addCookie(cookie);
+//    }
+//
+//    public String substringToken(String tokenValue) {
+//        if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
+//            return tokenValue.substring(7);
+//        }
+//        logger.error("Not Found Token");
+//        throw new NullPointerException("Not Found Token");
+//    }
 }
