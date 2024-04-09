@@ -33,10 +33,10 @@ public class Restaurant extends BaseEntity {
     @Column
     private int price;
 
-    @Column(nullable = false)
+    @Column
     private String opentime;
 
-    @Column(nullable = false)
+    @Column
     private String closetime;
 
     @Builder
