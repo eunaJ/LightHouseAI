@@ -37,7 +37,7 @@ public class UserController {
             @RequestBody UserLoginControllerRequestDto controllerRequestDto
     ) {
         UserLoginServiceRequestDto serviceRequestDto = userDtoMapper.toUserLoginServiceRequestDto(controllerRequestDto);
-        UserLoginResponseDto responseDto = userService.login(serviceRequestDto);
+        userService.login(serviceRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
