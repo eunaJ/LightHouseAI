@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,4 +32,27 @@ public class Restaurant extends BaseEntity {
 
     @Column
     private int price;
+
+    @Column(nullable = false)
+    private String opentime;
+
+    @Column(nullable = false)
+    private String closetime;
+
+    @Builder
+    public Restaurant(
+        final String title,
+        final String location,
+        final String menu,
+        final int price,
+        final String opentime,
+        final String closetime
+    ) {
+        this.title = title;
+        this.location = location;
+        this.menu = menu;
+        this.price = price;
+        this.opentime = opentime;
+        this.closetime = closetime;
+    }
 }
