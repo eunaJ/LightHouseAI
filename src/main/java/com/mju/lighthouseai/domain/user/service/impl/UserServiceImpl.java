@@ -51,7 +51,6 @@ public class UserServiceImpl implements UserService {
             throw new NotMatchPasswordException(UserErrorCode.NOT_MATCH_PASSWORD);
         }
         jwtUtil.addAccessTokenToHeader(user, httpServletResponse);
-        jwtUtil.addRefreshTokenToHeader(user, httpServletResponse);
         return userEntityMapper.toUserLoginResponseDto(user);
     }
 }
