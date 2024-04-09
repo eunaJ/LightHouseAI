@@ -34,10 +34,10 @@ public class Cafe extends BaseEntity {
     @Column
     private String menu;
 
-    @Column(nullable = false)
+    @Column
     private String opentime;
 
-    @Column(nullable = false)
+    @Column
     private String closetime;
 
     @Builder
