@@ -9,8 +9,6 @@ import com.mju.lighthouseai.domain.user.mapper.entity.UserEntityMapper;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import com.mju.lighthouseai.domain.user.service.UserService;
 import com.mju.lighthouseai.global.jwt.JwtUtil;
-import com.mju.lighthouseai.global.jwt.exception.BadRefreshTokenException;
-import com.mju.lighthouseai.global.jwt.exception.JwtErrorCode;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
