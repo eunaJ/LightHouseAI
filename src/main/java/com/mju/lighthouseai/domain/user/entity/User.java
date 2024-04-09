@@ -60,7 +60,6 @@ public class User extends BaseEntity {
         this.profile_img_url = profile_img_url;
     }
 
-    // 롤 변경 메소드
     public void changeRole(UserRole newRole) {
         this.role = newRole;
     }
@@ -71,5 +70,13 @@ public class User extends BaseEntity {
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public void updateBirth(String birth) {
+        this.birth = birth;
+    }
+
+    public void updateProfile_img_url(String profile_img_url) {
+        this.profile_img_url = profile_img_url;
     }
 }
