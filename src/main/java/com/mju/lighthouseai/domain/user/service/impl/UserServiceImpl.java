@@ -53,4 +53,31 @@ public class UserServiceImpl implements UserService {
         jwtUtil.addAccessTokenToHeader(user, httpServletResponse);
         return userEntityMapper.toUserLoginResponseDto(user);
     }
+
+    @Override
+    public void updatePassword(User user, UpdatePasswordServiceRequestDto serviceRequestDto) {
+        if (!passwordEncoder.matches(serviceRequestDto.currentPassword(), user.getPassword())) {
+            throw new NotMatchPasswordException(UserErrorCode.NOT_MATCH_PASSWORD);
+        }
+        if (!serviceRequestDto.newPassword().equals(serviceRequestDto.confirmNewPassword())) {
+            throw new NotMatchPasswordException(UserErrorCode.NOT_MATCH_PASSWORD);
+        }
+        user.updatePassword(passwordEncoder.encode(serviceRequestDto.newPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateNickname(User user, UpdateNicknameServiceRequestDto serviceRequestDto) {
+        if(userRepository.existsByNickname(serviceRequestDto.nickname())){
+            throw new DuplicateNicknameException(UserErrorCode.DUPLICATE_NICKNAME);
+        }
+        user.updateNickname(serviceRequestDto.nickname());
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateProfileImgUrl(User user, UpdateProfileImgUrlServiceRequestDto serviceRequestDto) {
+        user.updateProfile_img_url(serviceRequestDto.profile_img_url());
+        userRepository.save(user);
+    }
 }
