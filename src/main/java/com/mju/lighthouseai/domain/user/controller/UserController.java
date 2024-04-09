@@ -33,11 +33,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponseDto> login(
+    public ResponseEntity<?> login(
             @RequestBody UserLoginControllerRequestDto controllerRequestDto
     ) {
         UserLoginServiceRequestDto serviceRequestDto = userDtoMapper.toUserLoginServiceRequestDto(controllerRequestDto);
         UserLoginResponseDto responseDto = userService.login(serviceRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
