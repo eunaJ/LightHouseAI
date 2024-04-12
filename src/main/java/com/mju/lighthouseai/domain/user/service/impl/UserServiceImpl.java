@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -55,29 +57,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(User user, UpdatePasswordServiceRequestDto serviceRequestDto) {
-        if (!passwordEncoder.matches(serviceRequestDto.currentPassword(), user.getPassword())) {
-            throw new NotMatchPasswordException(UserErrorCode.NOT_MATCH_PASSWORD);
+    public void updateUser(User user, UpdateUserServiceRequestDto serviceRequestDto) {
+        log.info(serviceRequestDto.newPassword());
+        // 비밀번호
+        if(!Objects.equals(serviceRequestDto.newPassword(), "")){
+            if (passwordEncoder.matches(serviceRequestDto.newPassword(), user.getPassword())) {
+                throw new NotMatchPasswordException(UserErrorCode.MATCH_CURRENT_PASSWORD);
+            }
+            if (!serviceRequestDto.newPassword().equals(serviceRequestDto.confirmNewPassword())) {
+                throw new NotMatchPasswordException(UserErrorCode.NOT_MATCH_PASSWORD);
+            }
+            user.updatePassword(passwordEncoder.encode(serviceRequestDto.newPassword()));
         }
-        if (!serviceRequestDto.newPassword().equals(serviceRequestDto.confirmNewPassword())) {
-            throw new NotMatchPasswordException(UserErrorCode.NOT_MATCH_PASSWORD);
+        // 닉네임
+        if(!Objects.equals(serviceRequestDto.nickname(), "")){
+            if(userRepository.existsByNickname(serviceRequestDto.nickname())){
+                throw new DuplicateNicknameException(UserErrorCode.DUPLICATE_NICKNAME);
+            }
+            user.updateNickname(serviceRequestDto.nickname());
         }
-        user.updatePassword(passwordEncoder.encode(serviceRequestDto.newPassword()));
-        userRepository.save(user);
-    }
-
-    @Override
-    public void updateNickname(User user, UpdateNicknameServiceRequestDto serviceRequestDto) {
-        if(userRepository.existsByNickname(serviceRequestDto.nickname())){
-            throw new DuplicateNicknameException(UserErrorCode.DUPLICATE_NICKNAME);
+        // 프로필 이미지
+        if(!Objects.equals(serviceRequestDto.profile_img_url(), "")) {
+            user.updateProfile_img_url(serviceRequestDto.profile_img_url());
         }
-        user.updateNickname(serviceRequestDto.nickname());
-        userRepository.save(user);
-    }
-
-    @Override
-    public void updateProfileImgUrl(User user, UpdateProfileImgUrlServiceRequestDto serviceRequestDto) {
-        user.updateProfile_img_url(serviceRequestDto.profile_img_url());
         userRepository.save(user);
     }
 }

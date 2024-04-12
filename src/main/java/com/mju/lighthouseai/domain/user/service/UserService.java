@@ -9,9 +9,6 @@ public interface UserService {
 
     UserLoginResponseDto login(UserLoginServiceRequestDto userLoginServiceRequestDto);
 
-    void updatePassword(User user, UpdatePasswordServiceRequestDto updatePasswordServiceRequestDto);
+    void updateUser(User user, UpdateUserServiceRequestDto updateUserServiceRequestDto);
 
-    void updateNickname(User user, UpdateNicknameServiceRequestDto updateNicknameServiceRequestDto);
-
-    void updateProfileImgUrl(User user, UpdateProfileImgUrlServiceRequestDto updateProfileImgUrlServiceRequestDto);
 }
