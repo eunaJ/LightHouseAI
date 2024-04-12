@@ -32,7 +32,7 @@ public class CafeController {
         cafeService.createCafe(serviceRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-/*    @PutMapping("/cafes/{cafeId}")
+    @PutMapping("/cafes/{cafeId}")
     public ResponseEntity<?> updateCafe(
         @PathVariable Long cafeId,
         @RequestBody CafeUpdateControllerRequestDto controllerRequestDto
@@ -41,5 +41,5 @@ public class CafeController {
             cafeDtoMapper.toCafeUpdateServiceDto(controllerRequestDto);
         cafeService.updateCafe(cafeId,serviceRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
-    }*/
+    }
  }
