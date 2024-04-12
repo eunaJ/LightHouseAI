@@ -56,4 +56,14 @@ public class Cafe extends BaseEntity {
         this.opentime = opentime;
         this.closetime = closetime;
     }
+    public void updateCafe(
+        String title, String location, int price, String menu,
+        String opentime,String closetime){
+        this.title = title;
+        this.location = location;
+        this.price = price;
+        this.menu = menu;
+        this.opentime = opentime;
+        this.closetime = closetime;
+    }
 }
