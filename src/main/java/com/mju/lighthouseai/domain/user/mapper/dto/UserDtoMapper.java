@@ -15,15 +15,7 @@ public interface UserDtoMapper {
             UserLoginControllerRequestDto userLoginControllerRequestDto
     );
 
-    UpdatePasswordServiceRequestDto toUpdatePasswordServiceRequestDto(
-            UpdatePasswordControllerRequestDto updatePasswordControllerRequestDto
-    );
-
-    UpdateNicknameServiceRequestDto toUpdateNicknameServiceRequestDto(
-            UpdateNicknameControllerRequestDto updateNicknameControllerRequestDto
-    );
-
-    UpdateProfileImgUrlServiceRequestDto toUpdateProfileImgUrlServiceRequestDto(
-            UpdateProfileImgUrlControllerRequestDto updateProfileImgUrlControllerRequestDto
+    UpdateUserServiceRequestDto toUpdateUserServiceRequestDto(
+            UpdateUserControllerRequestDto updateUserControllerRequestDto
     );
 }
