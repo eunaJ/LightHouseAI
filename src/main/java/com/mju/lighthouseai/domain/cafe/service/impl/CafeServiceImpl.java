@@ -34,5 +34,10 @@ public class CafeServiceImpl implements CafeService {
         return cafeRepository.findById(id)
             .orElseThrow(()-> new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
     }
+    public void deleteCafe(Long id) {
+        Cafe food = cafeRepository.findById(id)
+            .orElseThrow(() -> new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
+        cafeRepository.delete(food);
+    }
 
 }
