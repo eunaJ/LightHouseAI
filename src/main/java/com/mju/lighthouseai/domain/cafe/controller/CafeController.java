@@ -9,6 +9,7 @@ import com.mju.lighthouseai.domain.cafe.service.CafeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,6 +41,13 @@ public class CafeController {
         CafeUpdateServiceRequestDto serviceRequestDto =
             cafeDtoMapper.toCafeUpdateServiceDto(controllerRequestDto);
         cafeService.updateCafe(cafeId,serviceRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @DeleteMapping("cafes/{cafeId}")
+    public ResponseEntity<?> deleteCafe(
+        @PathVariable Long cafeId
+    ){
+        cafeService.deleteCafe(cafeId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
  }
