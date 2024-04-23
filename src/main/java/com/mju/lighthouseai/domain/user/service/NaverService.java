@@ -47,15 +47,12 @@ public class NaverService {
     private final PasswordEncoder passwordEncoder;
 
     public UserLoginResponseDto loginWithNaver(String code) throws JsonProcessingException {
-//        String accessToken = getToken(code);
-//        NaverUserInfoDto naverUserInfo = getNaverUserInfo(accessToken);
-//        User user = joinNaverUser(naverUserInfo);
-//        jwtUtil.addAccessTokenToHeader(user, httpServletResponse);
-//        return userEntityMapper.toUserLoginResponseDto(user);
-        return null;
+        String accessToken = getToken(code);
+        NaverUserInfoDto naverUserInfo = getNaverUserInfo(accessToken);
+        User user = joinNaverUser(naverUserInfo);
+        jwtUtil.addAccessTokenToHeader(user, httpServletResponse);
+        return userEntityMapper.toUserLoginResponseDto(user);
     }
-
-    // TODO: loginWithNaver 함수 안에서 부르게끔 해야함으로, 차후에 Private로 변경해야 함
 
     public String getToken(String code) throws JsonProcessingException {
         log.info("인가코드: "+code);
@@ -110,8 +107,7 @@ public class NaverService {
         return accessToken;
     }
 
-    // TODO: loginWithNaver 함수 안에서 부르게끔 해야함으로, 차후에 Private로 변경해야 함
-    public NaverUserInfoDto getNaverUserInfo(String accessToken) throws JsonProcessingException {
+    private NaverUserInfoDto getNaverUserInfo(String accessToken) throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
 

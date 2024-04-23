@@ -23,8 +23,7 @@ public class NaverController {
         if ("code".equals(code)) {
             return ResponseEntity.status(HttpStatus.OK).body(naverService.getToken(code));
         }
-
-        NaverUserInfoDto naverUserInfo = naverService.getNaverUserInfo(naverService.getToken(code));
+        naverService.loginWithNaver(code);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
