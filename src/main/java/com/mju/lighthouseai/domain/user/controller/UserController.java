@@ -5,6 +5,7 @@ import com.mju.lighthouseai.domain.user.dto.service.request.*;
 import com.mju.lighthouseai.domain.user.mapper.dto.UserDtoMapper;
 import com.mju.lighthouseai.domain.user.service.UserService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,17 @@ public class UserController {
     ) {
         UpdateUserServiceRequestDto serviceRequestDto = userDtoMapper.toUpdateUserServiceRequestDto(controllerRequestDto);
         userService.updateUser(userDetailsImpl.user(), serviceRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshAccessToken(
+            @RequestHeader("Cookie") String refreshToken,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            HttpServletResponse httpServletResponse
+    ) {
+        userService.refreshAccessToken(refreshToken,
+                userDetails.user(), httpServletResponse);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
