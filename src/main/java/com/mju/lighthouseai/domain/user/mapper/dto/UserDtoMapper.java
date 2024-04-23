@@ -14,4 +14,8 @@ public interface UserDtoMapper {
     UserLoginServiceRequestDto toUserLoginServiceRequestDto(
             UserLoginControllerRequestDto userLoginControllerRequestDto
     );
+
+    UpdateUserServiceRequestDto toUpdateUserServiceRequestDto(
+            UpdateUserControllerRequestDto updateUserControllerRequestDto
+    );
 }

@@ -34,10 +34,10 @@ public class Cafe extends BaseEntity {
     @Column
     private String menu;
 
-    @Column(nullable = false)
+    @Column
     private String opentime;
 
-    @Column(nullable = false)
+    @Column
     private String closetime;
 
     @Builder
@@ -51,6 +51,16 @@ public class Cafe extends BaseEntity {
     ){
         this.title = title;
         this.location =location;
+        this.price = price;
+        this.menu = menu;
+        this.opentime = opentime;
+        this.closetime = closetime;
+    }
+    public void updateCafe(
+        String title, String location, int price, String menu,
+        String opentime,String closetime){
+        this.title = title;
+        this.location = location;
         this.price = price;
         this.menu = menu;
         this.opentime = opentime;

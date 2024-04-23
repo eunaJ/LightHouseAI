@@ -2,12 +2,9 @@ package com.mju.lighthouseai.domain.user.controller;
 
 import com.mju.lighthouseai.domain.user.dto.controller.*;
 import com.mju.lighthouseai.domain.user.dto.service.request.*;
-import com.mju.lighthouseai.domain.user.dto.service.response.UserLoginResponseDto;
 import com.mju.lighthouseai.domain.user.mapper.dto.UserDtoMapper;
 import com.mju.lighthouseai.domain.user.service.UserService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,11 +30,21 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponseDto> login(
+    public ResponseEntity<?> login(
             @RequestBody UserLoginControllerRequestDto controllerRequestDto
     ) {
         UserLoginServiceRequestDto serviceRequestDto = userDtoMapper.toUserLoginServiceRequestDto(controllerRequestDto);
-        UserLoginResponseDto responseDto = userService.login(serviceRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+        userService.login(serviceRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(
+            @RequestBody UpdateUserControllerRequestDto controllerRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl
+    ) {
+        UpdateUserServiceRequestDto serviceRequestDto = userDtoMapper.toUpdateUserServiceRequestDto(controllerRequestDto);
+        userService.updateUser(userDetailsImpl.user(), serviceRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

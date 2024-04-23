@@ -9,13 +9,13 @@ import com.mju.lighthouseai.domain.user.mapper.entity.UserEntityMapper;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import com.mju.lighthouseai.domain.user.service.UserService;
 import com.mju.lighthouseai.global.jwt.JwtUtil;
-import com.mju.lighthouseai.global.jwt.exception.BadRefreshTokenException;
-import com.mju.lighthouseai.global.jwt.exception.JwtErrorCode;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -53,7 +53,33 @@ public class UserServiceImpl implements UserService {
             throw new NotMatchPasswordException(UserErrorCode.NOT_MATCH_PASSWORD);
         }
         jwtUtil.addAccessTokenToHeader(user, httpServletResponse);
-        jwtUtil.addRefreshTokenToHeader(user, httpServletResponse);
         return userEntityMapper.toUserLoginResponseDto(user);
+    }
+
+    @Override
+    public void updateUser(User user, UpdateUserServiceRequestDto serviceRequestDto) {
+        log.info(serviceRequestDto.newPassword());
+        // 비밀번호
+        if(!Objects.equals(serviceRequestDto.newPassword(), "")){
+            if (passwordEncoder.matches(serviceRequestDto.newPassword(), user.getPassword())) {
+                throw new NotMatchPasswordException(UserErrorCode.MATCH_CURRENT_PASSWORD);
+            }
+            if (!serviceRequestDto.newPassword().equals(serviceRequestDto.confirmNewPassword())) {
+                throw new NotMatchPasswordException(UserErrorCode.NOT_MATCH_PASSWORD);
+            }
+            user.updatePassword(passwordEncoder.encode(serviceRequestDto.newPassword()));
+        }
+        // 닉네임
+        if(!Objects.equals(serviceRequestDto.nickname(), "")){
+            if(userRepository.existsByNickname(serviceRequestDto.nickname())){
+                throw new DuplicateNicknameException(UserErrorCode.DUPLICATE_NICKNAME);
+            }
+            user.updateNickname(serviceRequestDto.nickname());
+        }
+        // 프로필 이미지
+        if(!Objects.equals(serviceRequestDto.profile_img_url(), "")) {
+            user.updateProfile_img_url(serviceRequestDto.profile_img_url());
+        }
+        userRepository.save(user);
     }
 }
