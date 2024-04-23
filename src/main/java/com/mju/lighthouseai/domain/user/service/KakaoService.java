@@ -10,6 +10,8 @@ import com.mju.lighthouseai.domain.user.entity.UserRole;
 import com.mju.lighthouseai.domain.user.mapper.entity.UserEntityMapper;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import com.mju.lighthouseai.global.jwt.JwtUtil;
+import com.mju.lighthouseai.global.jwt.RefreshToken;
+import com.mju.lighthouseai.global.jwt.RefreshTokenRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,17 +35,24 @@ public class KakaoService {
     @Value("${spring.kakao.redirect-uri}")
     private String redirectUri;
 
+    @Value("${spring.jwt.refresh.expiration-period}")
+    private Long timeToLive;
+
     private final UserRepository userRepository;
     private final UserEntityMapper userEntityMapper;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final HttpServletResponse httpServletResponse;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public UserLoginResponseDto loginWithKakao(String code) throws JsonProcessingException{
         String accessToken = getToken(code);
         KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
         User user = joinKakaoUser(kakaoUserInfo);
         jwtUtil.addAccessTokenToHeader(user, httpServletResponse);
+        String refresh = jwtUtil.addRefreshTokenToCookie(user, httpServletResponse);
+        RefreshToken refreshToken = new RefreshToken(user.getId(), refresh, timeToLive);
+        refreshTokenRepository.save(refreshToken);
         return userEntityMapper.toUserLoginResponseDto(user);
     }
 
