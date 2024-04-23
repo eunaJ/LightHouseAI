@@ -9,9 +9,13 @@ import com.mju.lighthouseai.domain.user.mapper.entity.UserEntityMapper;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import com.mju.lighthouseai.domain.user.service.UserService;
 import com.mju.lighthouseai.global.jwt.JwtUtil;
+import com.mju.lighthouseai.global.jwt.RefreshToken;
+import com.mju.lighthouseai.global.jwt.RefreshTokenRepository;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +30,10 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final HttpServletResponse httpServletResponse;
     private final JwtUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
+
+    @Value("${spring.jwt.refresh.expiration-period}")
+    private Long timeToLive;
 
     @Override
     public void signUp(final UserSignUpServiceRequestDto serviceRequestDto) {
@@ -53,6 +61,9 @@ public class UserServiceImpl implements UserService {
             throw new NotMatchPasswordException(UserErrorCode.NOT_MATCH_PASSWORD);
         }
         jwtUtil.addAccessTokenToHeader(user, httpServletResponse);
+        String refresh = jwtUtil.addRefreshTokenToCookie(user, httpServletResponse);
+        RefreshToken refreshToken = new RefreshToken(user.getId(), refresh, timeToLive);
+        refreshTokenRepository.save(refreshToken);
         return userEntityMapper.toUserLoginResponseDto(user);
     }
 
@@ -81,5 +92,23 @@ public class UserServiceImpl implements UserService {
             user.updateProfile_img_url(serviceRequestDto.profile_img_url());
         }
         userRepository.save(user);
+    }
+
+    @Override
+    public UserLoginResponseDto refreshAccessToken(final String refreshToken,
+                                                   final User user,
+                                                   final HttpServletResponse response) {
+        String token = refreshToken.substring(13);
+        refreshTokenRepository.findById(String.valueOf(user.getId()))
+                .orElseThrow(() -> new JwtException("refreshToke 만료"));
+        if (!jwtUtil.validateRefreshToken(token)) {
+            log.error("BadRefreshToken");
+            throw new JwtException("BadRefreshToken");
+        }
+        jwtUtil.addAccessTokenToHeader(user, httpServletResponse);
+        String newToken = jwtUtil.addRefreshTokenToCookie(user, httpServletResponse);
+        refreshTokenRepository.deleteById(String.valueOf(user.getId()));
+        refreshTokenRepository.save(new RefreshToken(user.getId(), newToken, timeToLive));
+        return userEntityMapper.toUserLoginResponseDto(user);
     }
 }

@@ -10,6 +10,8 @@ import com.mju.lighthouseai.domain.user.entity.UserRole;
 import com.mju.lighthouseai.domain.user.mapper.entity.UserEntityMapper;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import com.mju.lighthouseai.global.jwt.JwtUtil;
+import com.mju.lighthouseai.global.jwt.RefreshToken;
+import com.mju.lighthouseai.global.jwt.RefreshTokenRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,12 +47,19 @@ public class NaverService {
     private final JwtUtil jwtUtil;
     private final HttpServletResponse httpServletResponse;
     private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenRepository refreshTokenRepository;
+
+    @Value("${spring.jwt.refresh.expiration-period}")
+    private Long timeToLive;
 
     public UserLoginResponseDto loginWithNaver(String code) throws JsonProcessingException {
         String accessToken = getToken(code);
         NaverUserInfoDto naverUserInfo = getNaverUserInfo(accessToken);
         User user = joinNaverUser(naverUserInfo);
         jwtUtil.addAccessTokenToHeader(user, httpServletResponse);
+        String refresh = jwtUtil.addRefreshTokenToCookie(user, httpServletResponse);
+        RefreshToken refreshToken = new RefreshToken(user.getId(), refresh, timeToLive);
+        refreshTokenRepository.save(refreshToken);
         return userEntityMapper.toUserLoginResponseDto(user);
     }
 
