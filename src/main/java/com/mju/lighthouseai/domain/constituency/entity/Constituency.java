@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.domain.constiuency.entity;
+package com.mju.lighthouseai.domain.constituency.entity;
 
 import com.mju.lighthouseai.global.entity.BaseEntity;
 import com.mju.lighthouseai.domain.region.entity.Region;
@@ -20,14 +20,14 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "TB_CONSTIUENCY")
-public class Constiuency extends BaseEntity {
+@Table(name = "TB_CONSTITUENCY")
+public class Constituency extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String constiuency;
+    private String constituency;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -35,12 +35,12 @@ public class Constiuency extends BaseEntity {
     private Region region;
 
     @Builder
-    public Constiuency(
-        final String constiuency,
+    public Constituency(
+        final String constituency,
         final Region region
     ){
-        this.constiuency = constiuency;
-        this.region =region;
+        this.constituency = constituency;
+        this.region = region;
     }
 
 }
