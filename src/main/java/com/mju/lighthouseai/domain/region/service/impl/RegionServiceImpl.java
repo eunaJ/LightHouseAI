@@ -30,8 +30,15 @@ public class RegionServiceImpl implements RegionService {
         Region region = findRegion(id);
         region.updateRegion(requestDto.region_name());
     }
+
     private Region findRegion(Long id){
         return regionRepository.findById(id)
                 .orElseThrow(()-> new NotFoundRegionException(RegionErrorCode.NOT_FOUND_REGION));
+    }
+
+    public void deleteRegion(Long id) {
+        Region region = regionRepository.findById(id)
+                .orElseThrow(() -> new NotFoundRegionException(RegionErrorCode.NOT_FOUND_REGION));
+        regionRepository.delete(region);
     }
 }
