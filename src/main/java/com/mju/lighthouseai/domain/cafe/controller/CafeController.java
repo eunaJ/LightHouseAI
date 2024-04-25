@@ -46,7 +46,7 @@ public class CafeController {
         cafeService.updateCafe(cafeId,serviceRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-    @DeleteMapping("cafes/{cafeId}")
+    @DeleteMapping("/cafes/{cafeId}")
     public ResponseEntity<?> deleteCafe(
         @PathVariable Long cafeId
     ){
