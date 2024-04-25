@@ -1,7 +1,9 @@
 package com.mju.lighthouseai.domain.region.controller;
 
 import com.mju.lighthouseai.domain.region.dto.controller.RegionCreateControllerRequestDto;
+import com.mju.lighthouseai.domain.region.dto.controller.RegionUpdateControllerRequestDto;
 import com.mju.lighthouseai.domain.region.dto.service.request.RegionCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.region.dto.service.request.RegionUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.region.mapper.dto.RegionDtoMapper;
 import com.mju.lighthouseai.domain.region.service.RegionService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
@@ -29,4 +31,14 @@ public class RegionController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PutMapping("/regions/{regionId}")
+    public ResponseEntity<?> updateRegion(
+            @PathVariable Long regionId,
+            @RequestBody RegionUpdateControllerRequestDto controllerRequestDto
+    ){
+        RegionUpdateServiceRequestDto serviceRequestDto =
+                regionDtoMapper.toRegionUpdateServiceDto(controllerRequestDto);
+        regionService.updateRegion(regionId, serviceRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
