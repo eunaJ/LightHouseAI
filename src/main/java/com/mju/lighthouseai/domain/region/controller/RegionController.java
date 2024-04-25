@@ -41,4 +41,12 @@ public class RegionController {
         regionService.updateRegion(regionId, serviceRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @DeleteMapping("/regions/{regionId}")
+    public ResponseEntity<?> deleteRegion(
+            @PathVariable Long regionId
+    ){
+        regionService.deleteRegion(regionId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
