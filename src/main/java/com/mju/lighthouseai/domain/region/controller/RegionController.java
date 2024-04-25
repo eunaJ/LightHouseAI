@@ -14,13 +14,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/admin")
 @RestController
 public class RegionController {
     private final RegionDtoMapper regionDtoMapper;
     private final RegionService regionService;
 
-    @PostMapping("/admin/regions/create")
+    @PostMapping("/regions/create")
     public ResponseEntity<?> createRegion(
             @RequestBody RegionCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
