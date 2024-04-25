@@ -34,4 +34,10 @@ public class ConstituencyServiceImpl implements ConstituencyService {
         return constituencyRepository.findById(id)
                 .orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
     }
+
+    public void deleteConstituency(Long id) {
+        Constituency constituency = constituencyRepository.findById(id)
+                .orElseThrow(() -> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
+        constituencyRepository.delete(constituency);
+    }
 }
