@@ -41,4 +41,12 @@ public class ConstituencyController {
         constituencyService.updateConstituency(constituencyId, serviceRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @DeleteMapping("/constituencies/{constituencyId}")
+    public ResponseEntity<?> deleteConstituency(
+            @PathVariable Long constituencyId
+    ){
+        constituencyService.deleteConstituency(constituencyId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
