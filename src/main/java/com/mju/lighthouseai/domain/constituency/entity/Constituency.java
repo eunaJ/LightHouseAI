@@ -43,4 +43,9 @@ public class Constituency extends BaseEntity {
         this.region = region;
     }
 
+    public void updateConstituency(
+            final String constituency
+    ){
+        this.constituency = constituency;
+    }
 }
