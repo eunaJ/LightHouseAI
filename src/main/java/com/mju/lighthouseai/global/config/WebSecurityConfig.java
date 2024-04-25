@@ -38,8 +38,8 @@ public class WebSecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests ->
                                 authorizeRequests
-                                        .requestMatchers("/api/v1/cafes/{cafeId}").hasRole("ADMIN")
-                                        .requestMatchers("/api/v1/regions/{regionId}").hasRole("ADMIN")
+                                        //.requestMatchers("/api/v1/cafes/{cafeId}").hasRole("ADMIN")
+                                        //.requestMatchers("/api/v1/regions/{regionId}").hasRole("ADMIN")
                                         .requestMatchers("/api/**").permitAll()
                                         // 추후 추가 예정
                                         // 추후 ADMIN 관리 예정
