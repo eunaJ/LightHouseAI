@@ -20,7 +20,7 @@ public class RegionController {
     private final RegionDtoMapper regionDtoMapper;
     private final RegionService regionService;
 
-    @PostMapping("/regions/create")
+    @PostMapping("/admin/regions/create")
     public ResponseEntity<?> createRegion(
             @RequestBody RegionCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
