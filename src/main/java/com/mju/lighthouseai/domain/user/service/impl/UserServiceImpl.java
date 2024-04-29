@@ -131,12 +131,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserLoginResponseDto getUser(final String token){
         if (jwtUtil.isExpired(token)) {
-            log.error("BadAccessToken");
-            throw new JwtException("BadAccessToken");
+            log.error("AccessToken 만료");
+            throw new JwtException("AccessToken 만료");
         }
         String email = jwtUtil.getUserInfoFromToken(token).getSubject();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
         return userEntityMapper.toUserLoginResponseDto(user);
+    }
+
+    @Override
+    public void logout(final String token){
+        if (jwtUtil.isExpired(token)) {
+            log.error("AccessToken 만료");
+            throw new JwtException("AccessToken 만료");
+        }
+        String email = jwtUtil.getUserInfoFromToken(token).getSubject();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        refreshTokenRepository.deleteById(String.valueOf(user.getId()));
     }
 }

@@ -19,4 +19,6 @@ public interface UserService {
     void isNotDupUserNick(isNotDupUserNickServiceRequestDto serviceRequestDto);
 
     UserLoginResponseDto getUser(String token);
+
+    void logout(String token);
 }
