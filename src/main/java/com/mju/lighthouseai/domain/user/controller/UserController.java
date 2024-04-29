@@ -84,4 +84,12 @@ public class UserController {
         UserLoginResponseDto responseDto = userService.getUser(token);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(
+            @RequestHeader("Authorization") String token
+    ){
+        userService.logout(token);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
