@@ -66,6 +66,9 @@ public class JwtUtil {
     }
 
     public boolean validateToken(String token) {
+        if(token.contains("Bearer ")){
+            token = token.substring(7);
+        }
         try {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
