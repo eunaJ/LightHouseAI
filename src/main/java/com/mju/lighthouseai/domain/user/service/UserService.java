@@ -15,4 +15,6 @@ public interface UserService {
     UserLoginResponseDto refreshAccessToken(String refreshToken, User user, HttpServletResponse response);
 
     void isNotDupUserEmail(isNotDupUserEmailServiceRequestDto serviceRequestDto);
+
+    void isNotDupUserNick(isNotDupUserNickServiceRequestDto serviceRequestDto);
 }

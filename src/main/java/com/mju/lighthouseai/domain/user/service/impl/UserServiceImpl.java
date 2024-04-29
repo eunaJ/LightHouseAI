@@ -119,4 +119,12 @@ public class UserServiceImpl implements UserService {
             throw new AlreadyExistsEmailException(UserErrorCode.ALREADY_EXIST_EMAIL);
         }
     }
+
+    @Override
+    public void isNotDupUserNick(isNotDupUserNickServiceRequestDto serviceRequestDto){
+        if(userRepository.existsByNickname(serviceRequestDto.nickname())) {
+            log.info("중복된 닉네임입니다.");
+            throw new DuplicateNicknameException(UserErrorCode.DUPLICATE_NICKNAME);
+        }
+    }
 }
