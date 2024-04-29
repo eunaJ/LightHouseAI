@@ -26,7 +26,6 @@ public class CafeServiceImpl implements CafeService {
 
     public void createCafe(CafeCreateServiceRequestDto requestDto, User user){
         Cafe cafe = cafeEntityMapper.tocafe(requestDto,user);
-        System.out.println(cafe.getUser());
         cafeRepository.save(cafe);
     }
 
