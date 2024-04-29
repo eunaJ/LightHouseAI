@@ -21,7 +21,7 @@ public class RestaurantController {
     private final RestaurantDtoMapper restaurantDtoMapper;
     private final RestaurantService restaurantService;
 
-    @PostMapping("/restaurant/create")
+    @PostMapping("/restaurants/create")
     public ResponseEntity<?> createRestaurant(
         @RequestBody RestaurantCreateControllerRequestDto controllerRequestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
