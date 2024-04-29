@@ -59,4 +59,20 @@ public class UserController {
                 userDetails.user(), httpServletResponse);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @PostMapping("/isnotdupemail")
+    public ResponseEntity<?> isNotDupEmail(
+            @RequestBody isNotDupUserEmailServiceRequestDto serviceRequestDto
+    ){
+        userService.isNotDupUserEmail(serviceRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/isnotdupnick")
+    public ResponseEntity<?> isNotDupNickname(
+            @RequestBody isNotDupUserNickServiceRequestDto serviceRequestDto
+    ){
+        userService.isNotDupUserNick(serviceRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
