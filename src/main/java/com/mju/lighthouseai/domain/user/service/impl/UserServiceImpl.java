@@ -111,4 +111,12 @@ public class UserServiceImpl implements UserService {
         refreshTokenRepository.save(new RefreshToken(user.getId(), newToken, timeToLive));
         return userEntityMapper.toUserLoginResponseDto(user);
     }
+
+    @Override
+    public void isNotDupUserEmail(isNotDupUserEmailServiceRequestDto serviceRequestDto){
+        if(userRepository.existsByEmail(serviceRequestDto.email())) {
+            log.info("중복된 이메일입니다.");
+            throw new AlreadyExistsEmailException(UserErrorCode.ALREADY_EXIST_EMAIL);
+        }
+    }
 }
