@@ -134,4 +134,11 @@ public class JwtUtil {
         cookie.setHttpOnly(true);
         return cookie;
     }
+
+    public Boolean isExpired(String token) {
+        if(token.contains("Bearer ")){
+            token = token.substring(7);
+        }
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+    }
 }
