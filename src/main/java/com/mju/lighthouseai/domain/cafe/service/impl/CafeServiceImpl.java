@@ -2,6 +2,7 @@ package com.mju.lighthouseai.domain.cafe.service.impl;
 
 import com.mju.lighthouseai.domain.cafe.dto.service.request.CafeCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.cafe.dto.service.request.CafeUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.cafe.dto.service.response.CafeReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.cafe.entity.Cafe;
 import com.mju.lighthouseai.domain.cafe.exceoption.CafeErrorCode;
 import com.mju.lighthouseai.domain.cafe.exceoption.NotFoundCafeException;
@@ -10,6 +11,7 @@ import com.mju.lighthouseai.domain.cafe.repository.CafeRepository;
 import com.mju.lighthouseai.domain.cafe.service.CafeService;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,5 +45,8 @@ public class CafeServiceImpl implements CafeService {
             .orElseThrow(() -> new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
         cafeRepository.delete(food);
     }
-
+    public List<CafeReadAllServiceResponseDto> readAllCafes(){
+        List<Cafe> cafes = cafeRepository.findAll();
+        return cafeEntityMapper.toCafeReadAllResponseDto(cafes);
+    }
 }
