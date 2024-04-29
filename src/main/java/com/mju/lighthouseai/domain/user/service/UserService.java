@@ -17,4 +17,6 @@ public interface UserService {
     void isNotDupUserEmail(isNotDupUserEmailServiceRequestDto serviceRequestDto);
 
     void isNotDupUserNick(isNotDupUserNickServiceRequestDto serviceRequestDto);
+
+    UserLoginResponseDto getUser(String token);
 }

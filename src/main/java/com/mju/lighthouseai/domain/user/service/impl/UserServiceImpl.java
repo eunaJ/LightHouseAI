@@ -127,4 +127,16 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateNicknameException(UserErrorCode.DUPLICATE_NICKNAME);
         }
     }
+
+    @Override
+    public UserLoginResponseDto getUser(final String token){
+        if (jwtUtil.isExpired(token)) {
+            log.error("BadAccessToken");
+            throw new JwtException("BadAccessToken");
+        }
+        String email = jwtUtil.getUserInfoFromToken(token).getSubject();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        return userEntityMapper.toUserLoginResponseDto(user);
+    }
 }
