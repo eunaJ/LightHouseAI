@@ -98,6 +98,9 @@ public class JwtUtil {
     }
 
     public Claims getUserInfoFromToken(String token) {
+        if(token.contains("Bearer ")){
+            token = token.substring(7);
+        }
         return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
     }
 
