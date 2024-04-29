@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.domain.cafe.service.impl;
+package com.mju.lighthouseai.domain.tour_list.service.impl;
 
 import com.mju.lighthouseai.domain.cafe.dto.service.request.CafeCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.cafe.dto.service.request.CafeUpdateServiceRequestDto;
@@ -8,7 +8,15 @@ import com.mju.lighthouseai.domain.cafe.exceoption.CafeErrorCode;
 import com.mju.lighthouseai.domain.cafe.exceoption.NotFoundCafeException;
 import com.mju.lighthouseai.domain.cafe.mapper.service.CafeEntityMapper;
 import com.mju.lighthouseai.domain.cafe.repository.CafeRepository;
-import com.mju.lighthouseai.domain.cafe.service.CafeService;
+import com.mju.lighthouseai.domain.constituency.entity.Constituency;
+import com.mju.lighthouseai.domain.constituency.exception.ConstituencyErrorCode;
+import com.mju.lighthouseai.domain.constituency.exception.NotFoundConstituencyException;
+import com.mju.lighthouseai.domain.constituency.repository.ConstituencyRepository;
+import com.mju.lighthouseai.domain.tour_list.dto.service.TourListCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.tour_list.entity.TourList;
+import com.mju.lighthouseai.domain.tour_list.mapper.service.TourListEntityMapper;
+import com.mju.lighthouseai.domain.tour_list.repository.TourListRepository;
+import com.mju.lighthouseai.domain.tour_list.service.TourListService;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import java.util.List;
@@ -18,17 +26,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class CafeServiceImpl implements CafeService {
+public class TourListServiceImpl implements TourListService {
 
-    private final CafeRepository cafeRepository;
-    private final CafeEntityMapper cafeEntityMapper;
-    private final UserRepository userRepository;
+    private final TourListRepository tourListRepository;
+    private final TourListEntityMapper tourListEntityMapper;
+    private final ConstituencyRepository constituencyRepository;
 
-    public void createCafe(CafeCreateServiceRequestDto requestDto, User user){
-        Cafe cafe = cafeEntityMapper.tocafe(requestDto,user);
-        cafeRepository.save(cafe);
+    public void createTourList(TourListCreateServiceRequestDto requestDto, User user){
+        Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
+            ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
+        TourList tourList = tourListEntityMapper.toTourList(requestDto,user,constituency);
+        tourListRepository.save(tourList);
     }
-
+/*
     @Transactional
     public void updateCafe(Long id,CafeUpdateServiceRequestDto requestDto){
         Cafe cafe = findCafe(id);
@@ -47,5 +57,5 @@ public class CafeServiceImpl implements CafeService {
     public List<CafeReadAllServiceResponseDto> readAllCafes(){
         List<Cafe> cafes = cafeRepository.findAll();
         return cafeEntityMapper.toCafeReadAllResponseDto(cafes);
-    }
+    }*/
 }
