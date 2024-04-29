@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.domain.restaurant.dto.service.request;
+package com.mju.lighthouseai.domain.restaurant.dto.service;
 
 public record RestaurantCreateServiceRequestDto(
     String title,
@@ -6,7 +6,9 @@ public record RestaurantCreateServiceRequestDto(
     Integer price,
     String menu,
     String opentime,
-    String closetime
+    String closetime,
+    String constituency_name
+
 ) {
 
 }
