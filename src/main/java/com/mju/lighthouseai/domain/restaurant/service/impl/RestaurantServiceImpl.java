@@ -48,15 +48,16 @@ public class RestaurantServiceImpl implements RestaurantService {
                 requestDto.opentime(), requestDto.closetime(),constituency);
     }
 
-    public List<RestaurantReadAllServiceResponseDto> readAllRestaurants(){
-        List<Restaurant> restaurants = restaurantRepository.findAll();
-        return restaurantEntityMapper.toRestaurantReadAllResponseDto(restaurants);
-    }
-
-    public void deleteRestaurant(Long id) {
+    public void deleteRestaurant(Long id, User user) {
+        checkUserRole(user);
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new NotFoundRestaurantException(RestaurantErrorCode.NOT_FOUND_Restaurant));
         restaurantRepository.delete(restaurant);
+    }
+
+    public List<RestaurantReadAllServiceResponseDto> readAllRestaurants(){
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        return restaurantEntityMapper.toRestaurantReadAllResponseDto(restaurants);
     }
 
     private Restaurant findRestaurant(Long id){

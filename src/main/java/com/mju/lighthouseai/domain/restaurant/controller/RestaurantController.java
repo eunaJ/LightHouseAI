@@ -43,17 +43,18 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @DeleteMapping("/{restaurantId}")
+    public ResponseEntity<?> deleteRestaurnat(
+            @PathVariable Long restaurantId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        restaurantService.deleteRestaurant(restaurantId, userDetails.user());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @GetMapping("/")
     public ResponseEntity<?> readAllRestaurant(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(restaurantService.readAllRestaurants());
-    }
-
-    @DeleteMapping("/{restaurantId}")
-    public ResponseEntity<?> deleteRestaurant(
-            @PathVariable Long restaurantId
-    ){
-        restaurantService.deleteRestaurant(restaurantId);
-        return ResponseEntity.status(HttpStatus.OK).build();
     }
  }
