@@ -12,7 +12,7 @@ import com.mju.lighthouseai.domain.other_service.exception.NotFoundOtherServiceE
 import com.mju.lighthouseai.domain.other_service.mapper.service.OtherServiceEntityMapper;
 import com.mju.lighthouseai.domain.other_service.repository.OtherServiceRepository;
 import com.mju.lighthouseai.domain.other_service.service.OtherService;
-import com.mju.lighthouseai.domain.other_service.exception.OtherSerivceErrorCode;
+import com.mju.lighthouseai.domain.other_service.exception.OtherServiceErrorCode;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.domain.user.entity.UserRole;
 import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
@@ -51,7 +51,7 @@ public class OtherServiceImpl implements OtherService {
     public void deleteOtherService(Long id,User user) {
         checkUserRole(user);
         OtherServiceEntity otherServiceEntity = otherServiceRepository.findById(id)
-                .orElseThrow(() -> new NotFoundOtherServiceException(OtherSerivceErrorCode.NOT_FOUND_OtherService));
+                .orElseThrow(() -> new NotFoundOtherServiceException(OtherServiceErrorCode.NOT_FOUND_OtherService));
         otherServiceRepository.delete(otherServiceEntity);
     }
 
@@ -60,9 +60,15 @@ public class OtherServiceImpl implements OtherService {
         return otherServiceEntityMapper.toOtherServiceReadAllResponseDto(otherServices);
     }
 
+    public OtherServiceReadAllServiceResponseDto readOtherService(Long id){
+        OtherServiceEntity otherServiceEntity = otherServiceRepository.findById(id)
+                .orElseThrow(()->new NotFoundOtherServiceException(OtherServiceErrorCode.NOT_FOUND_OtherService));
+        return otherServiceEntityMapper.toOtherServiceReadResponseDto(otherServiceEntity);
+    }
+
     private OtherServiceEntity findOtherService(Long id){
         return otherServiceRepository.findById(id)
-                .orElseThrow(()-> new NotFoundOtherServiceException(OtherSerivceErrorCode.NOT_FOUND_OtherService));
+                .orElseThrow(()-> new NotFoundOtherServiceException(OtherServiceErrorCode.NOT_FOUND_OtherService));
     }
 
     private void checkUserRole(User user) {

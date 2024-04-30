@@ -15,4 +15,6 @@ public interface OtherService {
     void deleteOtherService(Long id, User user);
 
     List<OtherServiceReadAllServiceResponseDto> readAllOtherServices();
+
+    OtherServiceReadAllServiceResponseDto readOtherService(Long id);
 }
