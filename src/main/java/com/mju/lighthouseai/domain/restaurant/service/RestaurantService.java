@@ -10,8 +10,6 @@ import java.util.List;
 public interface RestaurantService {
     void createRestaurant(RestaurantCreateServiceRequestDto requestDto, User user);
     void updateRestaurant(Long id, RestaurantUpdateServiceRequestDto requestDto, User user);
-
     void deleteRestaurant(Long id, User user);
-
     List<RestaurantReadAllServiceResponseDto> readAllRestaurants();
 }

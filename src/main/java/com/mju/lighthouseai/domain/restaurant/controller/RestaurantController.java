@@ -53,7 +53,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<?> readAllRestaurant(){
+    public ResponseEntity<?> readAllRestaurants(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(restaurantService.readAllRestaurants());
     }
