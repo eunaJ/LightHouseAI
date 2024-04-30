@@ -1,7 +1,9 @@
 package com.mju.lighthouseai.domain.other_service.controller;
 
 import com.mju.lighthouseai.domain.other_service.dto.controller.OtherServiceCreateControllerRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.controller.OtherServiceUpdateControllerRequestDto;
 import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.other_service.mapper.dto.OtherServiceDtoMapper;
 import com.mju.lighthouseai.domain.other_service.service.OtherService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
@@ -27,5 +29,17 @@ public class OtherServiceController {
                 otherServiceDtoMapper.toOtherServiceCreateServiceDto(controllerRequestDto);
         otherService.createOtherService(serviceRequestDto,userDetails.user());
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PutMapping("/{otherServiceId}")
+    public ResponseEntity<?> updateOtherService(
+            @PathVariable Long otherServiceId,
+            @RequestBody OtherServiceUpdateControllerRequestDto controllerRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        OtherServiceUpdateServiceRequestDto serviceRequestDto =
+                otherServiceDtoMapper.toOtherServiceUpdateServiceDto(controllerRequestDto);
+        otherService.updateOtherService(otherServiceId, serviceRequestDto, userDetails.user());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
  }
