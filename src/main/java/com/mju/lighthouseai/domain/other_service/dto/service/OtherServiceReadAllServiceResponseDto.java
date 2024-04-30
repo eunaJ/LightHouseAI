@@ -7,7 +7,7 @@ public record OtherServiceReadAllServiceResponseDto(
         String opentime,
         String closetime,
         String constituency_name,
-        String user_name,
+        String nickname,
         String region_name
 ) {
 }

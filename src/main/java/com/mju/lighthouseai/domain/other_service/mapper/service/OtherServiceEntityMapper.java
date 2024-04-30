@@ -27,7 +27,7 @@ public interface OtherServiceEntityMapper {
     default String toConstituencyRegionName(Region region){
         return region.getRegion_name();
     }
-    @Mapping(source = "user",target = "user_name")
+    @Mapping(source = "user",target = "nickname")
     @Mapping(source = "constituency",target = "constituency_name")
     @Mapping(source = "constituency.region",target = "region_name")
     OtherServiceReadAllServiceResponseDto toOtherServiceReadResponseDto(OtherServiceEntity otherServiceEntity);
