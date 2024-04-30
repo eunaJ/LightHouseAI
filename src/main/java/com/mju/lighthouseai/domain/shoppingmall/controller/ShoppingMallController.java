@@ -1,9 +1,14 @@
-package com.mju.lighthouseai.domain.restaurant.controller;
+package com.mju.lighthouseai.domain.shoppingmall.controller;
 
 import com.mju.lighthouseai.domain.restaurant.dto.controller.RestaurantCreateControllerRequestDto;
 import com.mju.lighthouseai.domain.restaurant.dto.service.RestaurantCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.restaurant.mapper.dto.RestaurantDtoMapper;
 import com.mju.lighthouseai.domain.restaurant.service.RestaurantService;
+import com.mju.lighthouseai.domain.shoppingmall.dto.controller.ShoppingMallCreateControllerRequestDto;
+import com.mju.lighthouseai.domain.shoppingmall.dto.service.ShoppingMallCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
+import com.mju.lighthouseai.domain.shoppingmall.mapper.dto.ShoppingMallDtoMapper;
+import com.mju.lighthouseai.domain.shoppingmall.service.ShoppingMallService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,18 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
-public class RestaurantController {
-    private final RestaurantDtoMapper restaurantDtoMapper;
-    private final RestaurantService restaurantService;
+public class ShoppingMallController {
+    private final ShoppingMallDtoMapper shoppingMallDtoMapper;
+    private final ShoppingMallService shoppingMallService;
 
-    @PostMapping("/restaurants/create")
-    public ResponseEntity<?> createRestaurant(
-        @RequestBody RestaurantCreateControllerRequestDto controllerRequestDto,
+    @PostMapping("/shoppingmalls/create")
+    public ResponseEntity<?> createShoppingMall(
+        @RequestBody ShoppingMallCreateControllerRequestDto controllerRequestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
-        RestaurantCreateServiceRequestDto serviceRequestDto =
-                restaurantDtoMapper.toRestaurantCreateServiceDto(controllerRequestDto);
-        restaurantService.createRestaurant(serviceRequestDto,userDetails.user());
+        ShoppingMallCreateServiceRequestDto serviceRequestDto =
+                shoppingMallDtoMapper.toShoppingMallCreateServiceDto(controllerRequestDto);
+        shoppingMallService.createShoppingMall(serviceRequestDto,userDetails.user());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
  }

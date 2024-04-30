@@ -2,11 +2,15 @@ package com.mju.lighthouseai.domain.restaurant.mapper.service;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
-import com.mju.lighthouseai.domain.restaurant.dto.service.request.RestaurantCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.constituency.entity.Constituency;
+import com.mju.lighthouseai.domain.restaurant.dto.service.RestaurantCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
+import com.mju.lighthouseai.domain.user.entity.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = SPRING)
 public interface RestaurantEntityMapper {
-    Restaurant torestaurant(RestaurantCreateServiceRequestDto requestDto);
+    @Mapping(source = "constituency",target = "constituency")
+    Restaurant torestaurant(RestaurantCreateServiceRequestDto requestDto, User user, Constituency constituency);
 }
