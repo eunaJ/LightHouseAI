@@ -1,19 +1,12 @@
 package com.mju.lighthouseai.domain.tour_list.service.impl;
 
-import com.mju.lighthouseai.domain.cafe.dto.service.request.CafeCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.cafe.dto.service.request.CafeUpdateServiceRequestDto;
-import com.mju.lighthouseai.domain.cafe.dto.service.response.CafeReadAllServiceResponseDto;
-import com.mju.lighthouseai.domain.cafe.entity.Cafe;
-import com.mju.lighthouseai.domain.cafe.exceoption.CafeErrorCode;
-import com.mju.lighthouseai.domain.cafe.exceoption.NotFoundCafeException;
-import com.mju.lighthouseai.domain.cafe.mapper.service.CafeEntityMapper;
-import com.mju.lighthouseai.domain.cafe.repository.CafeRepository;
 import com.mju.lighthouseai.domain.constituency.entity.Constituency;
 import com.mju.lighthouseai.domain.constituency.exception.ConstituencyErrorCode;
 import com.mju.lighthouseai.domain.constituency.exception.NotFoundConstituencyException;
 import com.mju.lighthouseai.domain.constituency.repository.ConstituencyRepository;
-import com.mju.lighthouseai.domain.tour_list.dto.service.TourListCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.tour_list.dto.service.TourListUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.tour_list.dto.service.request.TourListCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.tour_list.dto.service.request.TourListUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.tour_list.dto.service.response.TourListReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.tour_list.entity.TourList;
 import com.mju.lighthouseai.domain.tour_list.exceoption.NotFoundTourListException;
 import com.mju.lighthouseai.domain.tour_list.exceoption.TourListErrorCode;
@@ -21,7 +14,6 @@ import com.mju.lighthouseai.domain.tour_list.mapper.service.TourListEntityMapper
 import com.mju.lighthouseai.domain.tour_list.repository.TourListRepository;
 import com.mju.lighthouseai.domain.tour_list.service.TourListService;
 import com.mju.lighthouseai.domain.user.entity.User;
-import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,9 +53,9 @@ public class TourListServiceImpl implements TourListService {
             .orElseThrow(() -> new NotFoundTourListException(TourListErrorCode.NOT_FOUND_TOURLIST));
         tourListRepository.delete(tourList);
     }
-    /*
-    public List<CafeReadAllServiceResponseDto> readAllCafes(){
-        List<Cafe> cafes = cafeRepository.findAll();
-        return cafeEntityMapper.toCafeReadAllResponseDto(cafes);
-    }*/
+
+    public List<TourListReadAllServiceResponseDto> readAllTourLists(){
+        List<TourList> tourLists = tourListRepository.findAll();
+        return tourListEntityMapper.toTourListReadAllResponseDto(tourLists);
+    }
 }
