@@ -14,6 +14,10 @@ import com.mju.lighthouseai.domain.tour_list.mapper.service.TourListEntityMapper
 import com.mju.lighthouseai.domain.tour_list.repository.TourListRepository;
 import com.mju.lighthouseai.domain.tour_list.service.TourListService;
 import com.mju.lighthouseai.domain.user.entity.User;
+import com.mju.lighthouseai.domain.user.entity.UserRole;
+import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
+import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
+import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +30,8 @@ public class TourListServiceImpl implements TourListService {
     private final TourListRepository tourListRepository;
     private final TourListEntityMapper tourListEntityMapper;
     private final ConstituencyRepository constituencyRepository;
+    private final UserRepository userRepository;
+
 
     public void createTourList(TourListCreateServiceRequestDto requestDto, User user){
         Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
@@ -35,7 +41,8 @@ public class TourListServiceImpl implements TourListService {
     }
 
     @Transactional
-    public void updateTourList(Long id, TourListUpdateServiceRequestDto requestDto){
+    public void updateTourList(Long id, TourListUpdateServiceRequestDto requestDto,User user){
+        checkUserRole(user);
         TourList tourList = findTourList(id);
         Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
         ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
@@ -43,12 +50,8 @@ public class TourListServiceImpl implements TourListService {
              requestDto.opentime(), requestDto.closetime(),constituency);
     }
 
-    private TourList findTourList(Long id){
-        return tourListRepository.findById(id)
-            .orElseThrow(()-> new NotFoundTourListException(TourListErrorCode.NOT_FOUND_TOURLIST));
-    }
-
-    public void deleteTourList(Long id) {
+    public void deleteTourList(Long id,User user) {
+        checkUserRole(user);
         TourList tourList = tourListRepository.findById(id)
             .orElseThrow(() -> new NotFoundTourListException(TourListErrorCode.NOT_FOUND_TOURLIST));
         tourListRepository.delete(tourList);
@@ -57,5 +60,16 @@ public class TourListServiceImpl implements TourListService {
     public List<TourListReadAllServiceResponseDto> readAllTourLists(){
         List<TourList> tourLists = tourListRepository.findAll();
         return tourListEntityMapper.toTourListReadAllResponseDto(tourLists);
+
+    }
+
+    private TourList findTourList(Long id){
+        return tourListRepository.findById(id)
+            .orElseThrow(()-> new NotFoundTourListException(TourListErrorCode.NOT_FOUND_TOURLIST));
+    }
+    private void checkUserRole(User user) {
+        if (!(user.getRole().equals(UserRole.ADMIN))) {
+            throw new NotFoundUserException(UserErrorCode.NOT_ADMIN);
+        }
     }
 }

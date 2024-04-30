@@ -8,9 +8,7 @@ import java.util.List;
 
 public interface TourListService {
     void createTourList(TourListCreateServiceRequestDto requestDto, User user);
-    void updateTourList(Long id, TourListUpdateServiceRequestDto requestDto);
-
-    void deleteTourList(Long id);
-
+    void updateTourList(Long id, TourListUpdateServiceRequestDto requestDto,User user);
+    void deleteTourList(Long id,User user);
      List<TourListReadAllServiceResponseDto> readAllTourLists();
 }

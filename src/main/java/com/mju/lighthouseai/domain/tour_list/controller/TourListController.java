@@ -28,7 +28,7 @@ public class TourListController {
     private final TourListDtoMapper tourListDtoMapper;
     private final TourListService tourListService;
 
-    @PostMapping("/tourList/create")
+    @PostMapping("/tourLists/create")
     public ResponseEntity<?> createTourList(
         @RequestBody TourListCreateControllerRequestDto controllerRequestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -41,18 +41,20 @@ public class TourListController {
     @PutMapping("/tourLists/{tourListId}")
     public ResponseEntity<?> updateTourList(
         @PathVariable Long tourListId,
-        @RequestBody TourListUpdateControllerRequestDto controllerRequestDto
+        @RequestBody TourListUpdateControllerRequestDto controllerRequestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
         TourListUpdateServiceRequestDto serviceRequestDto =
             tourListDtoMapper.toTourListUpdateServiceDto(controllerRequestDto);
-        tourListService.updateTourList(tourListId,serviceRequestDto);
+        tourListService.updateTourList(tourListId,serviceRequestDto,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @DeleteMapping("/tourLists/{tourListId}")
     public ResponseEntity<?> deleteCafe(
-        @PathVariable Long tourListId
+        @PathVariable Long tourListId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
-        tourListService.deleteTourList(tourListId);
+        tourListService.deleteTourList(tourListId,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
   @GetMapping("/tourLists")
