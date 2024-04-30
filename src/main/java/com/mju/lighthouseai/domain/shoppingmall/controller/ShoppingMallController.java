@@ -1,12 +1,7 @@
 package com.mju.lighthouseai.domain.shoppingmall.controller;
 
-import com.mju.lighthouseai.domain.restaurant.dto.controller.RestaurantCreateControllerRequestDto;
-import com.mju.lighthouseai.domain.restaurant.dto.service.RestaurantCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.restaurant.mapper.dto.RestaurantDtoMapper;
-import com.mju.lighthouseai.domain.restaurant.service.RestaurantService;
 import com.mju.lighthouseai.domain.shoppingmall.dto.controller.ShoppingMallCreateControllerRequestDto;
 import com.mju.lighthouseai.domain.shoppingmall.dto.service.ShoppingMallCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
 import com.mju.lighthouseai.domain.shoppingmall.mapper.dto.ShoppingMallDtoMapper;
 import com.mju.lighthouseai.domain.shoppingmall.service.ShoppingMallService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
