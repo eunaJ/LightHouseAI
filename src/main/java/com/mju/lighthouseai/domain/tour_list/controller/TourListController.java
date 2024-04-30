@@ -58,12 +58,12 @@ public class TourListController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
   @GetMapping("/tourLists")
-    public ResponseEntity<?> readAllCafes(){
+    public ResponseEntity<?> readAllTourLists(){
         return ResponseEntity.status(HttpStatus.OK)
             .body(tourListService.readAllTourLists());
     }
     @GetMapping("/tourLists/{tourListId}")
-    public ResponseEntity<?> readAllCafes(
+    public ResponseEntity<?> readTourList(
         @PathVariable Long tourListId
     ){
         return ResponseEntity.status(HttpStatus.OK)
