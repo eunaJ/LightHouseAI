@@ -66,4 +66,14 @@ public class TourList extends BaseEntity {
         this.user = user;
         this.constituency = constituency;
     }
+    public void updateTourList(
+        String title, String location, int price,
+        String opentime,String closetime,Constituency constituency){
+        this.title = title;
+        this.location = location;
+        this.price = price;
+        this.opentime = opentime;
+        this.closetime = closetime;
+        this.constituency = constituency;
+    }
 }
