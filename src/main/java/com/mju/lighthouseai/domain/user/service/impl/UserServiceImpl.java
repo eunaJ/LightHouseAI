@@ -11,6 +11,10 @@ import com.mju.lighthouseai.domain.user.service.UserService;
 import com.mju.lighthouseai.global.jwt.JwtUtil;
 import com.mju.lighthouseai.global.jwt.RefreshToken;
 import com.mju.lighthouseai.global.jwt.RefreshTokenRepository;
+import com.mju.lighthouseai.global.jwt.exception.ExpiredJwtAccessTokenException;
+import com.mju.lighthouseai.global.jwt.exception.ExpiredJwtRefreshTokenException;
+import com.mju.lighthouseai.global.jwt.exception.FailedJwtTokenException;
+import com.mju.lighthouseai.global.jwt.exception.JwtErrorCode;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -100,10 +104,9 @@ public class UserServiceImpl implements UserService {
                                                    final HttpServletResponse response) {
         String token = refreshToken.substring(13);
         refreshTokenRepository.findById(String.valueOf(user.getId()))
-                .orElseThrow(() -> new JwtException("refreshToke 만료"));
+                .orElseThrow(() -> new ExpiredJwtRefreshTokenException(JwtErrorCode.EXPIRED_JWT_REFRESH_TOKEN));
         if (!jwtUtil.validateRefreshToken(token)) {
-            log.error("BadRefreshToken");
-            throw new JwtException("BadRefreshToken");
+            throw new FailedJwtTokenException(JwtErrorCode.FAILED_JWT_TOKEN);
         }
         jwtUtil.addAccessTokenToHeader(user, httpServletResponse);
         String newToken = jwtUtil.addRefreshTokenToCookie(user, httpServletResponse);
@@ -126,5 +129,27 @@ public class UserServiceImpl implements UserService {
             log.info("중복된 닉네임입니다.");
             throw new DuplicateNicknameException(UserErrorCode.DUPLICATE_NICKNAME);
         }
+    }
+
+    @Override
+    public UserLoginResponseDto getUser(final String token){
+        if (jwtUtil.isExpired(token)) {
+            throw new ExpiredJwtAccessTokenException(JwtErrorCode.EXPIRED_JWT_ACCESS_TOKEN);
+        }
+        String email = jwtUtil.getUserInfoFromToken(token).getSubject();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        return userEntityMapper.toUserLoginResponseDto(user);
+    }
+
+    @Override
+    public void logout(final String token){
+        if (jwtUtil.isExpired(token)) {
+            throw new ExpiredJwtAccessTokenException(JwtErrorCode.EXPIRED_JWT_ACCESS_TOKEN);
+        }
+        String email = jwtUtil.getUserInfoFromToken(token).getSubject();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        refreshTokenRepository.deleteById(String.valueOf(user.getId()));
     }
 }

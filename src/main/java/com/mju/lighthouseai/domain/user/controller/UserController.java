@@ -2,6 +2,7 @@ package com.mju.lighthouseai.domain.user.controller;
 
 import com.mju.lighthouseai.domain.user.dto.controller.*;
 import com.mju.lighthouseai.domain.user.dto.service.request.*;
+import com.mju.lighthouseai.domain.user.dto.service.response.UserLoginResponseDto;
 import com.mju.lighthouseai.domain.user.mapper.dto.UserDtoMapper;
 import com.mju.lighthouseai.domain.user.service.UserService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
@@ -73,6 +74,22 @@ public class UserController {
             @RequestBody isNotDupUserNickServiceRequestDto serviceRequestDto
     ){
         userService.isNotDupUserNick(serviceRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<UserLoginResponseDto> getUser(
+            @RequestHeader("Authorization") String token
+    ){
+        UserLoginResponseDto responseDto = userService.getUser(token);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(
+            @RequestHeader("Authorization") String token
+    ){
+        userService.logout(token);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
