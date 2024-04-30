@@ -65,7 +65,7 @@ public class KakaoService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", clientId);
-        body.add("redirect_uri", redirectUri + "/login/kakao");
+        body.add("redirect_uri", redirectUri);
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -106,7 +106,9 @@ public class KakaoService {
         String email = jsonNode.get("kakao_account").get("email").asText();
         String nickname = jsonNode.get("kakao_account")
                 .get("profile").get("nickname").asText();
-        String birth = jsonNode.get("kakao_account").get("birthday").asText();
+        String birth = jsonNode.get("kakao_account").get("birthyear").asText()+"-"
+                +jsonNode.get("kakao_account").get("birthday").asText().substring(0,2)+"-"
+                +jsonNode.get("kakao_account").get("birthday").asText().substring(2);
         String profile_img_url = jsonNode.get("kakao_account").get("profile").get("profile_image_url").asText();
         return new KakaoUserInfoDto(email, nickname, birth, profile_img_url);
     }
