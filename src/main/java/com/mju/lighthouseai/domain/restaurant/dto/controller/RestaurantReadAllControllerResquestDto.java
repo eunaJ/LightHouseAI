@@ -4,6 +4,7 @@ public record RestaurantReadAllControllerResquestDto (
         String title,
         String location,
         int price,
+        String menu,
         String opentime,
         String closetime,
         String constituency_name,
