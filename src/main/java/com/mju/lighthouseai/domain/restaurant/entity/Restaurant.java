@@ -72,10 +72,11 @@ public class Restaurant extends BaseEntity {
     }
 
     public void updateRestaurant(
-            String title, String location, int price,
+            String title, String location, String menu, int price,
             String opentime, String closetime, Constituency constituency){
         this.title = title;
         this.location = location;
+        this.menu = menu;
         this.price = price;
         this.opentime = opentime;
         this.closetime = closetime;

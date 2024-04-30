@@ -2,8 +2,6 @@ package com.mju.lighthouseai.domain.tour_list.mapper.service;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
-import com.mju.lighthouseai.domain.cafe.dto.service.response.CafeReadAllServiceResponseDto;
-import com.mju.lighthouseai.domain.cafe.entity.Cafe;
 import com.mju.lighthouseai.domain.constituency.entity.Constituency;
 import com.mju.lighthouseai.domain.region.entity.Region;
 import com.mju.lighthouseai.domain.tour_list.dto.service.request.TourListCreateServiceRequestDto;
@@ -28,7 +26,7 @@ public interface TourListEntityMapper {
         return region.getRegion_name();
     }
 
-    @Mapping(source = "user",target = "user_name")
+    @Mapping(source = "user",target = "nickname")
     @Mapping(source = "constituency",target = "constituency_name")
     @Mapping(source = "constituency.region",target = "region_name")
     TourListReadAllServiceResponseDto toTourListReadResponseDto(TourList tourList);
