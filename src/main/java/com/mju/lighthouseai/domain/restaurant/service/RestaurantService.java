@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface RestaurantService {
     void createRestaurant(RestaurantCreateServiceRequestDto requestDto, User user);
-    void updateRestaurant(Long id, RestaurantUpdateServiceRequestDto requestDto);
+    void updateRestaurant(Long id, RestaurantUpdateServiceRequestDto requestDto, User user);
 
     List<RestaurantReadAllServiceResponseDto> readAllRestaurants();
     void deleteRestaurant(Long id);

@@ -14,6 +14,9 @@ import com.mju.lighthouseai.domain.restaurant.mapper.service.RestaurantEntityMap
 import com.mju.lighthouseai.domain.restaurant.repository.RestaurantRepository;
 import com.mju.lighthouseai.domain.restaurant.service.RestaurantService;
 import com.mju.lighthouseai.domain.user.entity.User;
+import com.mju.lighthouseai.domain.user.entity.UserRole;
+import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
+import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,17 +39,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Transactional
-    public void updateRestaurant(Long id, RestaurantUpdateServiceRequestDto requestDto){
+    public void updateRestaurant(Long id, RestaurantUpdateServiceRequestDto requestDto, User user){
+        checkUserRole(user);
         Restaurant restaurant = findRestaurant(id);
         Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
         ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
-        restaurant.updateRestaurant(requestDto.title(), requestDto.location(), requestDto.price(),
+        restaurant.updateRestaurant(requestDto.title(), requestDto.location(), requestDto.menu(), requestDto.price(),
                 requestDto.opentime(), requestDto.closetime(),constituency);
-    }
-
-    private Restaurant findRestaurant(Long id){
-        return restaurantRepository.findById(id)
-                .orElseThrow(()-> new NotFoundRestaurantException(RestaurantErrorCode.NOT_FOUND_Restaurant));
     }
 
     public List<RestaurantReadAllServiceResponseDto> readAllRestaurants(){
@@ -58,5 +57,16 @@ public class RestaurantServiceImpl implements RestaurantService {
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new NotFoundRestaurantException(RestaurantErrorCode.NOT_FOUND_Restaurant));
         restaurantRepository.delete(restaurant);
+    }
+
+    private Restaurant findRestaurant(Long id){
+        return restaurantRepository.findById(id)
+                .orElseThrow(()-> new NotFoundRestaurantException(RestaurantErrorCode.NOT_FOUND_Restaurant));
+    }
+
+    private void checkUserRole(User user) {
+        if (!(user.getRole().equals(UserRole.ADMIN))) {
+            throw new NotFoundUserException(UserErrorCode.NOT_ADMIN);
+        }
     }
 }

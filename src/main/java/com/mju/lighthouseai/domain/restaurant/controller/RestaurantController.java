@@ -34,11 +34,12 @@ public class RestaurantController {
     @PutMapping("/{restaurantId}")
     public ResponseEntity<?> updateRestaurant(
             @PathVariable Long restaurantId,
-            @RequestBody RestaurantUpdateControllerRequestDto controllerRequestDto
+            @RequestBody RestaurantUpdateControllerRequestDto controllerRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
         RestaurantUpdateServiceRequestDto serviceRequestDto =
                 restaurantDtoMapper.toRestaurantUpdateServiceDto(controllerRequestDto);
-        restaurantService.updateRestaurant(restaurantId, serviceRequestDto);
+        restaurantService.updateRestaurant(restaurantId, serviceRequestDto, userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
