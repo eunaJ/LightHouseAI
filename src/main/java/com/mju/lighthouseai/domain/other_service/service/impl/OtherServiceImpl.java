@@ -5,13 +5,20 @@ import com.mju.lighthouseai.domain.constituency.exception.ConstituencyErrorCode;
 import com.mju.lighthouseai.domain.constituency.exception.NotFoundConstituencyException;
 import com.mju.lighthouseai.domain.constituency.repository.ConstituencyRepository;
 import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.other_service.entity.OtherServiceEntity;
+import com.mju.lighthouseai.domain.other_service.exception.NotFoundOtherServiceException;
 import com.mju.lighthouseai.domain.other_service.mapper.service.OtherServiceEntityMapper;
 import com.mju.lighthouseai.domain.other_service.repository.OtherServiceRepository;
 import com.mju.lighthouseai.domain.other_service.service.OtherService;
+import com.mju.lighthouseai.domain.other_service.exception.OtherSerivceErrorCode;
 import com.mju.lighthouseai.domain.user.entity.User;
+import com.mju.lighthouseai.domain.user.entity.UserRole;
+import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
+import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -28,4 +35,24 @@ public class OtherServiceImpl implements OtherService {
         otherServiceRepository.save(otherServiceEntity);
     }
 
+    @Transactional
+    public void updateOtherService(Long id, OtherServiceUpdateServiceRequestDto requestDto, User user){
+        checkUserRole(user);
+        OtherServiceEntity otherServiceEntity = findOtherService(id);
+        Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
+        ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
+        otherServiceEntity.updateOtherService(requestDto.title(), requestDto.location(), requestDto.price(),
+                requestDto.opentime(), requestDto.closetime(),constituency);
+    }
+
+    private OtherServiceEntity findOtherService(Long id){
+        return otherServiceRepository.findById(id)
+                .orElseThrow(()-> new NotFoundOtherServiceException(OtherSerivceErrorCode.NOT_FOUND_OtherService));
+    }
+
+    private void checkUserRole(User user) {
+        if (!(user.getRole().equals(UserRole.ADMIN))) {
+            throw new NotFoundUserException(UserErrorCode.NOT_ADMIN);
+        }
+    }
 }
