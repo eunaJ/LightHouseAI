@@ -1,18 +1,15 @@
 package com.mju.lighthouseai.domain.tour_list.service;
 
-import com.mju.lighthouseai.domain.cafe.dto.service.request.CafeCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.cafe.dto.service.request.CafeUpdateServiceRequestDto;
-import com.mju.lighthouseai.domain.cafe.dto.service.response.CafeReadAllServiceResponseDto;
-import com.mju.lighthouseai.domain.tour_list.dto.service.TourListCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.tour_list.dto.service.TourListUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.tour_list.dto.service.request.TourListCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.tour_list.dto.service.request.TourListUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.tour_list.dto.service.response.TourListReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.user.entity.User;
 import java.util.List;
 
 public interface TourListService {
     void createTourList(TourListCreateServiceRequestDto requestDto, User user);
-    void updateTourList(Long id, TourListUpdateServiceRequestDto requestDto);
-
-    void deleteTourList(Long id);
-
-    // List<CafeReadAllServiceResponseDto> readAllCafes();
+    void updateTourList(Long id, TourListUpdateServiceRequestDto requestDto,User user);
+    void deleteTourList(Long id,User user);
+     List<TourListReadAllServiceResponseDto> readAllTourLists();
+    TourListReadAllServiceResponseDto readTourList(Long id);
 }

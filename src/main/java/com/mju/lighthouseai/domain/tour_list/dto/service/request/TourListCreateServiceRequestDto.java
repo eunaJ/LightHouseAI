@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.domain.tour_list.dto.service;
+package com.mju.lighthouseai.domain.tour_list.dto.service.request;
 
 import com.mju.lighthouseai.domain.constituency.entity.Constituency;
 import com.mju.lighthouseai.domain.user.entity.User;
