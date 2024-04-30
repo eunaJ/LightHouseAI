@@ -51,4 +51,10 @@ public class OtherServiceController {
         otherService.deleteOtherService(otherServiceId, userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @GetMapping("/")
+    public ResponseEntity<?> readAllOtherServices(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(otherService.readAllOtherServices());
+    }
  }
