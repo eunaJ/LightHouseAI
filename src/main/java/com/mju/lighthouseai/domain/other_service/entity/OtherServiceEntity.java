@@ -37,9 +37,6 @@ public class OtherServiceEntity extends BaseEntity
     @Column
     private int price;
 
-    @Column
-    private String menu;
-
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
@@ -54,14 +51,12 @@ public class OtherServiceEntity extends BaseEntity
         final String title,
         final String location,
         final int price,
-        final String menu,
         final User user,
         final Constituency constituency
     ) {
         this.title = title;
         this.location = location;
         this.price = price;
-        this.menu = menu;
         this.user = user;
         this.constituency = constituency;
     }
