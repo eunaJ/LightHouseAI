@@ -5,13 +5,24 @@ import com.mju.lighthouseai.domain.constituency.exception.ConstituencyErrorCode;
 import com.mju.lighthouseai.domain.constituency.exception.NotFoundConstituencyException;
 import com.mju.lighthouseai.domain.constituency.repository.ConstituencyRepository;
 import com.mju.lighthouseai.domain.shoppingmall.dto.service.ShoppingMallCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.shoppingmall.dto.service.ShoppingMallUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
+import com.mju.lighthouseai.domain.shoppingmall.exception.NotFoundShoppingMallException;
+import com.mju.lighthouseai.domain.shoppingmall.exception.ShoppingMallErrorCode;
 import com.mju.lighthouseai.domain.shoppingmall.mapper.service.ShoppingMallEntityMapper;
 import com.mju.lighthouseai.domain.shoppingmall.repository.ShoppingMallRepository;
 import com.mju.lighthouseai.domain.shoppingmall.service.ShoppingMallService;
+import com.mju.lighthouseai.domain.tour_list.dto.service.request.TourListUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.tour_list.entity.TourList;
+import com.mju.lighthouseai.domain.tour_list.exceoption.NotFoundTourListException;
+import com.mju.lighthouseai.domain.tour_list.exceoption.TourListErrorCode;
 import com.mju.lighthouseai.domain.user.entity.User;
+import com.mju.lighthouseai.domain.user.entity.UserRole;
+import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
+import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -26,6 +37,25 @@ public class ShoppingMallServiceImpl implements ShoppingMallService {
             .orElseThrow(()->new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
         ShoppingMall shoppingMall = shoppingMallEntityMapper.toShoppingMall(requestDto,user,constituency);
         shoppingMallRepository.save(shoppingMall);
+    }
+    @Transactional
+    public void updateShoppingMall(Long id, ShoppingMallUpdateServiceRequestDto requestDto,User user){
+        checkUserRole(user);
+        ShoppingMall shoppingMall = findShoppingMall(id);
+        Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
+        ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
+        shoppingMall.updateShoppingMall(requestDto.title(), requestDto.location(),
+            requestDto.opentime(), requestDto.closetime(),constituency);
+    }
+
+    private ShoppingMall findShoppingMall(Long id){
+        return shoppingMallRepository.findById(id)
+            .orElseThrow(()-> new NotFoundShoppingMallException(ShoppingMallErrorCode.NOT_FOUND_ShoppingMall));
+    }
+    private void checkUserRole(User user) {
+        if (!(user.getRole().equals(UserRole.ADMIN))) {
+            throw new NotFoundUserException(UserErrorCode.NOT_ADMIN);
+        }
     }
 
 }
