@@ -4,12 +4,14 @@ import com.mju.lighthouseai.domain.cafe.dto.service.request.CafeCreateServiceReq
 import com.mju.lighthouseai.domain.cafe.dto.service.request.CafeUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.cafe.dto.service.response.CafeReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.tour_list.dto.service.TourListCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.tour_list.dto.service.TourListUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.user.entity.User;
 import java.util.List;
 
 public interface TourListService {
     void createTourList(TourListCreateServiceRequestDto requestDto, User user);
-/*    void updateCafe(Long id, CafeUpdateServiceRequestDto requestDto);
+    void updateTourList(Long id, TourListUpdateServiceRequestDto requestDto);
+/*
     void deleteCafe(Long id);
     List<CafeReadAllServiceResponseDto> readAllCafes();*/
 }
