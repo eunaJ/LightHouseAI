@@ -4,7 +4,6 @@ public record OtherServiceCreateControllerRequestDto(
     String title,
     String location,
     Integer price,
-    String menu,
     String constituency_name
 
 ) {
