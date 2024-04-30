@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum OtherSerivceErrorCode implements ErrorCode {
+public enum OtherServiceErrorCode implements ErrorCode {
 
     // 400
     ALREADY_EXIST_OtherService(HttpStatus.BAD_REQUEST, "기타 서비스가 존재합니다."),

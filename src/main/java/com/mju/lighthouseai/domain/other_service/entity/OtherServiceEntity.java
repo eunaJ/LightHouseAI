@@ -38,7 +38,10 @@ public class OtherServiceEntity extends BaseEntity
     private int price;
 
     @Column
-    private String menu;
+    private String opentime;
+
+    @Column
+    private String closetime;
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
@@ -51,20 +54,32 @@ public class OtherServiceEntity extends BaseEntity
 
     @Builder
     public OtherServiceEntity(
-        final String title,
-        final String location,
-        final int price,
-        final String menu,
-        final User user,
-        final Constituency constituency
+            final String title,
+            final String location,
+            final int price,
+            final String opentime,
+            final String closetime,
+            final User user,
+            final Constituency constituency
     ) {
         this.title = title;
         this.location = location;
         this.price = price;
-        this.menu = menu;
+        this.opentime = opentime;
+        this.closetime = closetime;
         this.user = user;
         this.constituency = constituency;
     }
 
+    public void updateOtherService(
+            String title, String location, int price,
+            String opentime, String closetime, Constituency constituency){
+        this.title = title;
+        this.location = location;
+        this.price = price;
+        this.opentime = opentime;
+        this.closetime = closetime;
+        this.constituency = constituency;
+    }
 }
 
