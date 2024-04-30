@@ -22,10 +22,10 @@ public class OtherServiceImpl implements OtherService {
     private final ConstituencyRepository constituencyRepository;
 
     public void createOtherService(OtherServiceCreateServiceRequestDto requestDto, User user){
-        Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name())
-            .orElseThrow(()->new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
-        OtherServiceEntity otherService = otherServiceEntityMapper.toOtherService(requestDto,user,constituency);
-        otherServiceRepository.save(otherService);
+        Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
+        ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
+        OtherServiceEntity otherServiceEntity = otherServiceEntityMapper.toOtherService(requestDto, user, constituency);
+        otherServiceRepository.save(otherServiceEntity);
     }
 
 }
