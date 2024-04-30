@@ -11,4 +11,5 @@ public interface TourListService {
     void updateTourList(Long id, TourListUpdateServiceRequestDto requestDto,User user);
     void deleteTourList(Long id,User user);
      List<TourListReadAllServiceResponseDto> readAllTourLists();
+    TourListReadAllServiceResponseDto readTourList(Long id);
 }
