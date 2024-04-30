@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "SHOPPINGMALL")
+@Table(name = "TB_SHOPPINGMALL")
 public class ShoppingMall extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
