@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,6 +45,13 @@ public class TourListController {
         TourListUpdateServiceRequestDto serviceRequestDto =
             tourListDtoMapper.toTourListUpdateServiceDto(controllerRequestDto);
         tourListService.updateTourList(tourListId,serviceRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @DeleteMapping("/tourLists/{tourListId}")
+    public ResponseEntity<?> deleteCafe(
+        @PathVariable Long tourListId
+    ){
+        tourListService.deleteTourList(tourListId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 /*    @GetMapping("/cafes")
