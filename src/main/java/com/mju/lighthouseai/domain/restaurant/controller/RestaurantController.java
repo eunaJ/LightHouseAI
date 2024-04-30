@@ -2,8 +2,8 @@ package com.mju.lighthouseai.domain.restaurant.controller;
 
 import com.mju.lighthouseai.domain.restaurant.dto.controller.RestaurantCreateControllerRequestDto;
 import com.mju.lighthouseai.domain.restaurant.dto.controller.RestaurantUpdateControllerRequestDto;
-import com.mju.lighthouseai.domain.restaurant.dto.service.RestaurantCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.restaurant.dto.service.RestaurantUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.restaurant.dto.service.request.RestaurantCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.restaurant.dto.service.request.RestaurantUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.restaurant.mapper.dto.RestaurantDtoMapper;
 import com.mju.lighthouseai.domain.restaurant.service.RestaurantService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
@@ -14,13 +14,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/restaurants")
 @RestController
 public class RestaurantController {
     private final RestaurantDtoMapper restaurantDtoMapper;
     private final RestaurantService restaurantService;
 
-    @PostMapping("/restaurants/create")
+    @PostMapping("/create")
     public ResponseEntity<?> createRestaurant(
         @RequestBody RestaurantCreateControllerRequestDto controllerRequestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -31,7 +31,7 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/restaurants/{restaurantId}")
+    @PutMapping("/{restaurantId}")
     public ResponseEntity<?> updateRestaurant(
             @PathVariable Long restaurantId,
             @RequestBody RestaurantUpdateControllerRequestDto controllerRequestDto
@@ -39,6 +39,20 @@ public class RestaurantController {
         RestaurantUpdateServiceRequestDto serviceRequestDto =
                 restaurantDtoMapper.toRestaurantUpdateServiceDto(controllerRequestDto);
         restaurantService.updateRestaurant(restaurantId, serviceRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<?> readAllRestaurant(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(restaurantService.readAllRestaurants());
+    }
+
+    @DeleteMapping("/{restaurantId}")
+    public ResponseEntity<?> deleteRestaurant(
+            @PathVariable Long restaurantId
+    ){
+        restaurantService.deleteRestaurant(restaurantId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
  }
