@@ -61,4 +61,17 @@ public class ShoppingMall extends BaseEntity {
         this.user = user;
         this.constituency = constituency;
     }
+    public void updateShoppingMall(
+        String title,
+        String location,
+        String opentime,
+        String closetime,
+        Constituency constituency
+    ){
+        this.title =title;
+        this.location = location;
+        this.opentime = opentime;
+        this.closetime = closetime;
+        this.constituency = constituency;
+    }
 }
