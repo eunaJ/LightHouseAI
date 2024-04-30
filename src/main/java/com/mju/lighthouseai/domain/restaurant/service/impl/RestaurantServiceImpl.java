@@ -60,6 +60,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantEntityMapper.toRestaurantReadAllResponseDto(restaurants);
     }
 
+    public RestaurantReadAllServiceResponseDto readRestaurant(Long id){
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(()->new NotFoundRestaurantException(RestaurantErrorCode.NOT_FOUND_Restaurant));
+        return restaurantEntityMapper.toRestaurantReadResponseDto(restaurant);
+    }
 
     private Restaurant findRestaurant(Long id){
         return restaurantRepository.findById(id)

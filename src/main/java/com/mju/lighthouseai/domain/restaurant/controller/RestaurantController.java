@@ -57,4 +57,12 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(restaurantService.readAllRestaurants());
     }
+
+    @GetMapping("/{restaurantId}")
+    public ResponseEntity<?> readRestaurant(
+            @PathVariable Long restaurantId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(restaurantService.readRestaurant(restaurantId));
+    }
  }
