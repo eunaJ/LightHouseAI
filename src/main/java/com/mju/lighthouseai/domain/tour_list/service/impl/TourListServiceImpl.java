@@ -62,6 +62,11 @@ public class TourListServiceImpl implements TourListService {
         return tourListEntityMapper.toTourListReadAllResponseDto(tourLists);
 
     }
+    public TourListReadAllServiceResponseDto readTourList(Long id){
+        TourList tourList =tourListRepository.findById(id)
+            .orElseThrow(()->new NotFoundTourListException(TourListErrorCode.NOT_FOUND_TOURLIST));
+        return tourListEntityMapper.toTourListReadResponseDto(tourList);
+    }
 
     private TourList findTourList(Long id){
         return tourListRepository.findById(id)
