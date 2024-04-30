@@ -5,6 +5,7 @@ import com.mju.lighthouseai.domain.constituency.exception.ConstituencyErrorCode;
 import com.mju.lighthouseai.domain.constituency.exception.NotFoundConstituencyException;
 import com.mju.lighthouseai.domain.constituency.repository.ConstituencyRepository;
 import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.other_service.entity.OtherServiceEntity;
 import com.mju.lighthouseai.domain.other_service.exception.NotFoundOtherServiceException;
@@ -19,6 +20,8 @@ import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -50,6 +53,11 @@ public class OtherServiceImpl implements OtherService {
         OtherServiceEntity otherServiceEntity = otherServiceRepository.findById(id)
                 .orElseThrow(() -> new NotFoundOtherServiceException(OtherSerivceErrorCode.NOT_FOUND_OtherService));
         otherServiceRepository.delete(otherServiceEntity);
+    }
+
+    public List<OtherServiceReadAllServiceResponseDto> readAllOtherServices(){
+        List<OtherServiceEntity> otherServices = otherServiceRepository.findAll();
+        return otherServiceEntityMapper.toOtherServiceReadAllResponseDto(otherServices);
     }
 
     private OtherServiceEntity findOtherService(Long id){
