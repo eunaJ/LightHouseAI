@@ -4,10 +4,6 @@ import com.mju.lighthouseai.domain.other_service.dto.controller.OtherServiceCrea
 import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.other_service.mapper.dto.OtherServiceDtoMapper;
 import com.mju.lighthouseai.domain.other_service.service.OtherService;
-import com.mju.lighthouseai.domain.restaurant.dto.controller.RestaurantCreateControllerRequestDto;
-import com.mju.lighthouseai.domain.restaurant.dto.service.RestaurantCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.restaurant.mapper.dto.RestaurantDtoMapper;
-import com.mju.lighthouseai.domain.restaurant.service.RestaurantService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
