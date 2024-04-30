@@ -13,7 +13,10 @@ import com.mju.lighthouseai.domain.constituency.exception.ConstituencyErrorCode;
 import com.mju.lighthouseai.domain.constituency.exception.NotFoundConstituencyException;
 import com.mju.lighthouseai.domain.constituency.repository.ConstituencyRepository;
 import com.mju.lighthouseai.domain.tour_list.dto.service.TourListCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.tour_list.dto.service.TourListUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.tour_list.entity.TourList;
+import com.mju.lighthouseai.domain.tour_list.exceoption.NotFoundTourListException;
+import com.mju.lighthouseai.domain.tour_list.exceoption.TourListErrorCode;
 import com.mju.lighthouseai.domain.tour_list.mapper.service.TourListEntityMapper;
 import com.mju.lighthouseai.domain.tour_list.repository.TourListRepository;
 import com.mju.lighthouseai.domain.tour_list.service.TourListService;
@@ -38,17 +41,21 @@ public class TourListServiceImpl implements TourListService {
         TourList tourList = tourListEntityMapper.toTourList(requestDto,user,constituency);
         tourListRepository.save(tourList);
     }
-/*
+
     @Transactional
-    public void updateCafe(Long id,CafeUpdateServiceRequestDto requestDto){
-        Cafe cafe = findCafe(id);
-        cafe.updateCafe(requestDto.title(), requestDto.location(), requestDto.price(),
-            requestDto.menu(), requestDto.opentime(), requestDto.closetime());
+    public void updateTourList(Long id, TourListUpdateServiceRequestDto requestDto){
+        TourList tourList = findTourList(id);
+        Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
+        ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
+        tourList.updateTourList(requestDto.title(), requestDto.location(), requestDto.price(),
+             requestDto.opentime(), requestDto.closetime(),constituency);
     }
-    private Cafe findCafe(Long id){
-        return cafeRepository.findById(id)
-            .orElseThrow(()-> new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
+
+    private TourList findTourList(Long id){
+        return tourListRepository.findById(id)
+            .orElseThrow(()-> new NotFoundTourListException(TourListErrorCode.NOT_FOUND_TOURLIST));
     }
+      /*
     public void deleteCafe(Long id) {
         Cafe food = cafeRepository.findById(id)
             .orElseThrow(() -> new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
