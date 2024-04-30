@@ -34,25 +34,35 @@ public class RestaurantController {
     @PutMapping("/{restaurantId}")
     public ResponseEntity<?> updateRestaurant(
             @PathVariable Long restaurantId,
-            @RequestBody RestaurantUpdateControllerRequestDto controllerRequestDto
+            @RequestBody RestaurantUpdateControllerRequestDto controllerRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
         RestaurantUpdateServiceRequestDto serviceRequestDto =
                 restaurantDtoMapper.toRestaurantUpdateServiceDto(controllerRequestDto);
-        restaurantService.updateRestaurant(restaurantId, serviceRequestDto);
+        restaurantService.updateRestaurant(restaurantId, serviceRequestDto, userDetails.user());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/{restaurantId}")
+    public ResponseEntity<?> deleteRestaurnat(
+            @PathVariable Long restaurantId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        restaurantService.deleteRestaurant(restaurantId, userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/")
-    public ResponseEntity<?> readAllRestaurant(){
+    public ResponseEntity<?> readAllRestaurants(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(restaurantService.readAllRestaurants());
     }
 
-    @DeleteMapping("/{restaurantId}")
-    public ResponseEntity<?> deleteRestaurant(
+    @GetMapping("/{restaurantId}")
+    public ResponseEntity<?> readRestaurant(
             @PathVariable Long restaurantId
     ){
-        restaurantService.deleteRestaurant(restaurantId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(restaurantService.readRestaurant(restaurantId));
     }
  }
