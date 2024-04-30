@@ -19,12 +19,12 @@ public class OtherServiceController {
     private final OtherService otherService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createOtherservice(
-        @RequestBody OtherServiceCreateControllerRequestDto controllerRequestDto,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
+    public ResponseEntity<?> createOtherService(
+            @RequestBody OtherServiceCreateControllerRequestDto controllerRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
         OtherServiceCreateServiceRequestDto serviceRequestDto =
-            otherServiceDtoMapper.toOtherServiceCreateServiceDto(controllerRequestDto);
+                otherServiceDtoMapper.toOtherServiceCreateServiceDto(controllerRequestDto);
         otherService.createOtherService(serviceRequestDto,userDetails.user());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
