@@ -4,8 +4,9 @@ import com.mju.lighthouseai.domain.constituency.entity.Constituency;
 import com.mju.lighthouseai.domain.constituency.exception.ConstituencyErrorCode;
 import com.mju.lighthouseai.domain.constituency.exception.NotFoundConstituencyException;
 import com.mju.lighthouseai.domain.constituency.repository.ConstituencyRepository;
-import com.mju.lighthouseai.domain.restaurant.dto.service.RestaurantCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.restaurant.dto.service.RestaurantUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.restaurant.dto.service.request.RestaurantCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.restaurant.dto.service.request.RestaurantUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.restaurant.dto.service.response.RestaurantReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
 import com.mju.lighthouseai.domain.restaurant.exceoption.NotFoundRestaurantException;
 import com.mju.lighthouseai.domain.restaurant.exceoption.RestaurantErrorCode;
@@ -16,6 +17,8 @@ import com.mju.lighthouseai.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -44,5 +47,16 @@ public class RestaurantServiceImpl implements RestaurantService {
     private Restaurant findRestaurant(Long id){
         return restaurantRepository.findById(id)
                 .orElseThrow(()-> new NotFoundRestaurantException(RestaurantErrorCode.NOT_FOUND_Restaurant));
+    }
+
+    public List<RestaurantReadAllServiceResponseDto> readAllRestaurants(){
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        return restaurantEntityMapper.toRestaurantReadAllResponseDto(restaurants);
+    }
+
+    public void deleteRestaurant(Long id) {
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new NotFoundRestaurantException(RestaurantErrorCode.NOT_FOUND_Restaurant));
+        restaurantRepository.delete(restaurant);
     }
 }
