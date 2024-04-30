@@ -55,12 +55,13 @@ public class TourListServiceImpl implements TourListService {
         return tourListRepository.findById(id)
             .orElseThrow(()-> new NotFoundTourListException(TourListErrorCode.NOT_FOUND_TOURLIST));
     }
-      /*
-    public void deleteCafe(Long id) {
-        Cafe food = cafeRepository.findById(id)
-            .orElseThrow(() -> new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
-        cafeRepository.delete(food);
+
+    public void deleteTourList(Long id) {
+        TourList tourList = tourListRepository.findById(id)
+            .orElseThrow(() -> new NotFoundTourListException(TourListErrorCode.NOT_FOUND_TOURLIST));
+        tourListRepository.delete(tourList);
     }
+    /*
     public List<CafeReadAllServiceResponseDto> readAllCafes(){
         List<Cafe> cafes = cafeRepository.findAll();
         return cafeEntityMapper.toCafeReadAllResponseDto(cafes);
