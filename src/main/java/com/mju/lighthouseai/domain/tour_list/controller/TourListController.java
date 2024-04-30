@@ -3,8 +3,8 @@ package com.mju.lighthouseai.domain.tour_list.controller;
 
 import com.mju.lighthouseai.domain.tour_list.dto.controller.TourListCreateControllerRequestDto;
 import com.mju.lighthouseai.domain.tour_list.dto.controller.TourListUpdateControllerRequestDto;
-import com.mju.lighthouseai.domain.tour_list.dto.service.TourListCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.tour_list.dto.service.TourListUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.tour_list.dto.service.request.TourListCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.tour_list.dto.service.request.TourListUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.tour_list.mapper.dto.TourListDtoMapper;
 import com.mju.lighthouseai.domain.tour_list.service.TourListService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,7 +28,7 @@ public class TourListController {
     private final TourListDtoMapper tourListDtoMapper;
     private final TourListService tourListService;
 
-    @PostMapping("/tourList/create")
+    @PostMapping("/tourLists/create")
     public ResponseEntity<?> createTourList(
         @RequestBody TourListCreateControllerRequestDto controllerRequestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -40,30 +41,33 @@ public class TourListController {
     @PutMapping("/tourLists/{tourListId}")
     public ResponseEntity<?> updateTourList(
         @PathVariable Long tourListId,
-        @RequestBody TourListUpdateControllerRequestDto controllerRequestDto
+        @RequestBody TourListUpdateControllerRequestDto controllerRequestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
         TourListUpdateServiceRequestDto serviceRequestDto =
             tourListDtoMapper.toTourListUpdateServiceDto(controllerRequestDto);
-        tourListService.updateTourList(tourListId,serviceRequestDto);
+        tourListService.updateTourList(tourListId,serviceRequestDto,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @DeleteMapping("/tourLists/{tourListId}")
     public ResponseEntity<?> deleteCafe(
+        @PathVariable Long tourListId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        tourListService.deleteTourList(tourListId,userDetails.user());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+  @GetMapping("/tourLists")
+    public ResponseEntity<?> readAllTourLists(){
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(tourListService.readAllTourLists());
+    }
+    @GetMapping("/tourLists/{tourListId}")
+    public ResponseEntity<?> readTourList(
         @PathVariable Long tourListId
     ){
-        tourListService.deleteTourList(tourListId);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-/*    @GetMapping("/cafes")
-    public ResponseEntity<?> readAllCafes(){
         return ResponseEntity.status(HttpStatus.OK)
-            .body(cafeService.readAllCafes());
+            .body(tourListService.readTourList(tourListId));
     }
-    @DeleteMapping("/cafes/{cafeId}")
-    public ResponseEntity<?> deleteCafe(
-        @PathVariable Long cafeId
-    ){
-        cafeService.deleteCafe(cafeId);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }*/
+
  }

@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.domain.tour_list.dto.service;
+package com.mju.lighthouseai.domain.tour_list.dto.service.request;
 
 public record TourListUpdateServiceRequestDto(
     String title,
