@@ -11,7 +11,8 @@ import java.util.List;
 public interface TourListService {
     void createTourList(TourListCreateServiceRequestDto requestDto, User user);
     void updateTourList(Long id, TourListUpdateServiceRequestDto requestDto);
-/*
-    void deleteCafe(Long id);
-    List<CafeReadAllServiceResponseDto> readAllCafes();*/
+
+    void deleteTourList(Long id);
+
+    // List<CafeReadAllServiceResponseDto> readAllCafes();
 }
