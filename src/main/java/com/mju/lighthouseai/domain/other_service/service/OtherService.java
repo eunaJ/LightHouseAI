@@ -8,4 +8,6 @@ public interface OtherService {
     void createOtherService(OtherServiceCreateServiceRequestDto requestDto, User user);
 
     void updateOtherService(Long id, OtherServiceUpdateServiceRequestDto requestDto, User user);
+
+    void deleteOtherService(Long id, User user);
 }

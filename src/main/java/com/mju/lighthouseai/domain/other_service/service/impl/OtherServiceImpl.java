@@ -45,6 +45,13 @@ public class OtherServiceImpl implements OtherService {
                 requestDto.opentime(), requestDto.closetime(),constituency);
     }
 
+    public void deleteOtherService(Long id,User user) {
+        checkUserRole(user);
+        OtherServiceEntity otherServiceEntity = otherServiceRepository.findById(id)
+                .orElseThrow(() -> new NotFoundOtherServiceException(OtherSerivceErrorCode.NOT_FOUND_OtherService));
+        otherServiceRepository.delete(otherServiceEntity);
+    }
+
     private OtherServiceEntity findOtherService(Long id){
         return otherServiceRepository.findById(id)
                 .orElseThrow(()-> new NotFoundOtherServiceException(OtherSerivceErrorCode.NOT_FOUND_OtherService));
