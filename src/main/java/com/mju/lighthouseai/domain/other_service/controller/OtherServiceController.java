@@ -42,4 +42,13 @@ public class OtherServiceController {
         otherService.updateOtherService(otherServiceId, serviceRequestDto, userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @DeleteMapping("/{otherServiceId}")
+    public ResponseEntity<?> deleteOtherService(
+            @PathVariable Long otherServiceId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        otherService.deleteOtherService(otherServiceId, userDetails.user());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
  }
