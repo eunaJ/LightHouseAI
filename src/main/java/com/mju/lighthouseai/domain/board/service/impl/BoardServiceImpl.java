@@ -8,7 +8,6 @@ import com.mju.lighthouseai.domain.board.exceoption.NotFoundBoardException;
 import com.mju.lighthouseai.domain.board.mapper.service.BoardEntityMapper;
 import com.mju.lighthouseai.domain.board.repository.BoardRepository;
 import com.mju.lighthouseai.domain.board.service.BoardService;
-import com.mju.lighthouseai.domain.cafe.exceoption.NotFoundCafeException;
 import com.mju.lighthouseai.domain.board.dto.service.respone.BoardReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
