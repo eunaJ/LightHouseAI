@@ -1,5 +1,9 @@
-package com.mju.lighthouseai.domain.restaurant.controller;
+package com.mju.lighthouseai.domain.other_service.controller;
 
+import com.mju.lighthouseai.domain.other_service.dto.controller.OtherServiceCreateControllerRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.mapper.dto.OtherServiceDtoMapper;
+import com.mju.lighthouseai.domain.other_service.service.OtherService;
 import com.mju.lighthouseai.domain.restaurant.dto.controller.RestaurantCreateControllerRequestDto;
 import com.mju.lighthouseai.domain.restaurant.dto.service.RestaurantCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.restaurant.mapper.dto.RestaurantDtoMapper;
@@ -17,18 +21,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
-public class RestaurantController {
-    private final RestaurantDtoMapper restaurantDtoMapper;
-    private final RestaurantService restaurantService;
+public class OtherServiceController {
+    private final OtherServiceDtoMapper otherServiceDtoMapper;
+    private final OtherService otherService;
 
-    @PostMapping("/restaurants/create")
+    @PostMapping("/other_services/create")
     public ResponseEntity<?> createRestaurant(
-        @RequestBody RestaurantCreateControllerRequestDto controllerRequestDto,
+        @RequestBody OtherServiceCreateControllerRequestDto controllerRequestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
-        RestaurantCreateServiceRequestDto serviceRequestDto =
-                restaurantDtoMapper.toRestaurantCreateServiceDto(controllerRequestDto);
-        restaurantService.createRestaurant(serviceRequestDto,userDetails.user());
+        OtherServiceCreateServiceRequestDto serviceRequestDto =
+            otherServiceDtoMapper.toOtherServiceCreateServiceDto(controllerRequestDto);
+        otherService.createOtherService(serviceRequestDto,userDetails.user());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
  }
