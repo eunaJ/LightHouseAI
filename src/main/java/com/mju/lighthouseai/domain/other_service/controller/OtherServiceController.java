@@ -57,4 +57,12 @@ public class OtherServiceController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(otherService.readAllOtherServices());
     }
+
+    @GetMapping("/{otherServiceId}")
+    public ResponseEntity<?> readOtherService(
+            @PathVariable Long otherServiceId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(otherService.readOtherService(otherServiceId));
+    }
  }
