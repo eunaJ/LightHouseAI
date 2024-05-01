@@ -63,5 +63,4 @@ public class ShoppingMallServiceImpl implements ShoppingMallService {
             throw new NotFoundUserException(UserErrorCode.NOT_ADMIN);
         }
     }
-
 }
