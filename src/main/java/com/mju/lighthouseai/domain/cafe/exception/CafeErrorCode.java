@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.domain.cafe.exceoption;
+package com.mju.lighthouseai.domain.cafe.exception;
 
 import com.mju.lighthouseai.global.exception.ErrorCode;
 import lombok.Getter;

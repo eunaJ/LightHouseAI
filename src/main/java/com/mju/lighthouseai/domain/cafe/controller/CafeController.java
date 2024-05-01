@@ -40,23 +40,32 @@ public class CafeController {
     @PutMapping("/cafes/{cafeId}")
     public ResponseEntity<?> updateCafe(
         @PathVariable Long cafeId,
-        @RequestBody CafeUpdateControllerRequestDto controllerRequestDto
+        @RequestBody CafeUpdateControllerRequestDto controllerRequestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
         CafeUpdateServiceRequestDto serviceRequestDto =
             cafeDtoMapper.toCafeUpdateServiceDto(controllerRequestDto);
-        cafeService.updateCafe(cafeId,serviceRequestDto);
+        cafeService.updateCafe(cafeId,serviceRequestDto,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @DeleteMapping("/cafes/{cafeId}")
     public ResponseEntity<?> deleteCafe(
-        @PathVariable Long cafeId
+        @PathVariable Long cafeId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
-        cafeService.deleteCafe(cafeId);
+        cafeService.deleteCafe(cafeId,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @GetMapping("/cafes")
     public ResponseEntity<?> readAllCafes(){
         return ResponseEntity.status(HttpStatus.OK)
             .body(cafeService.readAllCafes());
+    }
+    @GetMapping("/cafes/{cafeId}")
+    public ResponseEntity<?> readCafe(
+        @PathVariable Long cafeId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(cafeService.readCafe(cafeId));
     }
  }
