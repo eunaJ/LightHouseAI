@@ -15,7 +15,6 @@ import com.mju.lighthouseai.global.jwt.exception.ExpiredJwtAccessTokenException;
 import com.mju.lighthouseai.global.jwt.exception.ExpiredJwtRefreshTokenException;
 import com.mju.lighthouseai.global.jwt.exception.FailedJwtTokenException;
 import com.mju.lighthouseai.global.jwt.exception.JwtErrorCode;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
