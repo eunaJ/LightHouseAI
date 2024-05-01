@@ -72,7 +72,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user, UpdateUserServiceRequestDto serviceRequestDto) {
-        log.info(serviceRequestDto.newPassword());
         // 비밀번호
         if(!Objects.equals(serviceRequestDto.newPassword(), "")){
             if (passwordEncoder.matches(serviceRequestDto.newPassword(), user.getPassword())) {
