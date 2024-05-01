@@ -36,5 +36,10 @@ public class Region extends BaseEntity
         this.region_name = region_name;
     }
 
+    public void updateRegion(
+            final String region_name
+    ){
+        this.region_name = region_name;
+    }
 }
 

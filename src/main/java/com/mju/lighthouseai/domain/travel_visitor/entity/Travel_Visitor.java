@@ -1,7 +1,7 @@
 package com.mju.lighthouseai.domain.travel_visitor.entity;
 
 import com.mju.lighthouseai.domain.cafe.entity.Cafe;
-import com.mju.lighthouseai.domain.other_service.entity.OtherService;
+import com.mju.lighthouseai.domain.other_service.entity.OtherServiceEntity;
 import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
 import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
 import com.mju.lighthouseai.domain.tour_list.entity.TourList;
@@ -56,7 +56,7 @@ public class Travel_Visitor extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "otherservice_id", nullable = false)
-    private OtherService otherService;
+    private OtherServiceEntity otherServiceEntity;
 
     @Builder
     public Travel_Visitor(
@@ -65,13 +65,13 @@ public class Travel_Visitor extends BaseEntity {
         final Restaurant restaurant,
         final ShoppingMall shoppingMall,
         final TourList tourList,
-        final OtherService otherService
+        final OtherServiceEntity otherServiceEntity
     ) {
         this.travel = travel;
         this.cafe =cafe;
         this.restaurant =restaurant;
         this.shoppingMall =shoppingMall;
         this.tourList = tourList;
-        this.otherService = otherService;
+        this.otherServiceEntity = otherServiceEntity;
     }
 }

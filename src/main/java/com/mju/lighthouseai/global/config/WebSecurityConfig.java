@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,13 +34,18 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(configurationSource()))
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authorizeHttpRequests(authorizeRequests ->
-                                authorizeRequests
-                                        .requestMatchers("/api/**").permitAll()
-                                        // 추후 추가 예정
-                                        // 추후 ADMIN 관리 예정
-                         //.anyRequest().authenticated() // 추후 주석 해제 예정
+                );
+
+        http
+                .authorizeHttpRequests((authorizeHttpRequests) ->
+                        authorizeHttpRequests
+                                .requestMatchers("/api/v1/users/signup").permitAll()
+                                .requestMatchers("/api/v1/users/login").permitAll()
+                                .requestMatchers("/api/v1/users/kakao/**").permitAll()
+                                .requestMatchers("/api/v1/users/naver/**").permitAll()
+                                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/**").permitAll() // 개발 진행 위해서
+//                                .anyRequest().authenticated()
                 );
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -62,7 +66,7 @@ public class WebSecurityConfig {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
-            config.addAllowedOrigin("*");
+            config.addAllowedOriginPattern("*");
             config.setMaxAge(3600L);
             config.setAllowCredentials(true);
             config.setExposedHeaders(List.of("*"));
