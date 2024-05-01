@@ -4,22 +4,20 @@ import com.mju.lighthouseai.domain.constituency.entity.Constituency;
 import com.mju.lighthouseai.domain.constituency.exception.ConstituencyErrorCode;
 import com.mju.lighthouseai.domain.constituency.exception.NotFoundConstituencyException;
 import com.mju.lighthouseai.domain.constituency.repository.ConstituencyRepository;
-import com.mju.lighthouseai.domain.shoppingmall.dto.service.ShoppingMallCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.shoppingmall.dto.service.ShoppingMallUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.shoppingmall.dto.service.request.ShoppingMallCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.shoppingmall.dto.service.request.ShoppingMallUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.shoppingmall.dto.service.response.ShoppingMallReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
 import com.mju.lighthouseai.domain.shoppingmall.exception.NotFoundShoppingMallException;
 import com.mju.lighthouseai.domain.shoppingmall.exception.ShoppingMallErrorCode;
 import com.mju.lighthouseai.domain.shoppingmall.mapper.service.ShoppingMallEntityMapper;
 import com.mju.lighthouseai.domain.shoppingmall.repository.ShoppingMallRepository;
 import com.mju.lighthouseai.domain.shoppingmall.service.ShoppingMallService;
-import com.mju.lighthouseai.domain.tour_list.dto.service.request.TourListUpdateServiceRequestDto;
-import com.mju.lighthouseai.domain.tour_list.entity.TourList;
-import com.mju.lighthouseai.domain.tour_list.exceoption.NotFoundTourListException;
-import com.mju.lighthouseai.domain.tour_list.exceoption.TourListErrorCode;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.domain.user.entity.UserRole;
 import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
 import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +44,14 @@ public class ShoppingMallServiceImpl implements ShoppingMallService {
         ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
         shoppingMall.updateShoppingMall(requestDto.title(), requestDto.location(),
             requestDto.opentime(), requestDto.closetime(),constituency);
+    }
+    public ShoppingMallReadAllServiceResponseDto readShoppingMall(Long id){
+        ShoppingMall shoppingMall = findShoppingMall(id);
+        return shoppingMallEntityMapper.toShoppingMallReadResponseDto(shoppingMall);
+    }
+    public List<ShoppingMallReadAllServiceResponseDto> readAllShoppingMall(){
+        List<ShoppingMall> shoppingMall= shoppingMallRepository.findAll();
+        return shoppingMallEntityMapper.toShoppingMallReadAllResponseDto(shoppingMall);
     }
 
     private ShoppingMall findShoppingMall(Long id){
