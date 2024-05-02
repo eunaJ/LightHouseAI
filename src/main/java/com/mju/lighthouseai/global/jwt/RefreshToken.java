@@ -3,13 +3,18 @@ package com.mju.lighthouseai.global.jwt;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.RedisKeyValueAdapter;
+import org.springframework.data.redis.core.index.Indexed;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 @Getter
+@EnableRedisRepositories(enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP)
 @RedisHash(value = "RefreshToken")
 public class RefreshToken {
     @Id
     private final Long id;
 
+    @Indexed
     private final String refreshToken;
 
     //@Value("${spring.jwt.refresh.expiration-period}") 참고용
