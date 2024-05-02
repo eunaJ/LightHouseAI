@@ -43,19 +43,23 @@ public class BoardController {
     @PutMapping("/boards/{boardId}")
     public ResponseEntity<?> updateBoard(
             @PathVariable Long boardId,
-            @RequestBody BoardUpdateControllerRequestDto controllerRequestDto
+            @RequestBody BoardUpdateControllerRequestDto controllerRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
         BoardUpdateServiceRequestDto serviceRequestDto =
                 boardDtoMapper.toBoardUpdateServiceDto(controllerRequestDto);
-        boardService.updateBoard(boardId,serviceRequestDto);
+        boardService.updateBoard(boardId,serviceRequestDto, userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/boards/{bordId}")
     public ResponseEntity<?> deleteBoard(
-            @PathVariable Long boardId
+
+            @PathVariable Long boardId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+
     ){
-        boardService.deleteBoard(boardId);
+        boardService.deleteBoard(boardId,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @GetMapping("/boards")
@@ -63,6 +67,16 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boardService.readAllBoards());
     }
+
+    @GetMapping("/cafes/{boardId}")
+    public ResponseEntity<?> readBoard(
+            @PathVariable Long boardId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(boardService.readBoard(boardId));
+    }
 }
+
+
 
 

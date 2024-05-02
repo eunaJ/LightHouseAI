@@ -19,9 +19,10 @@ public interface BoardEntityMapper {
     default String toUserName(User user){
         return user.getNickname();
     }
-    @Mapping(source = "user",target = "user_name")
-    BoardReadAllServiceResponseDto toBoardReadResponseDto(Board board);
+    @Mapping(source = "user",target = "user_nickname")
 
+
+    BoardReadAllServiceResponseDto toBoardReadResponseDto(Board board);
     List<BoardReadAllServiceResponseDto> toBoardReadAllResponseDto(List<Board> boards);
 
 }

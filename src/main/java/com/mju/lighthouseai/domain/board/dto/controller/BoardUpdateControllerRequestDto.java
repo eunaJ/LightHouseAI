@@ -5,9 +5,7 @@ import com.mju.lighthouseai.domain.user.entity.User;
 public  record BoardUpdateControllerRequestDto (
     String title,
     String content,
-    String image_url,
-    User user,
-    String author
+    String image_url
 ) {
 
 }

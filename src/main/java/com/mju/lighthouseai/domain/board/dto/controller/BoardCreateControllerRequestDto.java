@@ -1,4 +1,11 @@
 package com.mju.lighthouseai.domain.board.dto.controller;
 
-public class BoardCreateControllerRequestDto {
+public record BoardCreateControllerRequestDto (
+        String title,
+
+        String content,
+
+        String image_url
+
+){
 }

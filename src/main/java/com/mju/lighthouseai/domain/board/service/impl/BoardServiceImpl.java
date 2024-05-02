@@ -9,6 +9,13 @@ import com.mju.lighthouseai.domain.board.mapper.service.BoardEntityMapper;
 import com.mju.lighthouseai.domain.board.repository.BoardRepository;
 import com.mju.lighthouseai.domain.board.service.BoardService;
 import com.mju.lighthouseai.domain.board.dto.service.respone.BoardReadAllServiceResponseDto;
+import com.mju.lighthouseai.domain.cafe.dto.service.response.CafeReadAllServiceResponseDto;
+import com.mju.lighthouseai.domain.cafe.entity.Cafe;
+import com.mju.lighthouseai.domain.cafe.exception.CafeErrorCode;
+import com.mju.lighthouseai.domain.cafe.exception.NotFoundCafeException;
+import com.mju.lighthouseai.domain.user.entity.UserRole;
+import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
+import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,10 +40,10 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Transactional
-    public void updateBoard(Long id, BoardUpdateServiceRequestDto requestDto) {
+    public void updateBoard(Long id, BoardUpdateServiceRequestDto requestDto,User user) {
+        checkUserRole(user);
         Board board = findBoard(id);
-        board.updateBoard(requestDto.title(), requestDto.content(), requestDto.image_url(),
-                requestDto.author(),requestDto.user());
+        board.updateBoard(requestDto.title(), requestDto.content(), requestDto.image_url());
     }
 
     private Board findBoard(Long id) {
@@ -44,7 +51,8 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new NotFoundBoardException(BoardErrorCode.NOT_FOUND_Board));
     }
 
-    public void deleteBoard(Long id) {
+    public void deleteBoard(Long id, User user) {
+        checkUserRole(user);
         Board delete_board = boardRepository.findById(id)
                 .orElseThrow(() -> new NotFoundBoardException(BoardErrorCode.NOT_FOUND_Board));
         boardRepository.delete(delete_board);
@@ -53,6 +61,19 @@ public class BoardServiceImpl implements BoardService {
         List<Board> boards = boardRepository.findAll();
         return boardEntityMapper.toBoardReadAllResponseDto(boards);
     }
+
+    public BoardReadAllServiceResponseDto readBoard(Long id){
+        Board board = boardRepository.findById(id).
+                orElseThrow(()->new NotFoundCafeException(BoardErrorCode.NOT_FOUND_Board));
+        return boardEntityMapper.toBoardReadResponseDto(board);
+    }
+    private void checkUserRole(User user) {
+        if (!(user.getRole().equals(UserRole.ADMIN))) {
+            throw new NotFoundUserException(UserErrorCode.NOT_ADMIN);
+        }
+    }
+
+
 }
 
 

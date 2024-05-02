@@ -7,10 +7,8 @@ public  record BoardCreateServiceRequestDto (
 
     String content,
 
-    String image_url,
+    String image_url
 
-    String author,
-    User user
     )
 {
 }

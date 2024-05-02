@@ -36,10 +36,13 @@ public class Board extends BaseEntity {
     @Column(length = 500, nullable = false)
     private String title;
 
+
     @Column (columnDefinition = "TEXT", nullable = false)
-    private String image_url;
     private String content;
-    private String author;
+
+    @Column
+    private String image_url;
+
 
 
     @ManyToOne
@@ -53,24 +56,19 @@ public class Board extends BaseEntity {
         final User user,
         final String title,
         final String image_url,
-        final String content,
-        final String author
+        final String content
     )
     {
-        this.user = user;
         this.title  = title;
         this.image_url = image_url;
         this.content = content;
-        this.author = author;
+        this.user = user;
     }
     public void updateBoard(
             String title, String content,
-            String image_url, String author, User user) {
+            String image_url) {
         this.title = title;
         this.content = content;
         this.image_url = image_url;
-        this.author = author;
-        this.user= user;
-
     }
 }

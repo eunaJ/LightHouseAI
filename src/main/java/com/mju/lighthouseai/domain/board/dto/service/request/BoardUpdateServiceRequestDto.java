@@ -7,10 +7,7 @@ public record BoardUpdateServiceRequestDto(
 
         String content,
 
-        String image_url,
-
-        String author,
-        User user
+        String image_url
 
 ){
 
