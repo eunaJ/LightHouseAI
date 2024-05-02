@@ -165,6 +165,7 @@ public class NaverService {
                     .nickname(naverUserInfoDto.nickname())
                     .birth(naverUserInfoDto.birth())
                     .role(UserRole.USER)
+                    .profile_img_url(naverUserInfoDto.profile_img_url())
                     .build();
             userRepository.save(naverUser);
         }

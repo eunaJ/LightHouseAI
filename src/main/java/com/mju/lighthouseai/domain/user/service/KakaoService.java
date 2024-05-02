@@ -103,6 +103,7 @@ public class KakaoService {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
 
+        log.info(jsonNode.get("kakao_account").get("profile").get("profile_image_url").asText());
         String email = jsonNode.get("kakao_account").get("email").asText();
         String nickname = jsonNode.get("kakao_account")
                 .get("profile").get("nickname").asText();
@@ -124,6 +125,7 @@ public class KakaoService {
                     .nickname(kakaoUserInfoDto.nickname())
                     .birth(kakaoUserInfoDto.birth())
                     .role(UserRole.USER)
+                    .profile_img_url(kakaoUserInfoDto.profile_img_url())
                     .build();
             userRepository.save(kakaoUser);
         }
