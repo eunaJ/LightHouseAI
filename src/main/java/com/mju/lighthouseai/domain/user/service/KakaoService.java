@@ -57,7 +57,6 @@ public class KakaoService {
     }
 
     private String getToken(String code) throws JsonProcessingException {
-        log.info("인가코드: "+code);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
@@ -103,7 +102,6 @@ public class KakaoService {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
 
-        log.info(jsonNode.get("kakao_account").get("profile").get("profile_image_url").asText());
         String email = jsonNode.get("kakao_account").get("email").asText();
         String nickname = jsonNode.get("kakao_account")
                 .get("profile").get("nickname").asText();
