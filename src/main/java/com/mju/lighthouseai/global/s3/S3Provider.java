@@ -19,7 +19,7 @@ public class S3Provider {
 
     private final AmazonS3 amazonS3;
     public static final String SEPARATOR = "/";
-    @Value("${cloud.aws.s3.bucket.name}")
+    @Value("${cloud.aws.s3.bucket}")
     public String bucket;
     public final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
 
