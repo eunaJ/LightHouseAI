@@ -2,6 +2,8 @@ package com.mju.lighthouseai.global.jwt;
 
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.domain.user.entity.UserRole;
+import com.mju.lighthouseai.global.jwt.exception.ExpiredJwtAccessTokenException;
+import com.mju.lighthouseai.global.jwt.exception.JwtErrorCode;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
@@ -135,10 +137,14 @@ public class JwtUtil {
         return cookie;
     }
 
-    public Boolean isExpired(String token) {
+    public Boolean isExpiredAccessToken(String token) {
         if(token.contains("Bearer ")){
             token = token.substring(7);
         }
-        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        try{
+            return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        } catch (ExpiredJwtException e){
+            throw new ExpiredJwtAccessTokenException(JwtErrorCode.EXPIRED_JWT_ACCESS_TOKEN);
+        }
     }
 }
