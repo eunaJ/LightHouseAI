@@ -21,7 +21,7 @@ public class S3Provider {
     public static final String SEPARATOR = "/";
     @Value("${cloud.aws.s3.bucket.name}")
     public String bucket;
-    public final String url = "https://onceclick.s3.ap-northeast-2.amazonaws.com/";
+    public final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
 
 
     private static ObjectMetadata setObjectMetadata(MultipartFile multipartFile) {
