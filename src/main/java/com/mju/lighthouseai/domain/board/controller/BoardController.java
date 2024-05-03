@@ -8,6 +8,7 @@ import com.mju.lighthouseai.domain.board.mapper.dto.BoardDtoMapper;
 import com.mju.lighthouseai.domain.board.service.BoardService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
 
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -32,12 +35,13 @@ public class BoardController {
 
     @PostMapping("/boards/create")
     public ResponseEntity<?> createBoard(
-            @RequestBody BoardCreateControllerRequestDto controllerRequestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+            @RequestPart BoardCreateControllerRequestDto controllerRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestPart MultipartFile multipartFile
+    )throws IOException {
         BoardCreateServiceRequestDto serviceRequestDto =
                 boardDtoMapper.toBoardCreateServiceDto(controllerRequestDto);
-        boardService.createBoard(serviceRequestDto,userDetails.user());
+        boardService.createBoard(serviceRequestDto,userDetails.user(),multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @PutMapping("/boards/{boardId}")

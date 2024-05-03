@@ -41,22 +41,29 @@ public class S3Provider {
     }
 
     public String originalFileName(MultipartFile multipartFile) {
+        System.out.println(multipartFile.getOriginalFilename());
+        System.out.println(multipartFile.getContentType());
         if (multipartFile.isEmpty()) {
             return "";
+        }else{
+            return multipartFile.getOriginalFilename()+UUID.randomUUID();
         }
 
-        if (Objects.equals(multipartFile.getContentType(), "image/png")
-            || Objects.equals(multipartFile.getContentType(), "image/jpeg")) {
-            String fileType = switch (multipartFile.getContentType()) {
+/*        if (Objects.equals(multipartFile.getOriginalFilename(), "image/png")
+            || Objects.equals(multipartFile.getOriginalFilename(), "image/jpeg")) {
+            String fileType = switch (multipartFile.getOriginalFilename()) {
                 case "image/png" -> ".png";
                 case "image/jpeg" -> ".jpg";
                 default -> throw new IllegalStateException(
                     "Unexpected value: " + multipartFile.getContentType());
             };
+            System.out.println(multipartFile.getName());
             return UUID.randomUUID() + fileType;
         } else {
+
             throw new IllegalArgumentException("잘못된 파일 형식입니다");
-        }
+        }*/
+
     }
 
     public void createFolder(String folderName) {
