@@ -10,6 +10,8 @@ public record CafeReadAllServiceResponseDto(
     String menu,
     String opentime,
     String closetime,
-    String user_name
+    String constituency_name,
+    String nickname,
+    String region_name
 ) {
 }

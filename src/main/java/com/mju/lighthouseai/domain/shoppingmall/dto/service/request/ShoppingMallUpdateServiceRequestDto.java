@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.domain.shoppingmall.dto.service;
+package com.mju.lighthouseai.domain.shoppingmall.dto.service.request;
 
 public record ShoppingMallUpdateServiceRequestDto(
     String title,

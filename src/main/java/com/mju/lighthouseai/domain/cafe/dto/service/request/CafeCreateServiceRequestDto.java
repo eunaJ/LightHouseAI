@@ -6,7 +6,8 @@ public record CafeCreateServiceRequestDto(
     Integer price,
     String menu,
     String opentime,
-    String closetime
+    String closetime,
+    String constituency_name
 ) {
 
 }

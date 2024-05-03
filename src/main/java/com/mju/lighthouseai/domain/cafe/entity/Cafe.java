@@ -1,5 +1,6 @@
 package com.mju.lighthouseai.domain.cafe.entity;
 
+import com.mju.lighthouseai.domain.constituency.entity.Constituency;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.global.entity.BaseEntity;
 import jakarta.persistence.Column;
@@ -47,6 +48,9 @@ public class Cafe extends BaseEntity {
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "constituency_id",nullable = false)
+    private Constituency constituency;
     @Builder
     public Cafe(
         final String title,
@@ -55,7 +59,8 @@ public class Cafe extends BaseEntity {
         final String menu,
         final String opentime,
         final String closetime,
-        final User user
+        final User user,
+        final Constituency constituency
     ){
         this.title = title;
         this.location =location;
@@ -64,6 +69,7 @@ public class Cafe extends BaseEntity {
         this.opentime = opentime;
         this.closetime = closetime;
         this.user = user;
+        this.constituency = constituency;
     }
     public void updateCafe(
         String title, String location, int price, String menu,
