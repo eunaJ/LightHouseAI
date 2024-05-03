@@ -14,14 +14,13 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(componentModel = SPRING)
 
 public interface BoardEntityMapper {
-    Board toboard(BoardCreateServiceRequestDto requestDto, User user);
+    @Mapping(source = "image_url",target = "image_url")
+    Board toboard(BoardCreateServiceRequestDto requestDto, User user,String image_url);
 
     default String toUserName(User user){
         return user.getNickname();
     }
-    @Mapping(source = "user",target = "user_nickname")
-
-
+    @Mapping(source = "user",target = "nickname")
     BoardReadAllServiceResponseDto toBoardReadResponseDto(Board board);
     List<BoardReadAllServiceResponseDto> toBoardReadAllResponseDto(List<Board> boards);
 
