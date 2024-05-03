@@ -9,7 +9,7 @@ public record BoardReadAllServiceResponseDto(
 
         String image_url,
 
-        String user_nickname
+        String nickname
 ){
 
 }

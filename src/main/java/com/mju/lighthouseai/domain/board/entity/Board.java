@@ -43,8 +43,6 @@ public class Board extends BaseEntity {
     @Column
     private String image_url;
 
-
-
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
@@ -53,10 +51,10 @@ public class Board extends BaseEntity {
 
     @Builder
     public  Board(
-        final User user,
         final String title,
         final String image_url,
-        final String content
+        final String content,
+        final User user
     )
     {
         this.title  = title;
@@ -65,10 +63,8 @@ public class Board extends BaseEntity {
         this.user = user;
     }
     public void updateBoard(
-            String title, String content,
-            String image_url) {
+            String title, String content) {
         this.title = title;
         this.content = content;
-        this.image_url = image_url;
     }
 }
