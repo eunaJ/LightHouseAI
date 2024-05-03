@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,10 +27,11 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(
-            @RequestBody UserSignUpControllerRequestDto controllerRequestDto) {
+            @RequestPart UserSignUpControllerRequestDto controllerRequestDto,
+            @RequestPart MultipartFile multipartFile) throws IOException {
         UserSignUpServiceRequestDto serviceRequestDto = userDtoMapper.toUserSignUpServiceRequestDto(
                 controllerRequestDto);
-        userService.signUp(serviceRequestDto);
+        userService.signUp(serviceRequestDto, multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
