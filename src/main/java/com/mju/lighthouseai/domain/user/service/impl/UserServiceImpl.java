@@ -15,7 +15,6 @@ import com.mju.lighthouseai.global.jwt.exception.ExpiredJwtAccessTokenException;
 import com.mju.lighthouseai.global.jwt.exception.ExpiredJwtRefreshTokenException;
 import com.mju.lighthouseai.global.jwt.exception.FailedJwtTokenException;
 import com.mju.lighthouseai.global.jwt.exception.JwtErrorCode;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,7 +72,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user, UpdateUserServiceRequestDto serviceRequestDto) {
-        log.info(serviceRequestDto.newPassword());
         // 비밀번호
         if(!Objects.equals(serviceRequestDto.newPassword(), "")){
             if (passwordEncoder.matches(serviceRequestDto.newPassword(), user.getPassword())) {
@@ -99,25 +97,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserLoginResponseDto refreshAccessToken(final String refreshToken,
-                                                   final User user,
+    public UserLoginResponseDto refreshAccessToken(final String refreshTokenCookie,
                                                    final HttpServletResponse response) {
-        String token = refreshToken.substring(13);
-        refreshTokenRepository.findById(String.valueOf(user.getId()))
+        String refresh = refreshTokenCookie.substring(13);
+        // 애초에 다르면 검증에 오류
+        RefreshToken refreshToken = refreshTokenRepository.findByRefreshToken(refresh)
                 .orElseThrow(() -> new ExpiredJwtRefreshTokenException(JwtErrorCode.EXPIRED_JWT_REFRESH_TOKEN));
-        if (!jwtUtil.validateRefreshToken(token)) {
+        if (!jwtUtil.validateRefreshToken(refreshToken.getRefreshToken())) {
             throw new FailedJwtTokenException(JwtErrorCode.FAILED_JWT_TOKEN);
         }
+        User user = userRepository.findById(refreshToken.getId()).orElseThrow(()->new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
         jwtUtil.addAccessTokenToHeader(user, httpServletResponse);
-        String newToken = jwtUtil.addRefreshTokenToCookie(user, httpServletResponse);
+        String newToken = jwtUtil.addRefreshTokenToCookie(user, response);
         refreshTokenRepository.deleteById(String.valueOf(user.getId()));
         refreshTokenRepository.save(new RefreshToken(user.getId(), newToken, timeToLive));
         return userEntityMapper.toUserLoginResponseDto(user);
     }
 
     @Override
-    public void isNotDupUserEmail(isNotDupUserEmailServiceRequestDto serviceRequestDto){
-        if(userRepository.existsByEmail(serviceRequestDto.email())) {
+    public void isNotDupUserEmail(isNotDupUserEmailServiceRequestDto serviceRequestDto) {
+        if (userRepository.existsByEmail(serviceRequestDto.email())) {
             log.info("중복된 이메일입니다.");
             throw new AlreadyExistsEmailException(UserErrorCode.ALREADY_EXIST_EMAIL);
         }
@@ -133,7 +132,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserLoginResponseDto getUser(final String token){
-        if (jwtUtil.isExpired(token)) {
+        if (jwtUtil.isExpiredAccessToken(token)) {
             throw new ExpiredJwtAccessTokenException(JwtErrorCode.EXPIRED_JWT_ACCESS_TOKEN);
         }
         String email = jwtUtil.getUserInfoFromToken(token).getSubject();
@@ -144,7 +143,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void logout(final String token){
-        if (jwtUtil.isExpired(token)) {
+        if (jwtUtil.isExpiredAccessToken(token)) {
             throw new ExpiredJwtAccessTokenException(JwtErrorCode.EXPIRED_JWT_ACCESS_TOKEN);
         }
         String email = jwtUtil.getUserInfoFromToken(token).getSubject();

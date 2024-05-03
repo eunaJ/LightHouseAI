@@ -1,7 +1,6 @@
 package com.mju.lighthouseai.domain.user.controller;
 
 import com.fasterxml.jackson.core.JacksonException;
-import com.mju.lighthouseai.domain.user.dto.service.response.UserLoginResponseDto;
 import com.mju.lighthouseai.domain.user.service.KakaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

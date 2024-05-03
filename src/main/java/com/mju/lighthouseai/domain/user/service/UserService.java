@@ -12,7 +12,7 @@ public interface UserService {
 
     void updateUser(User user, UpdateUserServiceRequestDto updateUserServiceRequestDto);
 
-    UserLoginResponseDto refreshAccessToken(String refreshToken, User user, HttpServletResponse response);
+    UserLoginResponseDto refreshAccessToken(String refreshToken, HttpServletResponse response);
 
     void isNotDupUserEmail(isNotDupUserEmailServiceRequestDto serviceRequestDto);
 

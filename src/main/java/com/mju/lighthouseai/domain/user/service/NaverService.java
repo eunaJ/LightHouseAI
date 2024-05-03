@@ -64,7 +64,6 @@ public class NaverService {
     }
 
     public String getToken(String code) throws JsonProcessingException {
-        log.info("인가코드: "+code);
         ResponseEntity<String> response;
         HttpHeaders headers = new HttpHeaders();
 
@@ -86,8 +85,6 @@ public class NaverService {
                     request,
                     String.class
             );
-
-            // TODO: PopUp을 띄워야 하지만, FrontEnd가 없는 관계로, response를 그대로 반환하여 로그인 페이지로 이동하도록 함
             return response.getBody();
         }
 
@@ -99,7 +96,6 @@ public class NaverService {
         body.add("state", "lighthouseai");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
-        log.info("request: "+request.toString());
         RestTemplate restTemplate = new RestTemplate();
         response = restTemplate.exchange(
                 "https://nid.naver.com/oauth2.0/token",
@@ -110,10 +106,7 @@ public class NaverService {
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
-
-        String accessToken = jsonNode.get("access_token").asText();
-        log.info("accessToken: "+accessToken);
-        return accessToken;
+        return jsonNode.get("access_token").asText();
     }
 
     private NaverUserInfoDto getNaverUserInfo(String accessToken) throws JsonProcessingException {
@@ -131,7 +124,6 @@ public class NaverService {
                 String.class
         );
         String responseBody = response.getBody();
-        log.info(responseBody);
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
@@ -140,14 +132,9 @@ public class NaverService {
         NaverUserInfoJson.put("uid", jsonNode.get("response").get("id").asText());
         NaverUserInfoJson.put("nickname", jsonNode.get("response").get("nickname").asText());
         NaverUserInfoJson.put("email", jsonNode.get("response").get("email").asText());
-        NaverUserInfoJson.put("birth", jsonNode.get("response").get("birthyear").asText());
-        if (jsonNode.get("response").has("profile_image")) {
-            NaverUserInfoJson.put("profile_img_url", jsonNode.get("response").get("profile_image").asText());
-        }else {
-            // TODO: 프로필 이미지가 없을 경우 처리 방법 의논할 것
-            NaverUserInfoJson.put("profile_img_url", "");
-        }
-        log.info("NaverUserInfoJson: "+NaverUserInfoJson.toJSONString());
+        NaverUserInfoJson.put("birth", jsonNode.get("response").get("birthyear").asText()+"-"
+                +jsonNode.get("response").get("birthday").asText());
+        NaverUserInfoJson.put("profile_img_url", jsonNode.get("response").get("profile_image").asText());
         return new ObjectMapper().readValue(NaverUserInfoJson.toJSONString(), NaverUserInfoDto.class);
     }
 
@@ -165,6 +152,7 @@ public class NaverService {
                     .nickname(naverUserInfoDto.nickname())
                     .birth(naverUserInfoDto.birth())
                     .role(UserRole.USER)
+                    .profile_img_url(naverUserInfoDto.profile_img_url())
                     .build();
             userRepository.save(naverUser);
         }

@@ -53,11 +53,9 @@ public class UserController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAccessToken(
             @RequestHeader("Cookie") String refreshToken,
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
             HttpServletResponse httpServletResponse
     ) {
-        userService.refreshAccessToken(refreshToken,
-                userDetails.user(), httpServletResponse);
+        userService.refreshAccessToken(refreshToken, httpServletResponse);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

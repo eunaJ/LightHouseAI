@@ -66,10 +66,10 @@ public class WebSecurityConfig {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
-            config.addAllowedOriginPattern("*");
+            config.setAllowedOrigins(List.of("http://localhost:3000", "http:localhost:8080"));
             config.setMaxAge(3600L);
             config.setAllowCredentials(true);
-            config.setExposedHeaders(List.of("*"));
+            config.setExposedHeaders(List.of("Access-Token", "Set-Cookie", "Cookie"));
             return config;
         };
     }
