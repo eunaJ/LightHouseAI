@@ -28,7 +28,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(
             @RequestPart UserSignUpControllerRequestDto controllerRequestDto,
-            @RequestPart MultipartFile multipartFile) throws IOException {
+            @RequestPart(required=false) MultipartFile multipartFile) throws IOException {
         UserSignUpServiceRequestDto serviceRequestDto = userDtoMapper.toUserSignUpServiceRequestDto(
                 controllerRequestDto);
         userService.signUp(serviceRequestDto, multipartFile);
