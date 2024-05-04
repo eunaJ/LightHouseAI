@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         // 프로필 이미지 업로드
         String fileName;
         String fileUrl;
-        if (multipartFile.isEmpty()){
+        if (multipartFile == null){
             fileUrl = null;
             User user = userEntityMapper.toUser(serviceRequestDto, UserRole.USER, fileUrl);
             userRepository.save(user);
