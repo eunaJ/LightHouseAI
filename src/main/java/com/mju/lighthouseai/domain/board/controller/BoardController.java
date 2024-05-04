@@ -72,7 +72,7 @@ public class BoardController {
                 .body(boardService.readAllBoards());
     }
 
-    @GetMapping("/cafes/{boardId}")
+    @GetMapping("/boards/{boardId}")
     public ResponseEntity<?> readBoard(
             @PathVariable Long boardId
     ){
