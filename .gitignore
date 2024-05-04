@@ -39,3 +39,6 @@ out/
 
 ### generated ###
 /src/main/generated/
+
+### catboost ###
+catboost_info/
