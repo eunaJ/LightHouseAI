@@ -3,7 +3,7 @@ package com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.response;
 public record TravelVisitorCafeReadAllServiceResponseDto (
         Long id,
         String menu,
-        int cost,
+        int price,
         String opentime,
         String closetime,
         String location,
