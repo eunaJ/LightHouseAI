@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service;
+package com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request;
 
 public record TravelVisitorCafeCreateServiceRequestDto(
         int cost,
