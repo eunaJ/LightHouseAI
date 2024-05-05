@@ -8,6 +8,8 @@ import com.mju.lighthouseai.domain.user.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = SPRING)
@@ -29,5 +31,8 @@ public interface TravelVisitorRestaurantEntityMapper {
     }
     @Mapping(source = "user", target = "nickname")
     @Mapping(source = "restaurant.title", target = "restaurant_title")
-    TravelVisitorRestaurantReadAllServiceResponseDto toTravelVisitorRestaurantReadResponseDto(TravelVisitorRestaurant travelVisitorRestaurant);
+    TravelVisitorRestaurantReadAllServiceResponseDto toTravelVisitorRestaurantReadResponseDto(
+            TravelVisitorRestaurant travelVisitorRestaurant);
+    List<TravelVisitorRestaurantReadAllServiceResponseDto> toTravelVisitorRestaurantReadAllResponseDto(
+            List<TravelVisitorRestaurant> travelVisitorRestaurants);
 }
