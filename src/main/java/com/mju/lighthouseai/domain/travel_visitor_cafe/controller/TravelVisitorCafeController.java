@@ -2,8 +2,8 @@ package com.mju.lighthouseai.domain.travel_visitor_cafe.controller;
 
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.controller.TravelVisitorCafeCreateControllerRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.controller.TravelVisitorCafeUpdateControllerRequestDto;
-import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.TravelVisitorCafeCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.TravelVisitorCafeUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request.TravelVisitorCafeCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request.TravelVisitorCafeUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.mapper.dto.TravelVisitorCafeDtoMapper;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.service.impl.TravelVisitorCafeServiceImpl;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/travelvisitorcafe")
+@RequestMapping("/api/v1/travelvisitorcafes")
 @RestController
 public class TravelVisitorCafeController {
     private final TravelVisitorCafeDtoMapper travelVisitorCafeDtoMapper;
@@ -53,5 +53,13 @@ public class TravelVisitorCafeController {
     ){
         travelVisitorCafeService.deleteTravelVisitorCafe(travelVisitorCafeId, userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/{travelVisitorCafeId}")
+    public ResponseEntity<?> readTravelVisitorCafe(
+            @PathVariable Long travelVisitorCafeId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorCafeService.readTravelVisitorCafe(travelVisitorCafeId));
     }
 }
