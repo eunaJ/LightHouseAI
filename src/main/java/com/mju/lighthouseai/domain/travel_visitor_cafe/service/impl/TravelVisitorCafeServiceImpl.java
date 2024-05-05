@@ -77,4 +77,10 @@ public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
         return travelVisitorCafeRepository.findById(id)
                 .orElseThrow(()-> new NotFoundTravelVisitorCafeException(TravelVisitorCafeErrorCode.NOT_FOUND_TRAVEL_VISITOR_CAFE));
     }
+
+    public void deleteTravelVisitorCafe(Long id, User user) {
+        TravelVisitorCafe travelVisitorCafe = travelVisitorCafeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundTravelVisitorCafeException(TravelVisitorCafeErrorCode.NOT_FOUND_TRAVEL_VISITOR_CAFE));
+        travelVisitorCafeRepository.delete(travelVisitorCafe);
+    }
 }

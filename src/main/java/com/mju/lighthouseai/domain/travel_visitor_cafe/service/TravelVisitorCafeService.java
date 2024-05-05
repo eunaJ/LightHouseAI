@@ -12,4 +12,5 @@ public interface TravelVisitorCafeService {
     void createTravelVisitorCafe(TravelVisitorCafeCreateServiceRequestDto requestDto, User user,
                                  MultipartFile multipartFile) throws IOException;
     void updateTravelVisitorCafe(Long id, TravelVisitorCafeUpdateServiceRequestDto requestDto, User user);
+    void deleteTravelVisitorCafe(Long id, User user);
 }

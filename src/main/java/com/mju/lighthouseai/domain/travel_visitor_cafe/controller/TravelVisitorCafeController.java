@@ -45,4 +45,13 @@ public class TravelVisitorCafeController {
         travelVisitorCafeService.updateTravelVisitorCafe(travelVisitorCafeId,serviceRequestDto,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @DeleteMapping("/{travelVisitorCafeId}")
+    public ResponseEntity<?> deleteTravelVisitorCafe(
+            @PathVariable Long travelVisitorCafeId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        travelVisitorCafeService.deleteTravelVisitorCafe(travelVisitorCafeId, userDetails.user());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
