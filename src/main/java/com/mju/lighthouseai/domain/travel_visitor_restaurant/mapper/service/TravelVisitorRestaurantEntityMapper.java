@@ -2,6 +2,7 @@ package com.mju.lighthouseai.domain.travel_visitor_restaurant.mapper.service;
 
 import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.response.TravelVisitorRestaurantReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.entity.TravelVisitorRestaurant;
 import com.mju.lighthouseai.domain.user.entity.User;
 import org.mapstruct.Mapper;
@@ -19,4 +20,14 @@ public interface TravelVisitorRestaurantEntityMapper {
     @Mapping(source = "restaurant", target = "restaurant")
     TravelVisitorRestaurant toTravelVisitorRestaurant(TravelVisitorRestaurantCreateServiceRequestDto requestDto,
                                                       User user, Restaurant restaurant, String image_url);
+
+    default String toUserName(User user){
+        return user.getNickname();
+    }
+    default String toRestaurantTitle(Restaurant restaurant){
+        return restaurant.getTitle();
+    }
+    @Mapping(source = "user", target = "nickname")
+    @Mapping(source = "restaurant.title", target = "restaurant_title")
+    TravelVisitorRestaurantReadAllServiceResponseDto toTravelVisitorRestaurantReadResponseDto(TravelVisitorRestaurant travelVisitorRestaurant);
 }
