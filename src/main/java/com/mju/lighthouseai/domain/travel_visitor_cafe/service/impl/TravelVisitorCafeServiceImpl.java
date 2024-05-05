@@ -72,7 +72,7 @@ public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
         fileUrl = null;
         log.info(String.valueOf(travelVisitorCafe.getCost()));
         // 카페가 없어져도 방문 기록은 남아야
-        travelVisitorCafe.updateTravelVisitorCafe(requestDto.cost(), requestDto.opentime(),
+        travelVisitorCafe.updateTravelVisitorCafe(requestDto.menu(), requestDto.cost(), requestDto.opentime(),
                 requestDto.closetime(), requestDto.location(), fileUrl);
     }
     private TravelVisitorCafe findTravelVisitorCafe(Long id){

@@ -14,6 +14,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = SPRING)
 public interface TravelVisitorCafeEntityMapper {
+    @Mapping(source = "requestDto.menu", target = "menu")
     @Mapping(source = "requestDto.opentime", target = "opentime")
     @Mapping(source = "requestDto.closetime", target = "closetime")
     @Mapping(source = "requestDto.location", target = "location")
