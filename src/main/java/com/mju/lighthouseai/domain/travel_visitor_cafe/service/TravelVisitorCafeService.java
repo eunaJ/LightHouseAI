@@ -15,4 +15,5 @@ public interface TravelVisitorCafeService {
     void updateTravelVisitorCafe(Long id, TravelVisitorCafeUpdateServiceRequestDto requestDto, User user);
     void deleteTravelVisitorCafe(Long id, User user);
     TravelVisitorCafeReadAllServiceResponseDto readTravelVisitorCafe(Long id);
+    List<TravelVisitorCafeReadAllServiceResponseDto> readAllTravelVisitorCafes();
 }

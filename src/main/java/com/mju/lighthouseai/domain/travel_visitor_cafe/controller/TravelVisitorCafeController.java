@@ -62,4 +62,10 @@ public class TravelVisitorCafeController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(travelVisitorCafeService.readTravelVisitorCafe(travelVisitorCafeId));
     }
+
+    @GetMapping("/")
+    public ResponseEntity<?> readAllTravelVisitorCafes(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorCafeService.readAllTravelVisitorCafes());
+    }
 }

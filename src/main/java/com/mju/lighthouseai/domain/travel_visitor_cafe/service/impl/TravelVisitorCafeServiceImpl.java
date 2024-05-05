@@ -91,4 +91,9 @@ public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
                 orElseThrow(()->new NotFoundTravelVisitorCafeException(TravelVisitorCafeErrorCode.NOT_FOUND_TRAVEL_VISITOR_CAFE));
         return travelVisitorCafeEntityMapper.toTravelVisitorCafeReadResponseDto(travelVisitorCafe);
     }
+
+    public List<TravelVisitorCafeReadAllServiceResponseDto> readAllTravelVisitorCafes(){
+        List<TravelVisitorCafe> travelVisitorCafes = travelVisitorCafeRepository.findAll();
+        return travelVisitorCafeEntityMapper.toTravelVisitorCafeReadAllResponseDto(travelVisitorCafes);
+    }
 }
