@@ -5,7 +5,10 @@ import com.mju.lighthouseai.domain.restaurant.exceoption.NotFoundRestaurantExcep
 import com.mju.lighthouseai.domain.restaurant.exceoption.RestaurantErrorCode;
 import com.mju.lighthouseai.domain.restaurant.repository.RestaurantRepository;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.entity.TravelVisitorRestaurant;
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.exception.NotFoundTravelVisitorRestaurant;
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.exception.TravelVisitorRestaurantErrorCode;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.mapper.service.TravelVisitorRestaurantEntityMapper;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.repository.TravelVisitorRestaurantRepository;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.service.TravelVisitorRestaurantService;
@@ -14,6 +17,7 @@ import com.mju.lighthouseai.global.s3.S3Provider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -54,5 +58,24 @@ public class TravelVisitorRestaurantServiceImpl implements TravelVisitorRestaura
             fileUrl = requestDto.restaurant_title() + SEPARATOR + fileName;
             s3Provider.saveFile(multipartFile,fileUrl);
         }
+    }
+
+    @Transactional
+    public void updateTravelVisitorRestaurant(Long id,
+                                              TravelVisitorRestaurantUpdateServiceRequestDto requestDto,
+                                              User user){
+        TravelVisitorRestaurant travelVisitorRestaurant = findTravelVisitorRestaurant(id);
+        String fileName;
+        String fileUrl;
+        fileUrl = null;
+        // 방문 기록은 남아야?
+        travelVisitorRestaurant.updateTravelVisitorRestaurant(requestDto.menu(),
+                requestDto.price(), requestDto.opentime(),
+                requestDto.closetime(), requestDto.location(), fileUrl);
+    }
+    private TravelVisitorRestaurant findTravelVisitorRestaurant(Long id){
+        return travelVisitorRestaurantRepository.findById(id)
+                .orElseThrow(()-> new NotFoundTravelVisitorRestaurant(
+                        TravelVisitorRestaurantErrorCode.NOT_FOUND_TRAVEL_VISITOR_RESTAURANT));
     }
 }

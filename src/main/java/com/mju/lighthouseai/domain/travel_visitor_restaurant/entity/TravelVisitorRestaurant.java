@@ -62,4 +62,14 @@ public class TravelVisitorRestaurant extends BaseEntity {
         this.user = user;
         this.restaurant = restaurant;
     }
+
+    public void updateTravelVisitorRestaurant(
+            String menu, int price, String opentime, String closetime, String location, String image_url) {
+        this.menu = menu;
+        this.price = price;
+        this.opentime = opentime;
+        this.closetime = closetime;
+        this.location = location;
+        this.image_url = image_url;
+    }
 }
