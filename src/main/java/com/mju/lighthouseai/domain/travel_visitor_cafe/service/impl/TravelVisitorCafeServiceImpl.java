@@ -5,19 +5,25 @@ import com.mju.lighthouseai.domain.cafe.exception.CafeErrorCode;
 import com.mju.lighthouseai.domain.cafe.exception.NotFoundCafeException;
 import com.mju.lighthouseai.domain.cafe.repository.CafeRepository;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.TravelVisitorCafeCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.TravelVisitorCafeUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.entity.TravelVisitorCafe;
+import com.mju.lighthouseai.domain.travel_visitor_cafe.exception.NotFoundTravelVisitorCafeException;
+import com.mju.lighthouseai.domain.travel_visitor_cafe.exception.TravelVisitorCafeErrorCode;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.mapper.service.TravelVisitorCafeEntityMapper;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.repository.TravelVisitorCafeRepository;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.service.TravelVisitorCafeService;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.global.s3.S3Provider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
@@ -54,5 +60,21 @@ public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
             fileUrl = requestDto.cafe_title() + SEPARATOR + fileName;
             s3Provider.saveFile(multipartFile,fileUrl);
         }
+    }
+
+    @Transactional
+    public void updateTravelVisitorCafe(Long id, TravelVisitorCafeUpdateServiceRequestDto requestDto, User user){
+        TravelVisitorCafe travelVisitorCafe = findTravelVisitorCafe(id);
+        String fileName;
+        String fileUrl;
+        fileUrl = null;
+        log.info(String.valueOf(travelVisitorCafe.getCost()));
+        // 카페가 없어져도 방문 기록은 남아야
+        travelVisitorCafe.updateTravelVisitorCafe(requestDto.cost(), requestDto.opentime(),
+                requestDto.closetime(), requestDto.location(), fileUrl);
+    }
+    private TravelVisitorCafe findTravelVisitorCafe(Long id){
+        return travelVisitorCafeRepository.findById(id)
+                .orElseThrow(()-> new NotFoundTravelVisitorCafeException(TravelVisitorCafeErrorCode.NOT_FOUND_TRAVEL_VISITOR_CAFE));
     }
 }
