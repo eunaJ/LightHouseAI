@@ -6,6 +6,7 @@ import com.mju.lighthouseai.domain.restaurant.exceoption.RestaurantErrorCode;
 import com.mju.lighthouseai.domain.restaurant.repository.RestaurantRepository;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.response.TravelVisitorRestaurantReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.entity.TravelVisitorRestaurant;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.exception.NotFoundTravelVisitorRestaurant;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.exception.TravelVisitorRestaurantErrorCode;
@@ -84,5 +85,12 @@ public class TravelVisitorRestaurantServiceImpl implements TravelVisitorRestaura
                 .orElseThrow(() -> new NotFoundTravelVisitorRestaurant(
                         TravelVisitorRestaurantErrorCode.NOT_FOUND_TRAVEL_VISITOR_RESTAURANT));
         travelVisitorRestaurantRepository.delete(travelVisitorRestaurant);
+    }
+
+    public TravelVisitorRestaurantReadAllServiceResponseDto readTravelVisitorRestaurant(Long id){
+        TravelVisitorRestaurant travelVisitorRestaurant = travelVisitorRestaurantRepository.findById(id).
+                orElseThrow(()->new NotFoundTravelVisitorRestaurant(
+                        TravelVisitorRestaurantErrorCode.NOT_FOUND_TRAVEL_VISITOR_RESTAURANT));
+        return travelVisitorRestaurantEntityMapper.toTravelVisitorRestaurantReadResponseDto(travelVisitorRestaurant);
     }
 }

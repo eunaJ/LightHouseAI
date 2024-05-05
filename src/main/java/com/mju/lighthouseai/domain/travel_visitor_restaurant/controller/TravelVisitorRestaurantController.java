@@ -54,4 +54,12 @@ public class TravelVisitorRestaurantController {
         travelVisitorRestaurantService.deleteTravelVisitorRestaurant(travelVisitorRestaurantId, userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @GetMapping("/{travelVisitorRestaurantId}")
+    public ResponseEntity<?> readTravelVisitorRestaurant(
+            @PathVariable Long travelVisitorRestaurantId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorRestaurantService.readTravelVisitorRestaurant(travelVisitorRestaurantId));
+    }
 }
