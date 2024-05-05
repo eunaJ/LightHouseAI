@@ -17,8 +17,4 @@ public interface TravelVisitorCafeEntityMapper {
     @Mapping(source = "cafe", target = "cafe")
     TravelVisitorCafe toTravelVisitorCafe(TravelVisitorCafeCreateServiceRequestDto requestDto,
                                           User user, Cafe cafe, String image_url);
-
-    default String toCafeTitle(Cafe cafe){
-        return cafe.getTitle();
-    }
 }
