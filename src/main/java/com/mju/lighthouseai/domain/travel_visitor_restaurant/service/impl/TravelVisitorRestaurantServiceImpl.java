@@ -78,4 +78,11 @@ public class TravelVisitorRestaurantServiceImpl implements TravelVisitorRestaura
                 .orElseThrow(()-> new NotFoundTravelVisitorRestaurant(
                         TravelVisitorRestaurantErrorCode.NOT_FOUND_TRAVEL_VISITOR_RESTAURANT));
     }
+
+    public void deleteTravelVisitorRestaurant(Long id, User user) {
+        TravelVisitorRestaurant travelVisitorRestaurant = travelVisitorRestaurantRepository.findById(id)
+                .orElseThrow(() -> new NotFoundTravelVisitorRestaurant(
+                        TravelVisitorRestaurantErrorCode.NOT_FOUND_TRAVEL_VISITOR_RESTAURANT));
+        travelVisitorRestaurantRepository.delete(travelVisitorRestaurant);
+    }
 }

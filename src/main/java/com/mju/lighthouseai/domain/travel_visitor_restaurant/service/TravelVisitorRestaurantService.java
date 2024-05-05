@@ -10,5 +10,7 @@ import java.io.IOException;
 public interface TravelVisitorRestaurantService {
     void createTravelVisitorRestaurant(TravelVisitorRestaurantCreateServiceRequestDto requestDto, User user,
                                        MultipartFile multipartFile) throws IOException;
-    void updateTravelVisitorRestaurant(Long id, TravelVisitorRestaurantUpdateServiceRequestDto requestDto, User user);
+    void updateTravelVisitorRestaurant(Long id,
+                                       TravelVisitorRestaurantUpdateServiceRequestDto requestDto, User user);
+    void deleteTravelVisitorRestaurant(Long id, User user);
 }

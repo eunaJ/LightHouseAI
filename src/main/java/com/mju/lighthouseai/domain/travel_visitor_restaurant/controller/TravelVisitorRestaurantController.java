@@ -45,4 +45,13 @@ public class TravelVisitorRestaurantController {
         travelVisitorRestaurantService.updateTravelVisitorRestaurant(travelVisitorRestaurantId,serviceRequestDto,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @DeleteMapping("/{travelVisitorRestaurantId}")
+    public ResponseEntity<?> deleteTravelVisitorRestaurant(
+            @PathVariable Long travelVisitorRestaurantId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        travelVisitorRestaurantService.deleteTravelVisitorRestaurant(travelVisitorRestaurantId, userDetails.user());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
