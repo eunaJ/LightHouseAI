@@ -4,8 +4,9 @@ import com.mju.lighthouseai.domain.cafe.entity.Cafe;
 import com.mju.lighthouseai.domain.cafe.exception.CafeErrorCode;
 import com.mju.lighthouseai.domain.cafe.exception.NotFoundCafeException;
 import com.mju.lighthouseai.domain.cafe.repository.CafeRepository;
-import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.TravelVisitorCafeCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.TravelVisitorCafeUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request.TravelVisitorCafeCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request.TravelVisitorCafeUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.response.TravelVisitorCafeReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.entity.TravelVisitorCafe;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.exception.NotFoundTravelVisitorCafeException;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.exception.TravelVisitorCafeErrorCode;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -82,5 +84,11 @@ public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
         TravelVisitorCafe travelVisitorCafe = travelVisitorCafeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundTravelVisitorCafeException(TravelVisitorCafeErrorCode.NOT_FOUND_TRAVEL_VISITOR_CAFE));
         travelVisitorCafeRepository.delete(travelVisitorCafe);
+    }
+
+    public TravelVisitorCafeReadAllServiceResponseDto readTravelVisitorCafe(Long id){
+        TravelVisitorCafe travelVisitorCafe = travelVisitorCafeRepository.findById(id).
+                orElseThrow(()->new NotFoundTravelVisitorCafeException(TravelVisitorCafeErrorCode.NOT_FOUND_TRAVEL_VISITOR_CAFE));
+        return travelVisitorCafeEntityMapper.toTravelVisitorCafeReadResponseDto(travelVisitorCafe);
     }
 }
