@@ -57,4 +57,13 @@ public class TravelVisitorCafe extends BaseEntity {
         this.user = user;
         this.cafe = cafe;
     }
+
+    public void updateTravelVisitorCafe(
+            int cost, String opentime, String closetime, String location, String image_url) {
+        this.cost = cost;
+        this.opentime = opentime;
+        this.closetime = closetime;
+        this.location = location;
+        this.image_url = image_url;
+    }
 }
