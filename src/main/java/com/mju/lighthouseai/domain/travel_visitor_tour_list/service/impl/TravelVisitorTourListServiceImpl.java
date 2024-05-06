@@ -5,7 +5,10 @@ import com.mju.lighthouseai.domain.tour_list.exceoption.NotFoundTourListExceptio
 import com.mju.lighthouseai.domain.tour_list.exceoption.TourListErrorCode;
 import com.mju.lighthouseai.domain.tour_list.repository.TourListRepository;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.request.TravelVisitorTourListCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.request.TravelVisitorTourListUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.entity.TravelVisitorTourList;
+import com.mju.lighthouseai.domain.travel_visitor_tour_list.exception.NotFoundTravelVisitorTourListException;
+import com.mju.lighthouseai.domain.travel_visitor_tour_list.exception.TravelVisitorTourListErrorCode;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.mapper.service.TravelVisitorTourListEntityMapper;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.repository.TravelVisitorTourListRepository;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.service.TravelVisitorTourListService;
@@ -14,6 +17,7 @@ import com.mju.lighthouseai.global.s3.S3Provider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -54,5 +58,21 @@ public class TravelVisitorTourListServiceImpl implements TravelVisitorTourListSe
             fileUrl = requestDto.tourList_title() + SEPARATOR + fileName;
             s3Provider.saveFile(multipartFile,fileUrl);
         }
+    }
+
+    @Transactional
+    public void updateTravelVisitorTourList(Long id, TravelVisitorTourListUpdateServiceRequestDto requestDto, User user){
+        TravelVisitorTourList travelVisitorTourList = findTravelVisitorTourList(id);
+        String fileName;
+        String fileUrl;
+        fileUrl = null;
+        // 카페가 없어져도 방문 기록은 남아야
+        travelVisitorTourList.updateTravelVisitorTourList(requestDto.price(), requestDto.opentime(),
+                requestDto.closetime(), requestDto.location(), fileUrl);
+    }
+    private TravelVisitorTourList findTravelVisitorTourList(Long id){
+        return travelVisitorTourListRepository.findById(id)
+                .orElseThrow(()-> new NotFoundTravelVisitorTourListException(
+                        TravelVisitorTourListErrorCode.NOT_FOUND_TRAVEL_VISITOR_TourList));
     }
 }
