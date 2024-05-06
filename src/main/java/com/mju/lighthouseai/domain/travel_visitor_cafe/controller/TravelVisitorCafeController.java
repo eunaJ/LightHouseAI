@@ -35,7 +35,7 @@ public class TravelVisitorCafeController {
     }
 
     @PutMapping("/{travelVisitorCafeId}")
-    public ResponseEntity<?> updateCafe(
+    public ResponseEntity<?> updateTravelVisitorCafe(
             @PathVariable Long travelVisitorCafeId,
             @RequestBody TravelVisitorCafeUpdateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
