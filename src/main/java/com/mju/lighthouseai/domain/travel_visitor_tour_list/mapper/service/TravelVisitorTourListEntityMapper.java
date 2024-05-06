@@ -32,4 +32,7 @@ public interface TravelVisitorTourListEntityMapper {
     @Mapping(source = "tourList.title", target = "tourList_title")
     TravelVisitorTourListReadAllServiceResponseDto toTravelVisitorTourListReadResponseDto(
             TravelVisitorTourList travelVisitorTourList);
+
+    List<TravelVisitorTourListReadAllServiceResponseDto> toTravelVisitorTourListReadAllResponseDto(
+            List<TravelVisitorTourList> travelVisitorTourLists);
 }
