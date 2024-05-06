@@ -64,4 +64,10 @@ public class TravelVisitorShoppingMallController {
                 .body(travelVisitorShoppingMallService.readTravelVisitorShoppingMall(
                         travelVisitorShoppingMallId));
     }
+
+    @GetMapping("/")
+    public ResponseEntity<?> readAllTravelVisitorShoppingMalls(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorShoppingMallService.readAllTravelVisitorShoppingMalls());
+    }
 }

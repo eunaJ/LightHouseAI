@@ -7,6 +7,7 @@ import com.mju.lighthouseai.domain.user.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface TravelVisitorShoppingMallService {
     void createTravelVisitorShoppingMall(TravelVisitorShoppingMallCreateServiceRequestDto requestDto,
@@ -15,4 +16,6 @@ public interface TravelVisitorShoppingMallService {
                                          TravelVisitorShoppingMallUpdateServiceRequestDto requestDto, User user);
     void deleteTravelVisitorShoppingMall(Long id, User user);
     TravelVisitorShoppingMallReadAllServiceResponseDto readTravelVisitorShoppingMall(Long id);
+
+    List<TravelVisitorShoppingMallReadAllServiceResponseDto> readAllTravelVisitorShoppingMalls();
 }

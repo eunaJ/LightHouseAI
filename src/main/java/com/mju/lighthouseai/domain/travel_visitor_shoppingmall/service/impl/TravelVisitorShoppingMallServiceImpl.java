@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -91,5 +92,11 @@ public class TravelVisitorShoppingMallServiceImpl {
                         TravelVisitorShoppingMallErrorCode.NOT_FOUND_TRAVEL_VISITOR_ShoppingMall));
         return travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMallReadResponseDto(
                 travelVisitorShoppingMall);
+    }
+
+    public List<TravelVisitorShoppingMallReadAllServiceResponseDto> readAllTravelVisitorShoppingMalls(){
+        List<TravelVisitorShoppingMall> travelVisitorShoppingMalls = travelVisitorShoppingMallRepository.findAll();
+        return travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMallReadAllResponseDto(
+                travelVisitorShoppingMalls);
     }
 }
