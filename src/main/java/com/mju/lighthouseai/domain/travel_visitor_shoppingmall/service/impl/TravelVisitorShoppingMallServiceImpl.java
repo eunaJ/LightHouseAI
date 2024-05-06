@@ -76,4 +76,11 @@ public class TravelVisitorShoppingMallServiceImpl {
                 .orElseThrow(()-> new NotFoundTravelVisitorShoppingMallException(
                         TravelVisitorShoppingMallErrorCode.NOT_FOUND_TRAVEL_VISITOR_ShoppingMall));
     }
+
+    public void deleteTravelVisitorShoppingMall(Long id, User user) {
+        TravelVisitorShoppingMall travelVisitorShoppingMall = travelVisitorShoppingMallRepository.findById(id)
+                .orElseThrow(() -> new NotFoundTravelVisitorShoppingMallException(
+                        TravelVisitorShoppingMallErrorCode.NOT_FOUND_TRAVEL_VISITOR_ShoppingMall));
+        travelVisitorShoppingMallRepository.delete(travelVisitorShoppingMall);
+    }
 }

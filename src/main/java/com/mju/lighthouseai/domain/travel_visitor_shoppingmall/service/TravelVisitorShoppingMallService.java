@@ -12,4 +12,5 @@ public interface TravelVisitorShoppingMallService {
                                          User user, MultipartFile multipartFile) throws IOException;
     void updateTravelVisitorShoppingMall(Long id,
                                          TravelVisitorShoppingMallUpdateServiceRequestDto requestDto, User user);
+    void deleteTravelVisitorShoppingMall(Long id, User user);
 }

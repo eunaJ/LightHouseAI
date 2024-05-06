@@ -46,4 +46,13 @@ public class TravelVisitorShoppingMallController {
                 travelVisitorShoppingMallId,serviceRequestDto,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @DeleteMapping("/{travelVisitorShoppingMallId}")
+    public ResponseEntity<?> deleteTravelVisitorShoppingMall(
+            @PathVariable Long travelVisitorShoppingMallId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        travelVisitorShoppingMallService.deleteTravelVisitorShoppingMall(travelVisitorShoppingMallId, userDetails.user());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
