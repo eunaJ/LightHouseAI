@@ -66,4 +66,10 @@ public class TravelVisitorTourListController {
                 .body(travelVisitorTourListService.readTravelVisitorTourList(
                         travelVisitorTourListId));
     }
+
+    @GetMapping("/")
+    public ResponseEntity<?> readAllTravelVisitorTourLists(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorTourListService.readAllTravelVisitorTourLists());
+    }
 }

@@ -7,6 +7,7 @@ import com.mju.lighthouseai.domain.user.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface TravelVisitorTourListService {
     void createTravelVisitorTourList(TravelVisitorTourListCreateServiceRequestDto requestDto, User user,
@@ -15,6 +16,6 @@ public interface TravelVisitorTourListService {
     void updateTravelVisitorTourList(Long id, TravelVisitorTourListUpdateServiceRequestDto requestDto,
                                      User user);
     void deleteTravelVisitorTourList(Long id, User user);
-
     TravelVisitorTourListReadAllServiceResponseDto readTravelVisitorTourList(Long id);
+    List<TravelVisitorTourListReadAllServiceResponseDto> readAllTravelVisitorTourLists();
 }
