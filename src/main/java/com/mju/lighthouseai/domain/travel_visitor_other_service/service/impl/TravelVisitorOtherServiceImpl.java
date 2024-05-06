@@ -5,7 +5,10 @@ import com.mju.lighthouseai.domain.other_service.exception.NotFoundOtherServiceE
 import com.mju.lighthouseai.domain.other_service.exception.OtherServiceErrorCode;
 import com.mju.lighthouseai.domain.other_service.repository.OtherServiceRepository;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.entity.TravelVisitorOtherServiceEntity;
+import com.mju.lighthouseai.domain.travel_visitor_other_service.exception.NotFoundTravelVisitorOtherServiceException;
+import com.mju.lighthouseai.domain.travel_visitor_other_service.exception.TravelVisitorOtherServiceErrorCode;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.mapper.service.TravelVisitorOtherServiceEntityMapper;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.repository.TravelVisitorOtherServiceRepository;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.service.TravelVisitorOtherService;
@@ -59,5 +62,22 @@ public class TravelVisitorOtherServiceImpl implements TravelVisitorOtherService 
             fileUrl = requestDto.otherService_title() + SEPARATOR + fileName;
             s3Provider.saveFile(multipartFile,fileUrl);
         }
+    }
+
+    @Transactional
+    public void updateTravelVisitorOtherService(
+            Long id, TravelVisitorOtherServiceUpdateServiceRequestDto requestDto, User user){
+        TravelVisitorOtherServiceEntity travelVisitorOtherServiceEntity = findTravelVisitorOtherService(id);
+        String fileName;
+        String fileUrl;
+        fileUrl = null;
+        // 없어져도 방문 기록은 남아야?
+        travelVisitorOtherServiceEntity.updateTravelVisitorOtherServiceEntity(requestDto.price(),
+                requestDto.opentime(), requestDto.closetime(), requestDto.location(), fileUrl);
+    }
+    private TravelVisitorOtherServiceEntity findTravelVisitorOtherService(Long id){
+        return travelVisitorOtherServiceRepository.findById(id)
+                .orElseThrow(()-> new NotFoundTravelVisitorOtherServiceException(
+                        TravelVisitorOtherServiceErrorCode.NOT_FOUND_TRAVEL_VISITOR_OtherService));
     }
 }

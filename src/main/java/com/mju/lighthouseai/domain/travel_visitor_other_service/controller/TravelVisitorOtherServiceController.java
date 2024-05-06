@@ -1,7 +1,9 @@
 package com.mju.lighthouseai.domain.travel_visitor_other_service.controller;
 
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.controller.TravelVisitorOtherServiceCreateControllerRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.controller.TravelVisitorOtherServiceUpdateControllerRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.mapper.dto.TravelVisitorOtherServiceDtoMapper;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.service.impl.TravelVisitorOtherServiceImpl;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
@@ -32,5 +34,19 @@ public class TravelVisitorOtherServiceController {
         travelVisitorOtherService.createTravelVisitorOtherService(
                 serviceRequestDto, userDetails.user(), multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PutMapping("/{travelVisitorOtherServiceId}")
+    public ResponseEntity<?> updateTravelVisitorOtherService(
+            @PathVariable Long travelVisitorOtherServiceId,
+            @RequestBody TravelVisitorOtherServiceUpdateControllerRequestDto controllerRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        TravelVisitorOtherServiceUpdateServiceRequestDto serviceRequestDto =
+                travelVisitorOtherServiceDtoMapper.toTravelVisitorOtherServiceUpdateServiceDto(
+                        controllerRequestDto);
+        travelVisitorOtherService.updateTravelVisitorOtherService(
+                travelVisitorOtherServiceId,serviceRequestDto,userDetails.user());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
