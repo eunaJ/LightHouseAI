@@ -55,4 +55,13 @@ public class TravelVisitorShoppingMallController {
         travelVisitorShoppingMallService.deleteTravelVisitorShoppingMall(travelVisitorShoppingMallId, userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @GetMapping("/{travelVisitorShoppingMallId}")
+    public ResponseEntity<?> readTravelVisitorShoppingMall(
+            @PathVariable Long travelVisitorShoppingMallId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorShoppingMallService.readTravelVisitorShoppingMall(
+                        travelVisitorShoppingMallId));
+    }
 }

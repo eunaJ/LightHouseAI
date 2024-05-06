@@ -6,6 +6,7 @@ import com.mju.lighthouseai.domain.shoppingmall.exception.ShoppingMallErrorCode;
 import com.mju.lighthouseai.domain.shoppingmall.repository.ShoppingMallRepository;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.response.TravelVisitorShoppingMallReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.entity.TravelVisitorShoppingMall;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.exception.NotFoundTravelVisitorShoppingMallException;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.exception.TravelVisitorShoppingMallErrorCode;
@@ -82,5 +83,13 @@ public class TravelVisitorShoppingMallServiceImpl {
                 .orElseThrow(() -> new NotFoundTravelVisitorShoppingMallException(
                         TravelVisitorShoppingMallErrorCode.NOT_FOUND_TRAVEL_VISITOR_ShoppingMall));
         travelVisitorShoppingMallRepository.delete(travelVisitorShoppingMall);
+    }
+
+    public TravelVisitorShoppingMallReadAllServiceResponseDto readTravelVisitorShoppingMall(Long id){
+        TravelVisitorShoppingMall travelVisitorShoppingMall = travelVisitorShoppingMallRepository.findById(id).
+                orElseThrow(()->new NotFoundTravelVisitorShoppingMallException(
+                        TravelVisitorShoppingMallErrorCode.NOT_FOUND_TRAVEL_VISITOR_ShoppingMall));
+        return travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMallReadResponseDto(
+                travelVisitorShoppingMall);
     }
 }
