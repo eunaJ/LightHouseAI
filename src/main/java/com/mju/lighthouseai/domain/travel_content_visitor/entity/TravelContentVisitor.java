@@ -2,7 +2,7 @@ package com.mju.lighthouseai.domain.travel_content_visitor.entity;
 
 import com.mju.lighthouseai.domain.travel_content.entity.TravelContent;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.entity.TravelVisitorCafe;
-import com.mju.lighthouseai.domain.travel_visitor_other_service.entity.TravelVisitorOtherService;
+import com.mju.lighthouseai.domain.travel_visitor_other_service.entity.TravelVisitorOtherServiceEntity;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.entity.TravelVisitorRestaurant;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.entity.TravelVisitorShoppingMall;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.entity.TravelVisitorTourList;
@@ -58,7 +58,7 @@ public class TravelContentVisitor extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     @JoinColumn(name = "travel_visitor_otherservice_id")
-    private TravelVisitorOtherService travelVisitorOtherService;
+    private TravelVisitorOtherServiceEntity travelVisitorOtherService;
 
     @Builder
     public TravelContentVisitor(
@@ -67,7 +67,7 @@ public class TravelContentVisitor extends BaseEntity {
         final TravelVisitorRestaurant travelVisitorRestaurant,
         final TravelVisitorShoppingMall travelVisitorShoppingMall,
         final TravelVisitorTourList travelVisitorTourList,
-        final TravelVisitorOtherService travelVisitorOtherService
+        final TravelVisitorOtherServiceEntity travelVisitorOtherService
     ) {
         this.travelContent = travelContent;
         this.travelVisitorCafe = travelVisitorCafe;

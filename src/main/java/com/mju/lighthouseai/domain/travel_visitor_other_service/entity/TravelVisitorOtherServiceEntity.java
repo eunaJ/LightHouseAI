@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "TB_TRAVEL_VISITOR_OTHER_SERVICE")
-public class TravelVisitorOtherService extends BaseEntity {
+public class TravelVisitorOtherServiceEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,7 +40,7 @@ public class TravelVisitorOtherService extends BaseEntity {
     @JoinColumn(name = "otherservice_id", nullable = false)
     private OtherServiceEntity otherServiceEntity;
 
-    public TravelVisitorOtherService(
+    public TravelVisitorOtherServiceEntity(
             final String image_url,
             final int price,
             final String opentime,
