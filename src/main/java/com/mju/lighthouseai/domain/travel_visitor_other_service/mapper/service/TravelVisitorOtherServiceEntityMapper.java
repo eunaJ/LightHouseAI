@@ -2,6 +2,7 @@ package com.mju.lighthouseai.domain.travel_visitor_other_service.mapper.service;
 
 import com.mju.lighthouseai.domain.other_service.entity.OtherServiceEntity;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.response.TravelVisitorOtherServiceReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.entity.TravelVisitorOtherServiceEntity;
 import com.mju.lighthouseai.domain.user.entity.User;
 import org.mapstruct.Mapper;
@@ -21,4 +22,15 @@ public interface TravelVisitorOtherServiceEntityMapper {
     TravelVisitorOtherServiceEntity toTravelVisitorOtherService(
             TravelVisitorOtherServiceCreateServiceRequestDto requestDto,
             User user, OtherServiceEntity otherServiceEntity, String image_url);
+
+    default String toUserName(User user){
+        return user.getNickname();
+    }
+    default String toOtherServiceTitle(OtherServiceEntity otherServiceEntity){
+        return otherServiceEntity.getTitle();
+    }
+    @Mapping(source = "user", target = "nickname")
+    @Mapping(source = "otherServiceEntity.title", target = "otherService_title")
+    TravelVisitorOtherServiceReadAllServiceResponseDto toTravelVisitorOtherServiceReadResponseDto(
+            TravelVisitorOtherServiceEntity travelVisitorOtherServiceEntity);
 }
