@@ -1,7 +1,7 @@
 package com.mju.lighthouseai.domain.travel_visitor_shoppingmall.mapper.service;
 
 import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
-import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.TravelVisitorShoppingMallCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.entity.TravelVisitorShoppingMall;
 import com.mju.lighthouseai.domain.user.entity.User;
 import org.mapstruct.Mapper;

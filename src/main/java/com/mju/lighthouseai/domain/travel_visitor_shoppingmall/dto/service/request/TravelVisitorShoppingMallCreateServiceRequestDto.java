@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service;
+package com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request;
 
 public record TravelVisitorShoppingMallCreateServiceRequestDto(
         int price,
