@@ -29,8 +29,13 @@ public interface TravelVisitorOtherServiceEntityMapper {
     default String toOtherServiceTitle(OtherServiceEntity otherServiceEntity){
         return otherServiceEntity.getTitle();
     }
+
     @Mapping(source = "user", target = "nickname")
     @Mapping(source = "otherServiceEntity.title", target = "otherService_title")
     TravelVisitorOtherServiceReadAllServiceResponseDto toTravelVisitorOtherServiceReadResponseDto(
             TravelVisitorOtherServiceEntity travelVisitorOtherServiceEntity);
+
+    List<TravelVisitorOtherServiceReadAllServiceResponseDto>
+    toTravelVisitorOtherServiceReadAllResponseDto(
+            List<TravelVisitorOtherServiceEntity> travelVisitorOtherServiceEntities);
 }
