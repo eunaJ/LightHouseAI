@@ -2,6 +2,7 @@ package com.mju.lighthouseai.domain.travel_visitor_shoppingmall.mapper.service;
 
 import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.response.TravelVisitorShoppingMallReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.entity.TravelVisitorShoppingMall;
 import com.mju.lighthouseai.domain.user.entity.User;
 import org.mapstruct.Mapper;
@@ -19,4 +20,15 @@ public interface TravelVisitorShoppingMallEntityMapper {
     TravelVisitorShoppingMall toTravelVisitorShoppingMall(
             TravelVisitorShoppingMallCreateServiceRequestDto requestDto,
             User user, ShoppingMall shoppingMall, String image_url);
+
+    default String toUserName(User user){
+        return user.getNickname();
+    }
+    default String toShoppingMallTitle(ShoppingMall shoppingMall){
+        return shoppingMall.getTitle();
+    }
+    @Mapping(source = "user", target = "nickname")
+    @Mapping(source = "shoppingMall.title", target = "shoppingMall_title")
+    TravelVisitorShoppingMallReadAllServiceResponseDto toTravelVisitorShoppingMallReadResponseDto(
+            TravelVisitorShoppingMall travelVisitorShoppingMall);
 }
