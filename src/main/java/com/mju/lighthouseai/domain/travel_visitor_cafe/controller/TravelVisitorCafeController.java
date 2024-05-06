@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/travelvisitorcafes")
+@RequestMapping("/api/v1/travelVisitorCafes")
 @RestController
 public class TravelVisitorCafeController {
     private final TravelVisitorCafeDtoMapper travelVisitorCafeDtoMapper;
