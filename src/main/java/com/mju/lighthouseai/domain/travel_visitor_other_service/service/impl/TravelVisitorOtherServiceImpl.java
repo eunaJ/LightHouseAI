@@ -98,4 +98,11 @@ public class TravelVisitorOtherServiceImpl implements TravelVisitorOtherService 
         return travelVisitorOtherServiceEntityMapper.toTravelVisitorOtherServiceReadResponseDto(
                 travelVisitorOtherServiceEntity);
     }
+
+    public List<TravelVisitorOtherServiceReadAllServiceResponseDto> readAllTravelVisitorOtherServices(){
+        List<TravelVisitorOtherServiceEntity> travelVisitorOtherServiceEntities
+                = travelVisitorOtherServiceRepository.findAll();
+        return travelVisitorOtherServiceEntityMapper.toTravelVisitorOtherServiceReadAllResponseDto(
+                travelVisitorOtherServiceEntities);
+    }
 }

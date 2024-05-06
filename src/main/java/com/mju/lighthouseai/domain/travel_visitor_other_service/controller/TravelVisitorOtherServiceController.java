@@ -68,4 +68,10 @@ public class TravelVisitorOtherServiceController {
                 .body(travelVisitorOtherService.readTravelVisitorOtherService(
                         travelVisitorOtherServiceId));
     }
+
+    @GetMapping("/")
+    public ResponseEntity<?> readAllTravelVisitorOtherServices(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorOtherService.readAllTravelVisitorOtherServices());
+    }
 }

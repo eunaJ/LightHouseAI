@@ -16,4 +16,5 @@ public interface TravelVisitorOtherService {
             Long id, TravelVisitorOtherServiceUpdateServiceRequestDto requestDto, User user);
     void deleteTravelVisitorOtherService(Long id, User user);
     TravelVisitorOtherServiceReadAllServiceResponseDto readTravelVisitorOtherService(Long id);
+    List<TravelVisitorOtherServiceReadAllServiceResponseDto> readAllTravelVisitorOtherServices();
 }
