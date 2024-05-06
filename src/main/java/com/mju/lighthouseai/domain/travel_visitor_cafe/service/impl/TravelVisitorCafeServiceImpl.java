@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
@@ -70,7 +69,6 @@ public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
         String fileName;
         String fileUrl;
         fileUrl = null;
-        log.info(String.valueOf(travelVisitorCafe.getPrice()));
         // 카페가 없어져도 방문 기록은 남아야
         travelVisitorCafe.updateTravelVisitorCafe(requestDto.menu(), requestDto.price(), requestDto.opentime(),
                 requestDto.closetime(), requestDto.location(), fileUrl);
