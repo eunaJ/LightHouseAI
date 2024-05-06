@@ -2,6 +2,7 @@ package com.mju.lighthouseai.domain.travel_visitor_tour_list.service;
 
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.request.TravelVisitorTourListCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.request.TravelVisitorTourListUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.response.TravelVisitorTourListReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.user.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,4 +15,6 @@ public interface TravelVisitorTourListService {
     void updateTravelVisitorTourList(Long id, TravelVisitorTourListUpdateServiceRequestDto requestDto,
                                      User user);
     void deleteTravelVisitorTourList(Long id, User user);
+
+    TravelVisitorTourListReadAllServiceResponseDto readTravelVisitorTourList(Long id);
 }

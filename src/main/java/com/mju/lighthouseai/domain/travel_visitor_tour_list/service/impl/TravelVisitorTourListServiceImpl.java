@@ -6,6 +6,7 @@ import com.mju.lighthouseai.domain.tour_list.exceoption.TourListErrorCode;
 import com.mju.lighthouseai.domain.tour_list.repository.TourListRepository;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.request.TravelVisitorTourListCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.request.TravelVisitorTourListUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.response.TravelVisitorTourListReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.entity.TravelVisitorTourList;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.exception.NotFoundTravelVisitorTourListException;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.exception.TravelVisitorTourListErrorCode;
@@ -81,5 +82,13 @@ public class TravelVisitorTourListServiceImpl implements TravelVisitorTourListSe
                 .orElseThrow(()-> new NotFoundTravelVisitorTourListException(
                         TravelVisitorTourListErrorCode.NOT_FOUND_TRAVEL_VISITOR_TourList));
         travelVisitorTourListRepository.delete(travelVisitorTourList);
+    }
+
+    public TravelVisitorTourListReadAllServiceResponseDto readTravelVisitorTourList(Long id){
+        TravelVisitorTourList travelVisitorTourList = travelVisitorTourListRepository.findById(id)
+                .orElseThrow(()-> new NotFoundTravelVisitorTourListException(
+                        TravelVisitorTourListErrorCode.NOT_FOUND_TRAVEL_VISITOR_TourList));
+        return travelVisitorTourListEntityMapper.toTravelVisitorTourListReadResponseDto(
+                travelVisitorTourList);
     }
 }
