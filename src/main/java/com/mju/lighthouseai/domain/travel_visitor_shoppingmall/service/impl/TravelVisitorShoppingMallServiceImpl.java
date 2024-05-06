@@ -4,8 +4,11 @@ import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
 import com.mju.lighthouseai.domain.shoppingmall.exception.NotFoundShoppingMallException;
 import com.mju.lighthouseai.domain.shoppingmall.exception.ShoppingMallErrorCode;
 import com.mju.lighthouseai.domain.shoppingmall.repository.ShoppingMallRepository;
-import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.TravelVisitorShoppingMallCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.entity.TravelVisitorShoppingMall;
+import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.exception.NotFoundTravelVisitorShoppingMallException;
+import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.exception.TravelVisitorShoppingMallErrorCode;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.mapper.service.TravelVisitorShoppingMallEntityMapper;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.repository.TravelVisitorShoppingMallRepository;
 import com.mju.lighthouseai.domain.user.entity.User;
@@ -13,6 +16,7 @@ import com.mju.lighthouseai.global.s3.S3Provider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -55,5 +59,21 @@ public class TravelVisitorShoppingMallServiceImpl {
             fileUrl = requestDto.shoppingMall_title() + SEPARATOR + fileName;
             s3Provider.saveFile(multipartFile,fileUrl);
         }
+    }
+
+    @Transactional
+    public void updateTravelVisitorShoppingMall(Long id, TravelVisitorShoppingMallUpdateServiceRequestDto requestDto, User user){
+        TravelVisitorShoppingMall travelVisitorShoppingMall = findTravelVisitorShoppingMall(id);
+        String fileName;
+        String fileUrl;
+        fileUrl = null;
+        // 없어져도 방문 기록은 남아야?
+        travelVisitorShoppingMall.updateTravelVisitorShoppingMall(requestDto.price(),
+                requestDto.opentime(), requestDto.closetime(), requestDto.location(), fileUrl);
+    }
+    private TravelVisitorShoppingMall findTravelVisitorShoppingMall(Long id){
+        return travelVisitorShoppingMallRepository.findById(id)
+                .orElseThrow(()-> new NotFoundTravelVisitorShoppingMallException(
+                        TravelVisitorShoppingMallErrorCode.NOT_FOUND_TRAVEL_VISITOR_ShoppingMall));
     }
 }
