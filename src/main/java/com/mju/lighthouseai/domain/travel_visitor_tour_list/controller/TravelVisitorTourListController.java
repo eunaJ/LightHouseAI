@@ -47,4 +47,14 @@ public class TravelVisitorTourListController {
                 travelVisitorTourListId,serviceRequestDto,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @DeleteMapping("/{travelVisitorTourListId}")
+    public ResponseEntity<?> deleteTravelVisitorTourList(
+            @PathVariable Long travelVisitorTourListId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        travelVisitorTourListService.deleteTravelVisitorTourList(
+                travelVisitorTourListId, userDetails.user());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

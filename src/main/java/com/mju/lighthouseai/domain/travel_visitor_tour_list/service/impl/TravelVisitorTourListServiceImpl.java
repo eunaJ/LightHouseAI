@@ -66,7 +66,7 @@ public class TravelVisitorTourListServiceImpl implements TravelVisitorTourListSe
         String fileName;
         String fileUrl;
         fileUrl = null;
-        // 카페가 없어져도 방문 기록은 남아야
+        // 없어져도 방문 기록은 남아야
         travelVisitorTourList.updateTravelVisitorTourList(requestDto.price(), requestDto.opentime(),
                 requestDto.closetime(), requestDto.location(), fileUrl);
     }
@@ -74,5 +74,12 @@ public class TravelVisitorTourListServiceImpl implements TravelVisitorTourListSe
         return travelVisitorTourListRepository.findById(id)
                 .orElseThrow(()-> new NotFoundTravelVisitorTourListException(
                         TravelVisitorTourListErrorCode.NOT_FOUND_TRAVEL_VISITOR_TourList));
+    }
+
+    public void deleteTravelVisitorTourList(Long id, User user) {
+        TravelVisitorTourList travelVisitorTourList = travelVisitorTourListRepository.findById(id)
+                .orElseThrow(()-> new NotFoundTravelVisitorTourListException(
+                        TravelVisitorTourListErrorCode.NOT_FOUND_TRAVEL_VISITOR_TourList));
+        travelVisitorTourListRepository.delete(travelVisitorTourList);
     }
 }

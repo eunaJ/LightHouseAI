@@ -13,4 +13,5 @@ public interface TravelVisitorTourListService {
 
     void updateTravelVisitorTourList(Long id, TravelVisitorTourListUpdateServiceRequestDto requestDto,
                                      User user);
+    void deleteTravelVisitorTourList(Long id, User user);
 }
