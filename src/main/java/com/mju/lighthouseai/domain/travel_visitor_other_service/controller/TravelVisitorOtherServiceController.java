@@ -49,4 +49,14 @@ public class TravelVisitorOtherServiceController {
                 travelVisitorOtherServiceId,serviceRequestDto,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @DeleteMapping("/{travelVisitorOtherServiceId}")
+    public ResponseEntity<?> deleteTravelVisitorOtherService(
+            @PathVariable Long travelVisitorOtherServiceId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        travelVisitorOtherService.deleteTravelVisitorOtherService(
+                travelVisitorOtherServiceId, userDetails.user());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

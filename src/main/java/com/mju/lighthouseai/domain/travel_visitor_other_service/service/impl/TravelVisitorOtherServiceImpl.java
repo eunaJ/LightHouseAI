@@ -80,4 +80,12 @@ public class TravelVisitorOtherServiceImpl implements TravelVisitorOtherService 
                 .orElseThrow(()-> new NotFoundTravelVisitorOtherServiceException(
                         TravelVisitorOtherServiceErrorCode.NOT_FOUND_TRAVEL_VISITOR_OtherService));
     }
+
+    public void deleteTravelVisitorOtherService(Long id, User user) {
+        TravelVisitorOtherServiceEntity travelVisitorOtherServiceEntity =
+                travelVisitorOtherServiceRepository.findById(id)
+                .orElseThrow(()-> new NotFoundTravelVisitorOtherServiceException(
+                        TravelVisitorOtherServiceErrorCode.NOT_FOUND_TRAVEL_VISITOR_OtherService));
+        travelVisitorOtherServiceRepository.delete(travelVisitorOtherServiceEntity);
+    }
 }
