@@ -6,6 +6,7 @@ import com.mju.lighthouseai.domain.other_service.exception.OtherServiceErrorCode
 import com.mju.lighthouseai.domain.other_service.repository.OtherServiceRepository;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.response.TravelVisitorOtherServiceReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.entity.TravelVisitorOtherServiceEntity;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.exception.NotFoundTravelVisitorOtherServiceException;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.exception.TravelVisitorOtherServiceErrorCode;
@@ -87,5 +88,14 @@ public class TravelVisitorOtherServiceImpl implements TravelVisitorOtherService 
                 .orElseThrow(()-> new NotFoundTravelVisitorOtherServiceException(
                         TravelVisitorOtherServiceErrorCode.NOT_FOUND_TRAVEL_VISITOR_OtherService));
         travelVisitorOtherServiceRepository.delete(travelVisitorOtherServiceEntity);
+    }
+
+    public TravelVisitorOtherServiceReadAllServiceResponseDto readTravelVisitorOtherService(Long id){
+        TravelVisitorOtherServiceEntity travelVisitorOtherServiceEntity =
+                travelVisitorOtherServiceRepository.findById(id)
+                        .orElseThrow(()-> new NotFoundTravelVisitorOtherServiceException(
+                                TravelVisitorOtherServiceErrorCode.NOT_FOUND_TRAVEL_VISITOR_OtherService));
+        return travelVisitorOtherServiceEntityMapper.toTravelVisitorOtherServiceReadResponseDto(
+                travelVisitorOtherServiceEntity);
     }
 }

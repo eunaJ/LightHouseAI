@@ -59,4 +59,13 @@ public class TravelVisitorOtherServiceController {
                 travelVisitorOtherServiceId, userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @GetMapping("/{travelVisitorOtherServiceId}")
+    public ResponseEntity<?> readTravelVisitorOtherService(
+            @PathVariable Long travelVisitorOtherServiceId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorOtherService.readTravelVisitorOtherService(
+                        travelVisitorOtherServiceId));
+    }
 }
