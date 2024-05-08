@@ -1,7 +1,5 @@
 package com.mju.lighthouseai.domain.user.dto.kakao;
 
-import java.time.LocalDateTime;
-
 public record KakaoUserInfoDto (
         String email,
         String nickname,

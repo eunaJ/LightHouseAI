@@ -5,7 +5,6 @@ public record UserSignUpControllerRequestDto(
         String password,
         String confirmPassword,
         String nickname,
-        String birth,
-        String profile_img_url
+        String birth
 ) {
 }

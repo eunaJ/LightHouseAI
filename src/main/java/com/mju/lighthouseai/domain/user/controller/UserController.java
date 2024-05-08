@@ -2,6 +2,7 @@ package com.mju.lighthouseai.domain.user.controller;
 
 import com.mju.lighthouseai.domain.user.dto.controller.*;
 import com.mju.lighthouseai.domain.user.dto.service.request.*;
+import com.mju.lighthouseai.domain.user.dto.service.response.UserLoginResponseDto;
 import com.mju.lighthouseai.domain.user.mapper.dto.UserDtoMapper;
 import com.mju.lighthouseai.domain.user.service.UserService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
@@ -12,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,10 +27,11 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(
-            @RequestBody UserSignUpControllerRequestDto controllerRequestDto) {
+            @RequestPart UserSignUpControllerRequestDto controllerRequestDto,
+            @RequestPart(required=false) MultipartFile multipartFile) throws IOException {
         UserSignUpServiceRequestDto serviceRequestDto = userDtoMapper.toUserSignUpServiceRequestDto(
                 controllerRequestDto);
-        userService.signUp(serviceRequestDto);
+        userService.signUp(serviceRequestDto, multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -52,11 +57,9 @@ public class UserController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAccessToken(
             @RequestHeader("Cookie") String refreshToken,
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
             HttpServletResponse httpServletResponse
     ) {
-        userService.refreshAccessToken(refreshToken,
-                userDetails.user(), httpServletResponse);
+        userService.refreshAccessToken(refreshToken, httpServletResponse);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -73,6 +76,22 @@ public class UserController {
             @RequestBody isNotDupUserNickServiceRequestDto serviceRequestDto
     ){
         userService.isNotDupUserNick(serviceRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<UserLoginResponseDto> getUser(
+            @RequestHeader("Authorization") String token
+    ){
+        UserLoginResponseDto responseDto = userService.getUser(token);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(
+            @RequestHeader("Authorization") String token
+    ){
+        userService.logout(token);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -11,14 +11,20 @@ import com.mju.lighthouseai.domain.user.service.UserService;
 import com.mju.lighthouseai.global.jwt.JwtUtil;
 import com.mju.lighthouseai.global.jwt.RefreshToken;
 import com.mju.lighthouseai.global.jwt.RefreshTokenRepository;
-import io.jsonwebtoken.JwtException;
+import com.mju.lighthouseai.global.jwt.exception.ExpiredJwtAccessTokenException;
+import com.mju.lighthouseai.global.jwt.exception.ExpiredJwtRefreshTokenException;
+import com.mju.lighthouseai.global.jwt.exception.FailedJwtTokenException;
+import com.mju.lighthouseai.global.jwt.exception.JwtErrorCode;
+import com.mju.lighthouseai.global.s3.S3Provider;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Objects;
 
 @Slf4j
@@ -35,8 +41,15 @@ public class UserServiceImpl implements UserService {
     @Value("${spring.jwt.refresh.expiration-period}")
     private Long timeToLive;
 
+    private final S3Provider s3Provider;
+    private final String SEPARATOR = "/";
+    private final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
+    @Value("${cloud.aws.s3.bucket}")
+    public String bucket;
+
     @Override
-    public void signUp(final UserSignUpServiceRequestDto serviceRequestDto) {
+    public void signUp(final UserSignUpServiceRequestDto serviceRequestDto,
+                       MultipartFile multipartFile) throws IOException {
         // 이메일 중복 체크
         if (userRepository.existsByEmail(serviceRequestDto.email())) {
             throw new AlreadyExistsEmailException(UserErrorCode.ALREADY_EXIST_EMAIL);
@@ -49,8 +62,22 @@ public class UserServiceImpl implements UserService {
         if(!serviceRequestDto.password().equals(serviceRequestDto.confirmPassword())) {
             throw new NotMatchPasswordException(UserErrorCode.NOT_MATCH_PASSWORD);
         }
-        User user = userEntityMapper.toUser(serviceRequestDto, UserRole.USER);
-        userRepository.save(user);
+        // 프로필 이미지 업로드
+        String fileName;
+        String fileUrl;
+        if (multipartFile == null){
+            fileUrl = null;
+            User user = userEntityMapper.toUser(serviceRequestDto, UserRole.USER, fileUrl);
+            userRepository.save(user);
+        } else {
+            fileName = s3Provider.originalFileName(multipartFile);
+            fileUrl = url + serviceRequestDto.email() + SEPARATOR + fileName;
+            User user = userEntityMapper.toUser(serviceRequestDto, UserRole.USER, fileUrl);
+            userRepository.save(user);
+            s3Provider.createFolder(serviceRequestDto.email());
+            fileUrl = serviceRequestDto.email() + SEPARATOR + fileName;
+            s3Provider.saveFile(multipartFile, fileUrl);
+        }
     }
 
     @Override
@@ -69,7 +96,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user, UpdateUserServiceRequestDto serviceRequestDto) {
-        log.info(serviceRequestDto.newPassword());
         // 비밀번호
         if(!Objects.equals(serviceRequestDto.newPassword(), "")){
             if (passwordEncoder.matches(serviceRequestDto.newPassword(), user.getPassword())) {
@@ -88,33 +114,33 @@ public class UserServiceImpl implements UserService {
             user.updateNickname(serviceRequestDto.nickname());
         }
         // 프로필 이미지
-        if(!Objects.equals(serviceRequestDto.profile_img_url(), "")) {
+        if(serviceRequestDto.profile_img_url() != null) {
             user.updateProfile_img_url(serviceRequestDto.profile_img_url());
         }
         userRepository.save(user);
     }
 
     @Override
-    public UserLoginResponseDto refreshAccessToken(final String refreshToken,
-                                                   final User user,
+    public UserLoginResponseDto refreshAccessToken(final String refreshTokenCookie,
                                                    final HttpServletResponse response) {
-        String token = refreshToken.substring(13);
-        refreshTokenRepository.findById(String.valueOf(user.getId()))
-                .orElseThrow(() -> new JwtException("refreshToke 만료"));
-        if (!jwtUtil.validateRefreshToken(token)) {
-            log.error("BadRefreshToken");
-            throw new JwtException("BadRefreshToken");
+        String refresh = refreshTokenCookie.substring(13);
+        // 애초에 다르면 검증에 오류
+        RefreshToken refreshToken = refreshTokenRepository.findByRefreshToken(refresh)
+                .orElseThrow(() -> new ExpiredJwtRefreshTokenException(JwtErrorCode.EXPIRED_JWT_REFRESH_TOKEN));
+        if (!jwtUtil.validateRefreshToken(refreshToken.getRefreshToken())) {
+            throw new FailedJwtTokenException(JwtErrorCode.FAILED_JWT_TOKEN);
         }
+        User user = userRepository.findById(refreshToken.getId()).orElseThrow(()->new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
         jwtUtil.addAccessTokenToHeader(user, httpServletResponse);
-        String newToken = jwtUtil.addRefreshTokenToCookie(user, httpServletResponse);
+        String newToken = jwtUtil.addRefreshTokenToCookie(user, response);
         refreshTokenRepository.deleteById(String.valueOf(user.getId()));
         refreshTokenRepository.save(new RefreshToken(user.getId(), newToken, timeToLive));
         return userEntityMapper.toUserLoginResponseDto(user);
     }
 
     @Override
-    public void isNotDupUserEmail(isNotDupUserEmailServiceRequestDto serviceRequestDto){
-        if(userRepository.existsByEmail(serviceRequestDto.email())) {
+    public void isNotDupUserEmail(isNotDupUserEmailServiceRequestDto serviceRequestDto) {
+        if (userRepository.existsByEmail(serviceRequestDto.email())) {
             log.info("중복된 이메일입니다.");
             throw new AlreadyExistsEmailException(UserErrorCode.ALREADY_EXIST_EMAIL);
         }
@@ -126,5 +152,27 @@ public class UserServiceImpl implements UserService {
             log.info("중복된 닉네임입니다.");
             throw new DuplicateNicknameException(UserErrorCode.DUPLICATE_NICKNAME);
         }
+    }
+
+    @Override
+    public UserLoginResponseDto getUser(final String token){
+        if (jwtUtil.isExpiredAccessToken(token)) {
+            throw new ExpiredJwtAccessTokenException(JwtErrorCode.EXPIRED_JWT_ACCESS_TOKEN);
+        }
+        String email = jwtUtil.getUserInfoFromToken(token).getSubject();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        return userEntityMapper.toUserLoginResponseDto(user);
+    }
+
+    @Override
+    public void logout(final String token){
+        if (jwtUtil.isExpiredAccessToken(token)) {
+            throw new ExpiredJwtAccessTokenException(JwtErrorCode.EXPIRED_JWT_ACCESS_TOKEN);
+        }
+        String email = jwtUtil.getUserInfoFromToken(token).getSubject();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        refreshTokenRepository.deleteById(String.valueOf(user.getId()));
     }
 }
