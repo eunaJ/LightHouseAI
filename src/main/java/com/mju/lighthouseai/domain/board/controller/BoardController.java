@@ -56,12 +56,10 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/boards/{bordId}")
+    @DeleteMapping("/boards/{boardId}")
     public ResponseEntity<?> deleteBoard(
-
             @PathVariable Long boardId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
-
     ){
         boardService.deleteBoard(boardId,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
