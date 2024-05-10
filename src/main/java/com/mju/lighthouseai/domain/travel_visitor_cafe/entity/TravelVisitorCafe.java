@@ -2,6 +2,7 @@ package com.mju.lighthouseai.domain.travel_visitor_cafe.entity;
 
 import com.mju.lighthouseai.domain.cafe.entity.Cafe;
 import com.mju.lighthouseai.domain.user.entity.User;
+import com.mju.lighthouseai.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,13 +12,16 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "TB_TRAVEL_VISITOR_CAFE")
-public class TravelVisitorCafe {
+public class TravelVisitorCafe extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
     private String image_url;
+
+    @Column
+    private String menu;
 
     @Column
     private int price;
@@ -41,6 +45,7 @@ public class TravelVisitorCafe {
 
     public TravelVisitorCafe(
             final String image_url,
+            final String menu,
             final int price,
             final String opentime,
             final String closetime,
@@ -49,11 +54,22 @@ public class TravelVisitorCafe {
             final Cafe cafe
     ) {
         this.image_url = image_url;
+        this.menu = menu;
         this.price = price;
         this.opentime = opentime;
         this.closetime = closetime;
         this.location = location;
         this.user = user;
         this.cafe = cafe;
+    }
+
+    public void updateTravelVisitorCafe(
+            String menu, int price, String opentime, String closetime, String location, String image_url) {
+        this.menu = menu;
+        this.price = price;
+        this.opentime = opentime;
+        this.closetime = closetime;
+        this.location = location;
+        this.image_url = image_url;
     }
 }
