@@ -37,7 +37,7 @@ public class BoardController {
     public ResponseEntity<?> createBoard(
             @RequestPart BoardCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart (required = false)MultipartFile multipartFile
     )throws IOException {
         BoardCreateServiceRequestDto serviceRequestDto =
                 boardDtoMapper.toBoardCreateServiceDto(controllerRequestDto);
@@ -49,7 +49,7 @@ public class BoardController {
             @PathVariable Long boardId,
             @RequestPart BoardUpdateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart (required = false) MultipartFile multipartFile
     )throws IOException{
         BoardUpdateServiceRequestDto serviceRequestDto =
                 boardDtoMapper.toBoardUpdateServiceDto(controllerRequestDto);
