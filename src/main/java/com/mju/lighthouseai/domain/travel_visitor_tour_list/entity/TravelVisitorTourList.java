@@ -2,6 +2,7 @@ package com.mju.lighthouseai.domain.travel_visitor_tour_list.entity;
 
 import com.mju.lighthouseai.domain.tour_list.entity.TourList;
 import com.mju.lighthouseai.domain.user.entity.User;
+import com.mju.lighthouseai.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "TB_TRAVEL_VISITOR_TOUR_LIST")
-public class TravelVisitorTourList {
+public class TravelVisitorTourList extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -55,5 +56,14 @@ public class TravelVisitorTourList {
         this.location = location;
         this.user = user;
         this.tourList = tourList;
+    }
+
+    public void updateTravelVisitorTourList(
+            int price, String opentime, String closetime, String location, String image_url) {
+        this.price = price;
+        this.opentime = opentime;
+        this.closetime = closetime;
+        this.location = location;
+        this.image_url = image_url;
     }
 }

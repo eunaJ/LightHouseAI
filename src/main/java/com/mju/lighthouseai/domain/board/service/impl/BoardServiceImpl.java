@@ -18,6 +18,7 @@ import com.mju.lighthouseai.global.s3.S3Provider;
 import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.buf.Utf8Encoder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,8 +89,21 @@ public class BoardServiceImpl implements BoardService {
 
     public void deleteBoard(Long id, User user) {
         Board delete_board = boardRepository.findById(id)
+
                 .orElseThrow(() -> new NotFoundBoardException(BoardErrorCode.NOT_FOUND_Board));
-        boardRepository.delete(delete_board);
+        System.out.println(board.getTitle());
+        if (board.getImage_url()==null){
+            boardRepository.delete(board);
+        }else{
+            String imageName = board.getImage_url().replace(url,"");
+            imageName = imageName.substring(imageName.lastIndexOf("/"));
+            boardRepository.delete(board);
+            s3Provider.delete(board.getTitle()+imageName);
+            // TODO 폴더 삭제 하기 구현하기
+            // TODO 1. AWS S3 안에 있는 객체를 모두 삭제 해야 폴더 삭제 가능
+
+        }
+
     }
     public List<BoardReadAllServiceResponseDto> readAllBoards(){
         List<Board> boards = boardRepository.findAll();
