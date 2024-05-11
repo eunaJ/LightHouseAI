@@ -117,11 +117,9 @@ public class UserServiceImpl implements UserService {
             user.updateNickname(serviceRequestDto.nickname());
         }
         // 프로필 이미지
-    if(!serviceRequestDto.ImageChange()) {
-            user.updateProfile_img_url(user.getProfile_img_url());
-        }else {
+        if(serviceRequestDto.ImageChange()) {
             String imageName = s3Provider.updateImage(user.getProfile_img_url(),
-                user.getFolderName(),multipartFile);
+                user.getFolderName(), multipartFile);
             user.updateProfile_img_url(imageName);
         }
         userRepository.save(user);
