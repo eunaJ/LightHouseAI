@@ -13,7 +13,8 @@ public interface UserEntityMapper {
     @Mapping(source = "serviceRequestDto.password", target = "password", qualifiedBy = EncoderPassword.class)
     @Mapping(source = "userRole", target = "role")
     @Mapping(source = "profile_img_url",target = "profile_img_url")
-    User toUser(UserSignUpServiceRequestDto serviceRequestDto, UserRole userRole, String profile_img_url);
+    @Mapping(source = "folderName",target = "folderName")
+    User toUser(UserSignUpServiceRequestDto serviceRequestDto, UserRole userRole, String profile_img_url,String folderName);
 
     UserLoginResponseDto toUserLoginResponseDto(User user);
 }
