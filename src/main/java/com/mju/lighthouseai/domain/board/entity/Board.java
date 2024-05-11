@@ -43,6 +43,9 @@ public class Board extends BaseEntity {
     @Column
     private String image_url;
 
+    @Column
+    private String folderName;
+
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
@@ -54,17 +57,20 @@ public class Board extends BaseEntity {
         final String title,
         final String image_url,
         final String content,
+        final String folderName,
         final User user
     )
     {
         this.title  = title;
         this.image_url = image_url;
         this.content = content;
+        this.folderName = folderName;
         this.user = user;
     }
     public void updateBoard(
-            String title, String content) {
+            String title, String content,String image_url) {
         this.title = title;
         this.content = content;
+        this.image_url = image_url;
     }
 }

@@ -16,7 +16,7 @@ import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import com.mju.lighthouseai.global.s3.S3Provider;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.buf.Utf8Encoder;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,26 +48,38 @@ public class BoardServiceImpl implements BoardService {
     ) throws IOException {
         String fileName;
         String fileUrl;
+        String folderName = requestDto.title()+UUID.randomUUID();
         if (multipartFile.isEmpty()){
             fileUrl = null;
-            Board board = boardEntityMapper.toboard(requestDto,user,fileUrl);
+            Board board = boardEntityMapper.toboard(requestDto,user,fileUrl,folderName);
             boardRepository.save(board);
         }else {
             fileName = s3Provider.originalFileName(multipartFile);
             fileUrl = url + requestDto.title() + SEPARATOR + fileName;
-            Board board = boardEntityMapper.toboard(requestDto,user,fileUrl);
+            Board board = boardEntityMapper.toboard(requestDto,user,fileUrl,folderName);
             boardRepository.save(board);
-            s3Provider.createFolder(requestDto.title());
-            fileUrl = requestDto.title() + SEPARATOR + fileName;
+            s3Provider.createFolder(folderName);
+            fileUrl = folderName + SEPARATOR + fileName;
             s3Provider.saveFile(multipartFile,fileUrl);
         }
     }
 
     @Transactional
-    public void updateBoard(Long id, BoardUpdateServiceRequestDto requestDto,User user) {
-        checkUserRole(user);
-        Board board = findBoard(id);
-        board.updateBoard(requestDto.title(), requestDto.content());
+    public void updateBoard(
+        Long id,
+        BoardUpdateServiceRequestDto requestDto,
+        User user,
+        MultipartFile multipartFile
+    ) throws IOException {
+        Board board = boardRepository.findBoardByIdAndUser(id,user)
+            .orElseThrow(()->new NotFoundCafeException(BoardErrorCode.NOT_FOUND_Board));
+        if (!requestDto.imageChange()){
+            board.updateBoard(requestDto.title(), requestDto.content(),board.getImage_url());
+        }else{
+            String imageName = s3Provider.updateImage(board.getImage_url(),
+                board.getFolderName(),multipartFile);
+            board.updateBoard(requestDto.title(), requestDto.content(),imageName);
+        }
     }
 
     private Board findBoard(Long id) {
@@ -76,8 +88,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     public void deleteBoard(Long id, User user) {
-        checkUserRole(user);
-        Board board = boardRepository.findById(id)
+        Board delete_board = boardRepository.findById(id)
+
                 .orElseThrow(() -> new NotFoundBoardException(BoardErrorCode.NOT_FOUND_Board));
         System.out.println(board.getTitle());
         if (board.getImage_url()==null){

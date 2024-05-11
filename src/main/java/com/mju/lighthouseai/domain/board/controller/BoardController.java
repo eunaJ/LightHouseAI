@@ -37,7 +37,7 @@ public class BoardController {
     public ResponseEntity<?> createBoard(
             @RequestPart BoardCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart (required = false)MultipartFile multipartFile
     )throws IOException {
         BoardCreateServiceRequestDto serviceRequestDto =
                 boardDtoMapper.toBoardCreateServiceDto(controllerRequestDto);
@@ -47,12 +47,13 @@ public class BoardController {
     @PutMapping("/boards/{boardId}")
     public ResponseEntity<?> updateBoard(
             @PathVariable Long boardId,
-            @RequestBody BoardUpdateControllerRequestDto controllerRequestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+            @RequestPart BoardUpdateControllerRequestDto controllerRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestPart (required = false) MultipartFile multipartFile
+    )throws IOException{
         BoardUpdateServiceRequestDto serviceRequestDto =
                 boardDtoMapper.toBoardUpdateServiceDto(controllerRequestDto);
-        boardService.updateBoard(boardId,serviceRequestDto, userDetails.user());
+        boardService.updateBoard(boardId,serviceRequestDto, userDetails.user(),multipartFile);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
