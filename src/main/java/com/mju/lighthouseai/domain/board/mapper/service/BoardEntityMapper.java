@@ -15,7 +15,8 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 public interface BoardEntityMapper {
     @Mapping(source = "image_url",target = "image_url")
-    Board toboard(BoardCreateServiceRequestDto requestDto, User user,String image_url);
+    @Mapping(source = "folderName",target = "folderName")
+    Board toboard(BoardCreateServiceRequestDto requestDto, User user,String image_url,String folderName);
 
     default String toUserName(User user){
         return user.getNickname();
