@@ -88,8 +88,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     public void deleteBoard(Long id, User user) {
-        Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new NotFoundBoardException(BoardErrorCode.NOT_FOUND_Board));
+        Board board = findBoard(id);
         System.out.println(board.getTitle());
         if (board.getImage_url()==null){
             boardRepository.delete(board);

@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -65,17 +66,17 @@ public class UserServiceImpl implements UserService {
         // 프로필 이미지 업로드
         String fileName;
         String fileUrl;
-        if (multipartFile == null){
+        if (multipartFile.isEmpty()){
             fileUrl = null;
-            User user = userEntityMapper.toUser(serviceRequestDto, UserRole.USER, fileUrl);
+            User user = userEntityMapper.toUser(serviceRequestDto, UserRole.USER, fileUrl,serviceRequestDto.nickname());
             userRepository.save(user);
         } else {
             fileName = s3Provider.originalFileName(multipartFile);
-            fileUrl = url + serviceRequestDto.email() + SEPARATOR + fileName;
-            User user = userEntityMapper.toUser(serviceRequestDto, UserRole.USER, fileUrl);
+            fileUrl = url + serviceRequestDto.nickname() + SEPARATOR + fileName;
+            User user = userEntityMapper.toUser(serviceRequestDto, UserRole.USER, fileUrl,serviceRequestDto.nickname());
             userRepository.save(user);
-            s3Provider.createFolder(serviceRequestDto.email());
-            fileUrl = serviceRequestDto.email() + SEPARATOR + fileName;
+            fileUrl = user.getFolderName() + SEPARATOR + fileName;
+            s3Provider.createFolder(serviceRequestDto.nickname());
             s3Provider.saveFile(multipartFile, fileUrl);
         }
     }
@@ -94,8 +95,10 @@ public class UserServiceImpl implements UserService {
         return userEntityMapper.toUserLoginResponseDto(user);
     }
 
-    @Override
-    public void updateUser(User user, UpdateUserServiceRequestDto serviceRequestDto) {
+    @Transactional
+    public void updateUser(User user,
+        UpdateUserServiceRequestDto serviceRequestDto,
+        MultipartFile multipartFile) throws IOException {
         // 비밀번호
         if(!Objects.equals(serviceRequestDto.newPassword(), "")){
             if (passwordEncoder.matches(serviceRequestDto.newPassword(), user.getPassword())) {
@@ -114,8 +117,10 @@ public class UserServiceImpl implements UserService {
             user.updateNickname(serviceRequestDto.nickname());
         }
         // 프로필 이미지
-        if(serviceRequestDto.profile_img_url() != null) {
-            user.updateProfile_img_url(serviceRequestDto.profile_img_url());
+        if(serviceRequestDto.ImageChange()) {
+            String imageName = s3Provider.updateImage(user.getProfile_img_url(),
+                user.getFolderName(), multipartFile);
+            user.updateProfile_img_url(imageName);
         }
         userRepository.save(user);
     }

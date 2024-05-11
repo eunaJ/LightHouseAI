@@ -13,7 +13,7 @@ public interface UserService {
 
     UserLoginResponseDto login(UserLoginServiceRequestDto userLoginServiceRequestDto);
 
-    void updateUser(User user, UpdateUserServiceRequestDto updateUserServiceRequestDto);
+    void updateUser(User user, UpdateUserServiceRequestDto updateUserServiceRequestDto,MultipartFile multipartFile)throws IOException;
 
     UserLoginResponseDto refreshAccessToken(String refreshToken, HttpServletResponse response);
 
