@@ -7,13 +7,14 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum BoardErrorCode implements ErrorCode {
+public enum BoardLikeErrorCode implements ErrorCode {
+
 
     // 403
-    FORBIDDEN_ACCESS_Board(HttpStatus.FORBIDDEN, "게시물에 접근할 수 없습니다."),
-
+    NOT_FOUND_User(HttpStatus.FORBIDDEN, "사용자를 찾을 수 없습니다."),
     // 404
     NOT_FOUND_Board(HttpStatus.NOT_FOUND, "게시물을 찾을 수 없습니다.");
+
 
     private final HttpStatus status;
     private final String message;

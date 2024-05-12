@@ -6,7 +6,6 @@ public record BoardUpdateServiceRequestDto(
         String title,
 
         String content
-
 ){
 
 }

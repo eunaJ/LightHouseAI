@@ -58,7 +58,6 @@ public class BoardController {
 
     @DeleteMapping("/boards/{bordId}")
     public ResponseEntity<?> deleteBoard(
-
             @PathVariable Long boardId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
 
