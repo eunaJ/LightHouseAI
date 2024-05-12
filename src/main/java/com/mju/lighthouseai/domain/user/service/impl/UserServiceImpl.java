@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         // 프로필 이미지 업로드
         String fileName;
         String fileUrl;
-        if (multipartFile.isEmpty()){
+        if (multipartFile == null || multipartFile.isEmpty()){
             fileUrl = null;
             User user = userEntityMapper.toUser(serviceRequestDto, UserRole.USER, fileUrl,serviceRequestDto.nickname());
             userRepository.save(user);
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
             User user = userEntityMapper.toUser(serviceRequestDto, UserRole.USER, fileUrl,serviceRequestDto.nickname());
             userRepository.save(user);
             fileUrl = user.getFolderName() + SEPARATOR + fileName;
-            s3Provider.createFolder(serviceRequestDto.nickname());
+            s3Provider.createFolder(serviceRequestDto.email());
             s3Provider.saveFile(multipartFile, fileUrl);
         }
     }
@@ -118,9 +118,14 @@ public class UserServiceImpl implements UserService {
         }
         // 프로필 이미지
         if(serviceRequestDto.ImageChange()) {
-            String imageName = s3Provider.updateImage(user.getProfile_img_url(),
-                user.getFolderName(), multipartFile);
-            user.updateProfile_img_url(imageName);
+            if(multipartFile == null){
+                user.updateProfile_img_url("/static/media/initialProfileImg.b31adf0c9ab904bf0899.png");
+            }
+            else {
+                String imageName = s3Provider.updateImage(user.getProfile_img_url(),
+                        user.getFolderName(), multipartFile);
+                user.updateProfile_img_url(imageName);
+            }
         }
         userRepository.save(user);
     }
