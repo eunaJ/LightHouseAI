@@ -12,17 +12,22 @@ def process_command(command):
         print("command")
         return "Script executed successfully"
     elif command["command"] == "train":
-        ai.train()
+        ai.dataTrain()
         return "Test command executed successfully"
     elif command["command"] == "predict":
         #args에 데이터를 넣어서 predict 실행
         birth = command["birth"]
         reg_id = command["reg_id"]
         serving = command["serving"]
+        title = command["title"]
         travel_expense = command["travel_expense"]
+        star = command["star"]
+        region_name = command["region_name"]
+        constituency = command["constituency"]
         loc_x = command["loc_x"]
         loc_y = command["loc_y"]
-        ai.predict(birth, reg_id, serving, travel_expense, loc_x, loc_y)
+        result = ai.dataPredict(birth, reg_id, serving, title, travel_expense, star, region_name, constituency, loc_x, loc_y)
+        print(result)
         return "Predict command executed successfully"
     
 @app.route('/api/v1/run_command', methods=['POST'])

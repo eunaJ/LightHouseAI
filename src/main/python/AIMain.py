@@ -5,6 +5,7 @@ import pymysql
 import json
 
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 from catboost import CatBoostRegressor, Pool
 from geopy.geocoders import Nominatim
 from urllib import parse
@@ -20,8 +21,11 @@ api_url = 'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query='
 """
 
 global model
+global titles
 
 def dataTrain():
+    global model
+    global titles
     #db에서 데이터를 가져와서 학습
     conn = pymysql.connect(
         host='localhost',
@@ -122,56 +126,37 @@ def dataTrain():
     df_filter['loc_x'] = 0
     df_filter['loc_y'] = 0
     
-    #constituency를 받아 loc_x, loc_y에 x, y좌표를 추가
-    #...하고 싶지만 일단은 임의로 좌표 추가
-    """
-    request = Request(url)
-    request.add_header('X-NCP-APIGW-API-KEY-ID', Client_ID)
-    request.add_header('X-NCP-APIGW-API-KEY', Client_Secret)
-
-    try:
-        response = urlopen(request)
-
-    except HTTPError as e:
-        print('HTTP Error')
-        latitude, longitude = None, None
-
-    else:
-        rescode = response.getcode()
-        
-        if rescode == 200:
-            response_body = response.read().decode('utf-8')
-            response_body = json.loads(response_body)
-            
-            if response_body['addresses'] == []:
-                print('No result')
-            else:
-                latitude = response_body['addresses'][0]['y']
-                longitude = response_body['addresses'][0]['x']
-                print('Success')
-        else:
-            print(f'Response error, rescode:{rescode}')
-            latitude, longitude = None, None    
-    """
     df_filter['loc_x'] = 126.890115
     df_filter['loc_y'] = 37.487221
-
-    categoricla_features_name = [
-        'title',
-        'region_name',
-        'constituency'
-    ]
-    
     df_filter['loc_x'] = 1000000 * df_filter['loc_x']
     df_filter['loc_y'] = 1000000 * df_filter['loc_y']
     
     print(df_filter)
 
-    #df_filter_1을 학습 데이터와 테스트 데이터로 나눔
     train_data, test_data = train_test_split(df_filter, test_size=0.2, random_state=42)
-    
-    train_pool = Pool(train_data.drop('star', axis=1), label=train_data['star'], cat_features=categoricla_features_name)
-    test_pool = Pool(test_data.drop('star', axis=1), label=test_data['star'], cat_features=categoricla_features_name)
+
+    categorical_features_name = [
+        'title',
+        'region_name',
+        'constituency'
+    ]
+
+    #df_filter[categorical_features_name[1:-1]] = df_filter[categorical_features_name[1:-1]].astype(int)
+
+    le = LabelEncoder()
+    for cat in categorical_features_name:
+        df_filter[cat] = le.fit_transform(df_filter[cat])
+        
+
+    #df_filter_1을 학습 데이터와 테스트 데이터로 나눔
+    train_pool = Pool(train_data.drop('star', axis=1), label=train_data['star'], cat_features=categorical_features_name)
+    test_pool = Pool(test_data.drop('star', axis=1), label=test_data['star'], cat_features=categorical_features_name)
+
+
+    #categorical_features_index = [train_data.columns.get_loc(c) for c in categorical_features_name if c in train_data]
+
+    #train_pool = Pool(train_data.drop('star', axis=1), label=train_data['star'], cat_features=categorical_features_index)
+    #test_pool = Pool(test_data.drop('star', axis=1), label=test_data['star'], cat_features=categorical_features_index)
     
     model = CatBoostRegressor(
         depth=6,
@@ -184,14 +169,44 @@ def dataTrain():
     model.fit(
         train_pool,
         eval_set=test_pool,
-        verbose=1,
+        verbose=500,
         plot=True)
     
-def dataPredict(birth, region_id, serving, travel_expense ,loc_x, loc_y):
-    #모델을 사용하여 예측
-    prediction = model.predict([[birth, region_id, serving, travel_expense, loc_x, loc_y]])
+    titles = df_filter['title'].drop_duplicates()
+
+    print(model.get_feature_importance(prettified=True))
     
-    return prediction
+def dataPredict(birth, region_id, serving, title, travel_expense, star, region_name_, constituency, loc_x, loc_y):
+    global model
+    global titles
+    #모델을 사용하여 예측
+    
+    traveler = {
+        'birth':birth,
+        'region_id': region_id,
+        'serving': serving,
+        'title': title,
+        'travel_expense': travel_expense,
+        'region_name': region_name_,
+        'constituency': constituency,
+        'loc_x': loc_x,
+        'loc_y': loc_y
+    }
+
+    results = pd.DataFrame([], columns=['title', 'stars'])
+
+    for title in titles:
+        input = list(traveler.values())
+        input.append(title)
+
+        stars = model.predict(input)
+
+        results = pd.concat([results, pd.DataFrame([[title, stars]], columns=['title', 'stars'])])
+
+    results.sort_values('stars', ascending=False)[:10]
+    #prediction = model.predict([[birth, region_id, serving, title, travel_expense, region_name_, constituency, loc_x, loc_y]])
+    
+    return results
     
 if __name__ == '__main__':
     dataTrain()
