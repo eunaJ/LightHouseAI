@@ -39,6 +39,9 @@ public class User extends BaseEntity {
     @Column
     private String profile_img_url;
 
+    @Column
+    private String folderName;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
@@ -50,7 +53,8 @@ public class User extends BaseEntity {
         final String nickname,
         final UserRole role,
         final String birth,
-        final String profile_img_url
+        final String profile_img_url,
+        final String folderName
     ) {
         this.email = email;
         this.password = password;
@@ -58,6 +62,7 @@ public class User extends BaseEntity {
         this.role = UserRole.USER;
         this.birth = birth;
         this.profile_img_url = profile_img_url;
+        this.folderName = folderName;
     }
 
     public void changeRole(UserRole newRole) {

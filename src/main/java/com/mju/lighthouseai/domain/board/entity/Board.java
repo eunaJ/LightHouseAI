@@ -4,9 +4,16 @@ import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.global.entity.BaseEntity;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 
 
@@ -15,7 +22,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 
 @Getter
 @Entity
@@ -37,6 +43,8 @@ public class Board extends BaseEntity {
     @Column
     private String image_url;
 
+    @Column
+    private String folderName;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -44,27 +52,25 @@ public class Board extends BaseEntity {
     private User user;
 
 
-    @Column(name = "likes_count", nullable = false)
-    private long boardlikesCount ;// 좋아요 수를 저장할 필드, 초기값은 0
-
     @Builder
     public  Board(
         final String title,
         final String image_url,
         final String content,
+        final String folderName,
         final User user
     )
     {
         this.title  = title;
         this.image_url = image_url;
         this.content = content;
+        this.folderName = folderName;
         this.user = user;
     }
     public void updateBoard(
-            String title, String content) {
+            String title, String content,String image_url) {
         this.title = title;
         this.content = content;
+        this.image_url = image_url;
     }
-
-
 }

@@ -12,7 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 public interface BoardService {
     void createBoard (BoardCreateServiceRequestDto requestDto, User user,
         MultipartFile multipartFile) throws IOException;
-    void updateBoard(Long id, BoardUpdateServiceRequestDto requestDto, User user);
+    void updateBoard (Long id, BoardUpdateServiceRequestDto requestDto, User user,MultipartFile multipartFile)
+        throws IOException;
     void deleteBoard(Long id, User user);
     BoardReadAllServiceResponseDto readBoard(Long id);
     List<BoardReadAllServiceResponseDto> readAllBoards();
