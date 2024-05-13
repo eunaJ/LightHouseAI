@@ -1,6 +1,8 @@
 package com.mju.lighthouseai.domain.user.controller;
 
-import com.mju.lighthouseai.domain.user.dto.controller.*;
+import com.mju.lighthouseai.domain.user.dto.controller.request.UpdateUserControllerRequestDto;
+import com.mju.lighthouseai.domain.user.dto.controller.request.UserLoginControllerRequestDto;
+import com.mju.lighthouseai.domain.user.dto.controller.request.UserSignUpControllerRequestDto;
 import com.mju.lighthouseai.domain.user.dto.service.request.*;
 import com.mju.lighthouseai.domain.user.dto.service.response.UserLoginResponseDto;
 import com.mju.lighthouseai.domain.user.mapper.dto.UserDtoMapper;
@@ -46,11 +48,12 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(
-            @RequestBody UpdateUserControllerRequestDto controllerRequestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl
-    ) {
+            @RequestPart UpdateUserControllerRequestDto controllerRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+        @RequestPart(required=false) MultipartFile multipartFile) throws IOException
+     {
         UpdateUserServiceRequestDto serviceRequestDto = userDtoMapper.toUpdateUserServiceRequestDto(controllerRequestDto);
-        userService.updateUser(userDetailsImpl.user(), serviceRequestDto);
+        userService.updateUser(userDetailsImpl.user(), serviceRequestDto,multipartFile);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
