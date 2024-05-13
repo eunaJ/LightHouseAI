@@ -21,7 +21,12 @@ api_url = 'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query='
 """
 
 global model
+
 global titles
+
+global model_cafe
+global cafe_le
+global cafe_titles
 
 def dataTrain():
     global model
@@ -52,28 +57,7 @@ def dataTrain():
         'birth',
         'profile_img_url',
     ]
-    
-    #TB_TRAVEL을 가져와 데이터프레임으로 변환
-    dbconn.execute('SELECT * FROM TB_TRAVEL')
-    rows = dbconn.fetchall()
 
-    df_travel = pd.DataFrame(rows)
-    df_travel.columns = [
-        'id',
-        'image_url',
-        'serving',
-        'star',
-        'title',
-        'travel_expense',
-        'region_id',
-        'user_id',
-        'createdAt',
-        'modifiedAt'
-    ]
-    
-    #두 데이터프레임을 join
-    df_1 = pd.merge(df_user.set_index('id'), df_travel.set_index('user_id'), left_index=True, right_index=True, how='inner')
-    
     #TB_REGION을 가져와 데이터프레임으로 변환
     dbconn.execute('SELECT * FROM TB_REGION')
     rows = dbconn.fetchall()
@@ -135,6 +119,7 @@ def dataTrain():
 
     train_data, test_data = train_test_split(df_filter, test_size=0.2, random_state=42)
 
+    #
     categorical_features_name = [
         'title',
         'region_name',
@@ -208,5 +193,218 @@ def dataPredict(birth, region_id, serving, title, travel_expense, star, region_n
     
     return results
     
+def cafeTrain():
+    global cafe_le
+    global model_cafe
+    global cafe_titles
+    #db에서 데이터를 가져와서 학습
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='1231',
+        port=3306,
+        db='lighthouseAI'
+    )
+    dbconn = conn.cursor()
+
+    #TB_USER을 가져와 데이터프레임으로 변환
+    dbconn.execute('SELECT * FROM TB_USER')
+    rows = dbconn.fetchall()
+
+    df_user = pd.DataFrame(rows)
+    df_user.columns = [
+        'id',
+        'createdAt',
+        'modifiedAt',
+        'email',
+        'nickname',
+        'password',
+        'role',
+        'birth',
+        'profile_img_url',
+    ]
+
+    #df_user에서 필요한 컬럼만 추출
+    df_user = df_user[['id', 'birth']]
+
+    #태어난 년도를 나이로 변환
+    df_user['birth'] = 2024 - df_user['birth'].astype(int)
+
+    #10대, 20대, 30대, 40대, 50대로 변환
+    df_user['birth'] = df_user['birth'] // 10 * 10
+    
+    #TB_TRAVEL을 가져와 데이터프레임으로 변환
+    dbconn.execute('SELECT * FROM TB_TRAVEL')
+    rows = dbconn.fetchall()
+
+    df_travel = pd.DataFrame(rows)
+    df_travel.columns = [
+        'id',
+        'image_url',
+        'serving',
+        'star',
+        'title',
+        'travel_expense',
+        'region_id',
+        'user_id',
+        'createdAt',
+        'modifiedAt'
+    ]
+
+    #df_travel에서 필요한 컬럼만 추출
+    df_travel = df_travel[['id', 'serving', 'star', 'travel_expense', 'user_id']]
+
+    #TB_CAFE을 가져와 데이터프레임으로 변환
+    dbconn.execute('SELECT * FROM TB_CAFE')
+    rows = dbconn.fetchall()
+
+    df_cafe = pd.DataFrame(rows)
+    df_cafe.columns = [
+        'id',
+        'createdAt',
+        'modifiedAt',
+        'location',
+        'menu',
+        'price',
+        'title',
+        'user_id',
+        'closetime',
+        'opentime',
+        'constituency_id',
+    ]
+
+    #df_cafe에서 필요한 컬럼만 추출
+    df_cafe = df_cafe[['id','title', 'location', 'user_id']]
+
+    #TB_TRAVEL_VISITOR_CAFE를 가져와 데이터프레임으로 변환
+    dbconn.execute('SELECT * FROM TB_TRAVEL_VISITOR_CAFE')
+    rows = dbconn.fetchall()
+
+    df_cafe_visitor = pd.DataFrame(rows)
+    df_cafe_visitor.columns = [
+        'id',
+        'closetime',
+        'image_url',
+        'location',
+        'opentime',
+        'price',
+        'cafe_id',
+        'user_id',
+        'createdAt',
+        'modifiedAt',
+        'menu',
+    ]
+
+    #df_cafe_visitor에서 필요한 컬럼만 추출
+    df_cafe_visitor = df_cafe_visitor[['id', 'user_id', 'price']]
+
+    #TB_USER과 TB_TRAVEL을 병합
+    df_1 = pd.merge(df_user, df_travel, left_on='id', right_on='user_id', how='right')
+
+    #df_1에서 필요한 컬럼만 추출
+    df_1 = df_1[['id_y', 'user_id', 'birth', 'serving', 'star', 'travel_expense' ]]
+    #id_y를 id로 변경
+    df_1 = df_1.rename(columns={'id_y': 'id'})
+
+    #TB_CAFE와 TB_TRAVEL_VISITOR_CAFE를 병합
+    df_2 = pd.merge(df_cafe, df_cafe_visitor, left_on='id', right_on='user_id', how='right')
+
+    #df_2에서 필요한 컬럼만 추출
+    df_2 = df_2[['user_id_y','price', 'location','title']]
+    #user_id_y를 user_id로 변경
+    df_2 = df_2.rename(columns={'user_id_y': 'user_id'})
+
+    #df_1과 df_2를 병합
+    df = pd.merge(df_1, df_2, left_on='user_id', right_on='user_id', how='left')
+
+    #범주형 데이터를 수치형 데이터로 변환
+    categorical_features_name = [
+        'location',
+        'title',
+    ]
+
+    cafe_titles = pd.DataFrame([], columns=categorical_features_name)
+
+    cafe_le = LabelEncoder()
+    for cat in categorical_features_name:
+        df[cat] = cafe_le.fit_transform(df[cat])
+
+    for cat in categorical_features_name:
+        cafe_titles[cat] = df[cat].drop_duplicates()
+
+    print(cafe_titles)
+
+    #id를 제거
+    df = df.drop('id', axis=1)
+
+    #df를 학습 데이터와 테스트 데이터로 나눔
+    train_data, test_data = train_test_split(df, test_size=0.2, random_state=42)
+
+    train_pool = Pool(train_data.drop('star', axis=1), label=train_data['star'], cat_features=categorical_features_name)
+    test_pool = Pool(test_data.drop('star', axis=1), label=test_data['star'], cat_features=categorical_features_name)
+
+    model_cafe = CatBoostRegressor(
+        depth=6,
+        learning_rate=0.01,
+        loss_function='RMSE',
+        task_type='GPU',
+        eval_metric='MAE',
+        n_estimators=2000)
+    
+    model_cafe.fit(
+        train_pool,
+        eval_set=test_pool,
+        verbose=500,
+        plot=True)
+    
+    print(model_cafe.get_feature_importance(prettified=True))
+
+def cafePredict(birth, serving, user_id, travel_expense, location):
+    global model_cafe
+    global cafe_titles
+    #모델을 사용하여 예측
+    
+    traveler = {
+        'birth':birth,
+        'serving': serving,
+        'user_id': user_id,
+        'travel_expense': travel_expense,
+        'location': location,
+        'price' : travel_expense
+    }
+
+    results = pd.DataFrame([], columns=['title', 'stars'])
+
+    #cafe_titles에서 location 삭제
+    cafe_titles = cafe_titles.drop('location', axis=1)
+
+    cafelist = cafe_le.inverse_transform(cafe_titles)
+
+    print(cafelist)
+
+    print(cafe_titles)
+
+    titles = cafe_titles['title']
+
+    for title in titles:
+        input = list(traveler.values())
+        input.append(title)
+
+        stars = model_cafe.predict(input)
+
+        results = pd.concat([results, pd.DataFrame([[title, stars]], columns=['title', 'stars'])])
+    
+    #cafelist를 리스트로 변환
+    cafelist = cafelist.tolist()
+    
+    results['cafeName'] = cafelist
+
+    result = results.sort_values('stars', ascending=False)[:10]
+
+    #json형태로 변환
+    result = result.to_json(orient="records")
+
+    return result
+
 if __name__ == '__main__':
     dataTrain()

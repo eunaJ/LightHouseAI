@@ -13,7 +13,7 @@ def process_command(command):
         return "Script executed successfully"
     elif command["command"] == "train":
         ai.dataTrain()
-        return "Test command executed successfully"
+        return "Train command executed successfully"
     elif command["command"] == "predict":
         #args에 데이터를 넣어서 predict 실행
         birth = command["birth"]
@@ -29,6 +29,20 @@ def process_command(command):
         result = ai.dataPredict(birth, reg_id, serving, title, travel_expense, star, region_name, constituency, loc_x, loc_y)
         print(result)
         return "Predict command executed successfully"
+    elif command["command"] == "cafe_train":
+        ai.cafeTrain()
+        return "cafe train command executed successfully"
+    elif command["command"] == "cafe_predict":
+        #args에 데이터를 넣어서 predict 실행
+        birth = command["birth"]
+        serving = command["serving"]
+        travel_expense = command["travel_expense"]
+        user_id = command["user_id"]
+        location = command["location"]
+        result = ai.cafePredict(birth, serving, travel_expense, user_id, location)
+        print(result)
+        return result
+
     
 @app.route('/api/v1/run_command', methods=['POST'])
 def command():
