@@ -19,7 +19,8 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 public interface BoardLikeEntityMapper {
     @Mapping(source = "user",target = "user")
-    BoardLike toboardLike(BoardLikeServiceRequestDto boardLikeServiceRequestDto, User user, Board bord);
+    @Mapping(source = "board",target = "board")
+    BoardLike toboardLike(BoardLikeServiceRequestDto boardLikeServiceRequestDto, User user, Board board);
 
     default Long toUserId(User user){return user.getId();}
     default Long toBoardId(Board board){

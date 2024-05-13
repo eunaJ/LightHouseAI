@@ -15,7 +15,6 @@ public enum BoardLikeErrorCode implements ErrorCode {
     // 404
     NOT_FOUND_Board(HttpStatus.NOT_FOUND, "게시물을 찾을 수 없습니다.");
 
-
     private final HttpStatus status;
     private final String message;
 }

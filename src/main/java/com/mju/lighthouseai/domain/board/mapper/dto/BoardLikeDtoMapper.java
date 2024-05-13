@@ -13,6 +13,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(componentModel = SPRING)
 public interface BoardLikeDtoMapper {
     @Mapping(source = "user",target = "user")
+    @Mapping(source = "board",target = "board")
     BoardLikeServiceRequestDto toBoardLikeServiceDto(
             BoardLikeControllerRequestDto controllerRequestDto, User user, Board board
     );
