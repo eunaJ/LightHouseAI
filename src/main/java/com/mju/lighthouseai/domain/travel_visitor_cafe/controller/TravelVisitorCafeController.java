@@ -26,11 +26,12 @@ public class TravelVisitorCafeController {
     public ResponseEntity<?> createTravelVisitorCafe(
             @RequestPart TravelVisitorCafeCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long travelId,
             @RequestPart MultipartFile multipartFile
     )throws IOException {
         TravelVisitorCafeCreateServiceRequestDto serviceRequestDto =
                 travelVisitorCafeDtoMapper.toTravelVisitorCafeCreateServiceDto(controllerRequestDto);
-        travelVisitorCafeService.createTravelVisitorCafe(serviceRequestDto, userDetails.user(), multipartFile);
+        travelVisitorCafeService.createTravelVisitorCafe(serviceRequestDto, userDetails.user(),travelId, multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
