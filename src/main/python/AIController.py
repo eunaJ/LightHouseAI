@@ -1,16 +1,15 @@
 from flask import Flask, request, jsonify
 import json
 import AIMain as ai
+import Chatbot as chatbot
 
 app = Flask(__name__)
 
 def process_command(command):
     if command["command"] == "run_script":
-        script_path = command["script_path"]
-        args = command["args"]
-        options = command["options"]
-        print("command")
-        return "Script executed successfully"
+        msg = command["msg"]
+        ans = chatbot.generate_response(msg)
+        return ans
     elif command["command"] == "train":
         ai.dataTrain()
         return "Train command executed successfully"

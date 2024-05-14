@@ -14,12 +14,6 @@ from urllib.request import Request
 from urllib.error import HTTPError
 from bs4 import BeautifulSoup
 
-"""
-Client_ID = 'vkba6txhxb'
-Client_Secret = 'IPKKtWyJkMm3bgW8NOLaXg6TtwNglNrPkNhpZZTn'
-api_url = 'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query='
-"""
-
 global model
 
 global titles
@@ -27,6 +21,9 @@ global titles
 global model_cafe
 global cafe_le
 global cafe_titles
+
+def makeTravel(birth, serving, user_id, expense, location, days, people):
+    print(s)
 
 def dataTrain():
     global model
@@ -405,6 +402,3 @@ def cafePredict(birth, serving, user_id, travel_expense, location):
     result = result.to_json(orient="records")
 
     return result
-
-if __name__ == '__main__':
-    dataTrain()
