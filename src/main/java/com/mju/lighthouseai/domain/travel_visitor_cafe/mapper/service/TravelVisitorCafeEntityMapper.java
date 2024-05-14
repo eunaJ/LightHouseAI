@@ -1,6 +1,7 @@
 package com.mju.lighthouseai.domain.travel_visitor_cafe.mapper.service;
 
 import com.mju.lighthouseai.domain.cafe.entity.Cafe;
+import com.mju.lighthouseai.domain.travel.entity.Travel;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request.TravelVisitorCafeCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.response.TravelVisitorCafeReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.entity.TravelVisitorCafe;
@@ -19,9 +20,11 @@ public interface TravelVisitorCafeEntityMapper {
     @Mapping(source = "requestDto.opentime", target = "opentime")
     @Mapping(source = "requestDto.closetime", target = "closetime")
     @Mapping(source = "requestDto.location", target = "location")
+    @Mapping(source = "user",target = "user")
     @Mapping(source = "cafe", target = "cafe")
+    @Mapping(source = "travel",target = "travel")
     TravelVisitorCafe toTravelVisitorCafe(TravelVisitorCafeCreateServiceRequestDto requestDto,
-                                          User user, Cafe cafe, String image_url);
+        String image_url, User user, Cafe cafe,  Travel travel);
 
     default String toUserName(User user){
         return user.getNickname();
