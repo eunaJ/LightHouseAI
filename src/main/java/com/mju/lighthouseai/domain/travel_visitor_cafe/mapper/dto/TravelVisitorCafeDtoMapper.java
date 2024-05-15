@@ -11,9 +11,6 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = SPRING)
 public interface TravelVisitorCafeDtoMapper {
-
-    List<TravelVisitorCafeCreateServiceRequestDto> toTravelVisitorCafeCreateServiceDtos(
-            List<TravelVisitorCafeCreateControllerRequestDto>controllerRequestDto );
     TravelVisitorCafeCreateServiceRequestDto toTravelVisitorCafeCreateServiceDto(
             TravelVisitorCafeCreateControllerRequestDto controllerRequestDto
     );
@@ -21,4 +18,6 @@ public interface TravelVisitorCafeDtoMapper {
     TravelVisitorCafeUpdateServiceRequestDto toTravelVisitorCafeUpdateServiceDto(
             TravelVisitorCafeUpdateControllerRequestDto controllerRequestDto
     );
+    List<TravelVisitorCafeCreateServiceRequestDto> toTravelVisitorCafeCreateServiceDtos(
+        List<TravelVisitorCafeCreateControllerRequestDto>controllerRequestDto );
 }

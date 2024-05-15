@@ -4,6 +4,10 @@ import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
 import com.mju.lighthouseai.domain.shoppingmall.exception.NotFoundShoppingMallException;
 import com.mju.lighthouseai.domain.shoppingmall.exception.ShoppingMallErrorCode;
 import com.mju.lighthouseai.domain.shoppingmall.repository.ShoppingMallRepository;
+import com.mju.lighthouseai.domain.travel.entity.Travel;
+import com.mju.lighthouseai.domain.travel.exception.NotFoundTravelException;
+import com.mju.lighthouseai.domain.travel.exception.TravelErrorCode;
+import com.mju.lighthouseai.domain.travel.repository.TravelRepository;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.response.TravelVisitorShoppingMallReadAllServiceResponseDto;
@@ -30,18 +34,24 @@ public class TravelVisitorShoppingMallServiceImpl {
     private final TravelVisitorShoppingMallEntityMapper travelVisitorShoppingMallEntityMapper;
     private final ShoppingMallRepository shoppingMallRepository;
     private final S3Provider s3Provider;
+    private final TravelRepository travelRepository;
 
     private final String SEPARATOR = "/";
     private final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    public void createTravelVisitorShoppingMall(TravelVisitorShoppingMallCreateServiceRequestDto requestDto,
-                                                User user,
-                                                MultipartFile multipartFile
+    public void createTravelVisitorShoppingMall(
+        Long id,
+        TravelVisitorShoppingMallCreateServiceRequestDto requestDto,
+        User user,
+        MultipartFile multipartFile
     ) throws IOException {
         String fileName;
         String fileUrl;
+        Travel travel = travelRepository.findById(id).orElseThrow(
+            () -> new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL)
+        );
         ShoppingMall shoppingMall = shoppingMallRepository.findShoppingMallByTitle(
                 requestDto.shoppingMall_title())
                 .orElseThrow(()->new NotFoundShoppingMallException(ShoppingMallErrorCode.NOT_FOUND_ShoppingMall));
@@ -49,13 +59,13 @@ public class TravelVisitorShoppingMallServiceImpl {
             fileUrl = null;
             TravelVisitorShoppingMall travelVisitorShoppingMall =
                     travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMall(
-                            requestDto,user,shoppingMall,fileUrl);
+                            requestDto,fileUrl,user,shoppingMall,travel);
             travelVisitorShoppingMallRepository.save(travelVisitorShoppingMall);
         } else {
             fileName = s3Provider.originalFileName(multipartFile);
             fileUrl = url + requestDto.shoppingMall_title() + SEPARATOR + fileName;
             TravelVisitorShoppingMall travelVisitorShoppingMall =
-                    travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMall(requestDto,user,shoppingMall,fileUrl);
+                    travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMall(requestDto,fileUrl,user,shoppingMall,travel);
             travelVisitorShoppingMallRepository.save(travelVisitorShoppingMall);
             s3Provider.createFolder(requestDto.shoppingMall_title());
             fileUrl = requestDto.shoppingMall_title() + SEPARATOR + fileName;
