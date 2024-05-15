@@ -23,6 +23,7 @@ public interface TravelVisitorRestaurantEntityMapper {
     @Mapping(source = "restaurant", target = "restaurant")
     @Mapping(source = "image_url", target = "image_url")
     @Mapping(source = "travel",target = "travel")
+    @Mapping(source = "user",target = "user")
     TravelVisitorRestaurant toTravelVisitorRestaurant(
         TravelVisitorRestaurantCreateServiceRequestDto requestDto,
         String image_url,

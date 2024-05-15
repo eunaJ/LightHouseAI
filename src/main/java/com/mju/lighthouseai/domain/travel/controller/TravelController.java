@@ -8,6 +8,10 @@ import com.mju.lighthouseai.domain.travel.service.impl.TraveServiceImpl;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.controller.TravelVisitorCafeCreateControllerRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request.TravelVisitorCafeCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.mapper.dto.TravelVisitorCafeDtoMapper;
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.controller.TravelVisitorRestaurantCreateControllerRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.entity.TravelVisitorRestaurant;
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.mapper.dto.TravelVisitorRestaurantDtoMapper;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -31,23 +35,30 @@ public class TravelController {
     private final TravelDtoMapper travelDtoMapper;
     private final TravelVisitorCafeDtoMapper travelVisitorCafeDtoMapper;
     private final TravelService travelService;
+    private final TravelVisitorRestaurantDtoMapper travelVisitorRestaurantDtoMapper;
     @PostMapping("/create")
     public ResponseEntity<?> createTravelVisitorCafe(
         @Valid @RequestPart(name = "travelCreateRequestDto") TravelCreateControllerRequestDto travelCreateControllerRequestDto,
         @RequestPart(name = "travelCreateImage",required = false) MultipartFile travelImage,
         @Valid @RequestPart(name = "TravelVisitorCafeCreateServiceRequestDto") List<TravelVisitorCafeCreateControllerRequestDto> TravelVisitorCafeCreateControllerRequestDto,
         @RequestPart(name = "travelVisitorCafeImage",required = false) List<MultipartFile> travelVisitorCafeImage,
+        @Valid @RequestPart(name = "TravelVisitorRestaurantCreateServiceRequestDto") List<TravelVisitorRestaurantCreateControllerRequestDto> TravelVisitorRestaurantCreateControllerRequestDto,
+        @RequestPart(name = "TravelVisitorRestaurantImage",required = false) List<MultipartFile> TravelVisitorRestaurantImage,
         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         TravelCreateServiceRequestDto serviceRequestDto =
                 travelDtoMapper.toTravelCreateServiceDto(travelCreateControllerRequestDto);
         List<TravelVisitorCafeCreateServiceRequestDto> TravelVisitorCafeCreateServiceRequestDtos=
             travelVisitorCafeDtoMapper.toTravelVisitorCafeCreateServiceDtos(
                 TravelVisitorCafeCreateControllerRequestDto);
+        List<TravelVisitorRestaurantCreateServiceRequestDto> TravelVisitorRestaurantCreateServiceRequestDtos =
+            travelVisitorRestaurantDtoMapper.toTravelVisitorRestaurantCreateServiceDtos(TravelVisitorRestaurantCreateControllerRequestDto);
         travelService.createTravel(
             serviceRequestDto,
             travelImage,
             TravelVisitorCafeCreateServiceRequestDtos,
-        travelVisitorCafeImage,
+            travelVisitorCafeImage,
+            TravelVisitorRestaurantCreateServiceRequestDtos,
+            TravelVisitorRestaurantImage,
         userDetails.user()
         );
         return ResponseEntity.status(HttpStatus.CREATED).build();
