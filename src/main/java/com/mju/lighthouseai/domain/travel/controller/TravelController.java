@@ -34,9 +34,9 @@ public class TravelController {
     @PostMapping("/create")
     public ResponseEntity<?> createTravelVisitorCafe(
         @Valid @RequestPart(name = "travelCreateRequestDto") TravelCreateControllerRequestDto travelCreateControllerRequestDto,
-        @RequestPart(name = "travelCreateImage") MultipartFile travelImage,
+        @RequestPart(name = "travelCreateImage",required = false) MultipartFile travelImage,
         @Valid @RequestPart(name = "TravelVisitorCafeCreateServiceRequestDto") List<TravelVisitorCafeCreateControllerRequestDto> TravelVisitorCafeCreateControllerRequestDto,
-        @RequestPart(name = "travelVisitorCafeImage") List<MultipartFile> travelVisitorCafeImage,
+        @RequestPart(name = "travelVisitorCafeImage",required = false) List<MultipartFile> travelVisitorCafeImage,
         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         TravelCreateServiceRequestDto serviceRequestDto =
                 travelDtoMapper.toTravelCreateServiceDto(travelCreateControllerRequestDto);
