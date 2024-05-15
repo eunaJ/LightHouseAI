@@ -1,6 +1,7 @@
 package com.mju.lighthouseai.domain.travel_visitor_restaurant.entity;
 
 import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
+import com.mju.lighthouseai.domain.travel.entity.Travel;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -43,6 +44,10 @@ public class TravelVisitorRestaurant extends BaseEntity {
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
+    @ManyToOne
+    @JoinColumn(name = "travel_id",nullable = false)
+    private Travel travel;
+
     public TravelVisitorRestaurant(
             final String image_url,
             final String menu,
@@ -51,7 +56,8 @@ public class TravelVisitorRestaurant extends BaseEntity {
             final String closetime,
             final String location,
             final User user,
-            final Restaurant restaurant
+            final Restaurant restaurant,
+            final Travel travel
     ) {
         this.image_url = image_url;
         this.menu = menu;
@@ -61,6 +67,7 @@ public class TravelVisitorRestaurant extends BaseEntity {
         this.location = location;
         this.user = user;
         this.restaurant = restaurant;
+        this.travel = travel;
     }
 
     public void updateTravelVisitorRestaurant(
