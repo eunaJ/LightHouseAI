@@ -42,3 +42,5 @@ out/
 
 ### catboost ###
 catboost_info/
+*.pyc
+/src/main/python/__pycache__

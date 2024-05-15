@@ -219,6 +219,7 @@ def cafeTrain():
         'role',
         'birth',
         'profile_img_url',
+        'folderName',
     ]
 
     #df_user에서 필요한 컬럼만 추출
@@ -230,7 +231,7 @@ def cafeTrain():
     #10대, 20대, 30대, 40대, 50대로 변환
     df_user['birth'] = df_user['birth'] // 10 * 10
     
-    #TB_TRAVEL을 가져와 데이터프레임으로 변환
+    #TB_TRAVEL을 가져와 데이터프레임으로 변환.
     dbconn.execute('SELECT * FROM TB_TRAVEL')
     rows = dbconn.fetchall()
 
@@ -245,7 +246,9 @@ def cafeTrain():
         'region_id',
         'user_id',
         'createdAt',
-        'modifiedAt'
+        'modifiedAt',
+        'folderName',
+        'constituency_id',
     ]
 
     #df_travel에서 필요한 컬럼만 추출
@@ -271,7 +274,7 @@ def cafeTrain():
     ]
 
     #df_cafe에서 필요한 컬럼만 추출
-    df_cafe = df_cafe[['id','title', 'location', 'user_id']]
+    df_cafe = df_cafe[['id','title', 'location']]
 
     #TB_TRAVEL_VISITOR_CAFE를 가져와 데이터프레임으로 변환
     dbconn.execute('SELECT * FROM TB_TRAVEL_VISITOR_CAFE')
@@ -290,10 +293,11 @@ def cafeTrain():
         'createdAt',
         'modifiedAt',
         'menu',
+        'travel_id',
     ]
 
     #df_cafe_visitor에서 필요한 컬럼만 추출
-    df_cafe_visitor = df_cafe_visitor[['id', 'user_id', 'price']]
+    df_cafe_visitor = df_cafe_visitor[['cafe_id', 'price','travel_id']]
 
     #TB_USER과 TB_TRAVEL을 병합
     df_1 = pd.merge(df_user, df_travel, left_on='id', right_on='user_id', how='right')
@@ -303,42 +307,32 @@ def cafeTrain():
     #id_y를 id로 변경
     df_1 = df_1.rename(columns={'id_y': 'id'})
 
+    print("df_1")   
+    print(df_1)
+
     #TB_CAFE와 TB_TRAVEL_VISITOR_CAFE를 병합
-    df_2 = pd.merge(df_cafe, df_cafe_visitor, left_on='id', right_on='user_id', how='right')
+    df_2 = pd.merge(df_cafe, df_cafe_visitor, left_on='id', right_on='cafe_id', how='right')
 
     #df_2에서 필요한 컬럼만 추출
-    df_2 = df_2[['user_id_y','price', 'location','title']]
-    #user_id_y를 user_id로 변경
-    df_2 = df_2.rename(columns={'user_id_y': 'user_id'})
+    df_2 = df_2[['travel_id', 'cafe_id', 'price']]
+    
+    print("df_2")
+    print(df_2)
 
     #df_1과 df_2를 병합
-    df = pd.merge(df_1, df_2, left_on='user_id', right_on='user_id', how='left')
+    df = pd.merge(df_1, df_2, left_on='id', right_on='travel_id', how='left')
 
-    #범주형 데이터를 수치형 데이터로 변환
-    categorical_features_name = [
-        'location',
-        'title',
-    ]
+    #df에서 필요한 컬럼만 추출
+    df = df[['user_id', 'cafe_id', 'birth', 'serving', 'price', 'star']]
 
-    cafe_titles = pd.DataFrame([], columns=categorical_features_name)
-
-    cafe_le = LabelEncoder()
-    for cat in categorical_features_name:
-        df[cat] = cafe_le.fit_transform(df[cat])
-
-    for cat in categorical_features_name:
-        cafe_titles[cat] = df[cat].drop_duplicates()
-
-    print(cafe_titles)
-
-    #id를 제거
-    df = df.drop('id', axis=1)
+    print("df")
+    print(df)
 
     #df를 학습 데이터와 테스트 데이터로 나눔
     train_data, test_data = train_test_split(df, test_size=0.2, random_state=42)
 
-    train_pool = Pool(train_data.drop('star', axis=1), label=train_data['star'], cat_features=categorical_features_name)
-    test_pool = Pool(test_data.drop('star', axis=1), label=test_data['star'], cat_features=categorical_features_name)
+    train_pool = Pool(train_data.drop('star', axis=1), label=train_data['star'])
+    test_pool = Pool(test_data.drop('star', axis=1), label=test_data['star'])
 
     model_cafe = CatBoostRegressor(
         depth=6,
