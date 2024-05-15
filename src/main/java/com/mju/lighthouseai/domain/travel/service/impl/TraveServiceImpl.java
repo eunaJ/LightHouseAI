@@ -68,14 +68,13 @@ public class TraveServiceImpl implements TravelService {
                 String travelVisitorCafeImageName =
                     s3Provider.originalFileName(travelVisitorCafeImages.get(i));
                 String travelVisitorCafeImageUrl = null;
-                if (!travelImageName.isEmpty()) {
+                if (!travelVisitorCafeImageName.isEmpty()) {
                     travelVisitorCafeImageUrl = s3Provider
                         .getImagePath(travelFolderName + S3Provider.SEPARATOR + travelVisitorCafeImageName);
                 }
                 travelVisitorCafeImageNames.add(travelVisitorCafeImageName);
                 travelVisitorCafes.add(travelVisitorCafeEntityMapper.toTravelVisitorCafe(
                     travelVisitorCafeCreateServiceRequestDtos.get(i), travelVisitorCafeImageUrl,user,cafe ,travel));
-
         }
         travel.getTravelVisitorCafes().addAll(travelVisitorCafes);
         travelRepository.save(travel);
