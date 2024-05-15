@@ -4,6 +4,10 @@ import com.mju.lighthouseai.domain.cafe.entity.Cafe;
 import com.mju.lighthouseai.domain.cafe.exception.CafeErrorCode;
 import com.mju.lighthouseai.domain.cafe.exception.NotFoundCafeException;
 import com.mju.lighthouseai.domain.cafe.repository.CafeRepository;
+import com.mju.lighthouseai.domain.travel.entity.Travel;
+import com.mju.lighthouseai.domain.travel.exception.NotFoundTravelException;
+import com.mju.lighthouseai.domain.travel.exception.TravelErrorCode;
+import com.mju.lighthouseai.domain.travel.repository.TravelRepository;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request.TravelVisitorCafeCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request.TravelVisitorCafeUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.response.TravelVisitorCafeReadAllServiceResponseDto;
@@ -32,33 +36,36 @@ public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
     private final TravelVisitorCafeEntityMapper travelVisitorCafeEntityMapper;
     private final CafeRepository cafeRepository;
     private final S3Provider s3Provider;
+    private final TravelRepository travelRepository;
 
     private final String SEPARATOR = "/";
     private final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    public void createTravelVisitorCafe(TravelVisitorCafeCreateServiceRequestDto requestDto,
-                                        User user,
-                                        MultipartFile multipartFile
+    public void createTravelVisitorCafe(
+        TravelVisitorCafeCreateServiceRequestDto requestDto,
+        User user,
+        Long travelId,
+        MultipartFile multipartFile
     ) throws IOException {
-        String fileName;
-        String fileUrl;
+        Travel travel = travelRepository.findById(travelId)
+            .orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
         Cafe cafe = cafeRepository.findCafeByTitle(requestDto.cafe_title())
                 .orElseThrow(()->new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
+        String fileName;
+        String fileUrl;
         if (multipartFile == null || multipartFile.isEmpty()){
             fileUrl = null;
             TravelVisitorCafe travelVisitorCafe =
-                    travelVisitorCafeEntityMapper.toTravelVisitorCafe(requestDto,user,cafe,fileUrl);
+                    travelVisitorCafeEntityMapper.toTravelVisitorCafe(requestDto,fileUrl,user,cafe,travel);
             travelVisitorCafeRepository.save(travelVisitorCafe);
         } else {
             fileName = s3Provider.originalFileName(multipartFile);
-            fileUrl = url + requestDto.cafe_title() + SEPARATOR + fileName;
+            fileUrl = travel.getFolderName() + SEPARATOR + fileName;
             TravelVisitorCafe travelVisitorCafe =
-                    travelVisitorCafeEntityMapper.toTravelVisitorCafe(requestDto,user,cafe,fileUrl);
+                    travelVisitorCafeEntityMapper.toTravelVisitorCafe(requestDto,fileUrl,user,cafe,travel);
             travelVisitorCafeRepository.save(travelVisitorCafe);
-            s3Provider.createFolder(requestDto.cafe_title());
-            fileUrl = requestDto.cafe_title() + SEPARATOR + fileName;
             s3Provider.saveFile(multipartFile,fileUrl);
         }
     }
