@@ -3,6 +3,7 @@ import os
 import csv
 import pymysql
 import json
+import numpy as np
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -350,47 +351,121 @@ def cafeTrain():
     
     print(model_cafe.get_feature_importance(prettified=True))
 
-def cafePredict(birth, serving, user_id, travel_expense, location):
+def cafePredict(user_id, serving, constituency_id, rank_s, rank_e):
     global model_cafe
-    global cafe_titles
-    #모델을 사용하여 예측
-    
-    traveler = {
-        'birth':birth,
-        'serving': serving,
-        'user_id': user_id,
-        'travel_expense': travel_expense,
-        'location': location,
-        'price' : travel_expense
-    }
 
     results = pd.DataFrame([], columns=['title', 'stars'])
 
+    """
     #cafe_titles에서 location 삭제
     cafe_titles = cafe_titles.drop('location', axis=1)
 
     cafelist = cafe_le.inverse_transform(cafe_titles)
 
-    print(cafelist)
-
-    print(cafe_titles)
-
     titles = cafe_titles['title']
+    """
 
-    for title in titles:
-        input = list(traveler.values())
-        input.append(title)
+    #TB_CAFE에서 데이터를 가져와 데이터프레임으로 변환
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='1231',
+        port=3306,
+        db='lighthouseAI'
+    )
+    dbconn = conn.cursor()
 
-        stars = model_cafe.predict(input)
+    #TB_CAFE에서 constiuency_id가 일치하는 데이터를 가져와 데이터프레임으로 변환
+    dbconn.execute('SELECT * FROM TB_CAFE WHERE constituency_id = %s', (constituency_id))
+    rows = dbconn.fetchall()
 
-        results = pd.concat([results, pd.DataFrame([[title, stars]], columns=['title', 'stars'])])
+    df_cafe = pd.DataFrame(rows)
+    df_cafe.columns = [
+        'id',
+        'createdAt',
+        'modifiedAt',
+        'location',
+        'menu',
+        'price',
+        'title',
+        'user_id',
+        'closetime',
+        'opentime',
+        'constituency_id',
+    ]
+
+    #df_cafe에서 필요한 컬럼만 추출하여 df_cafe_copy에 저장
+    df_cafe = df_cafe[['id', 'price','title']]
+    df_cafe_copy = df_cafe.copy()
+
+    #df_cafe에서 필요한 컬럼만 추출
+    df_cafe = df_cafe[['id', 'price']]
+
+    #df_cafe에 user_id, serving 컬럼 추가
+    df_cafe['user_id'] = user_id
+    df_cafe['serving'] = serving
+
+    print("df_cafe")
+    print(df_cafe)
+
+    #TB_USER에서 user_id가 일치하는 데이터를 가져와 데이터프레임으로 변환
+    dbconn.execute('SELECT * FROM TB_USER WHERE id = %s', (user_id))
+    rows = dbconn.fetchall()
+
+    df_user = pd.DataFrame(rows)
+    df_user.columns = [
+        'id',
+        'createdAt',
+        'modifiedAt',
+        'email',
+        'nickname',
+        'password',
+        'role',
+        'birth',
+        'profile_img_url',
+        'folderName',
+    ]
+
+    #df_user에서 필요한 컬럼만 추출
+    df_user = df_user[['id', 'birth']]
+
+    #태어난 년도를 나이로 변환
+    df_user['birth'] = 2024 - df_user['birth'].astype(int)
+
+    #10대, 20대, 30대, 40대, 50대로 변환
+    df_user['birth'] = df_user['birth'] // 10 * 10
+
+    for index, row in df_cafe.iterrows():
+
+        user_id = int(row['user_id'])
+        user_birth = df_user[df_user['id'] == user_id]['birth'].values[0]
+
+        input = {
+            'user_id': user_id,
+            'birth': int(user_birth),
+            'serving': int(row['serving']),
+            'price': int(row['price']),
+            'cafe_id': int(row['id'])
+        }
+
+        input_df = pd.DataFrame([input])
+
+        stars = model_cafe.predict(input_df)
+
+        results = pd.concat([results, pd.DataFrame([[input['cafe_id'], stars[0]]], columns=['id', 'stars'])])
     
-    #cafelist를 리스트로 변환
-    cafelist = cafelist.tolist()
     
-    results['cafeName'] = cafelist
+    results = pd.merge(results, df_cafe_copy, left_on='id', right_on='id', how='left')
 
-    result = results.sort_values('stars', ascending=False)[:10]
+    #title_x 컬럼을 삭제
+    results = results.drop('title_x', axis=1)
+
+    #title_y 컬럼을 title로 변경
+    results = results.rename(columns={'title_y': 'title'})
+    
+    result = results.sort_values('stars', ascending=False)[rank_s:rank_e]
+
+    print(result)
 
     #json형태로 변환
     result = result.to_json(orient="records")

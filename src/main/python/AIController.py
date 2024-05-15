@@ -33,12 +33,12 @@ def process_command(command):
         return "cafe train command executed successfully"
     elif command["command"] == "cafe_predict":
         #args에 데이터를 넣어서 predict 실행
-        birth = command["birth"]
-        serving = command["serving"]
-        travel_expense = command["travel_expense"]
         user_id = command["user_id"]
-        location = command["location"]
-        result = ai.cafePredict(birth, serving, travel_expense, user_id, location)
+        serving = command["serving"]
+        constituency_id = command["constituency_id"]
+        rank_s = command["rank_s"]
+        rank_e = command["rank_e"]
+        result = ai.cafePredict(user_id, serving, constituency_id, rank_s, rank_e)
         print(result)
         return result
 
