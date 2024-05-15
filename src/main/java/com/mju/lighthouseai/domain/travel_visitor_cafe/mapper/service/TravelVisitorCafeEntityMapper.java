@@ -20,6 +20,7 @@ public interface TravelVisitorCafeEntityMapper {
     @Mapping(source = "requestDto.opentime", target = "opentime")
     @Mapping(source = "requestDto.closetime", target = "closetime")
     @Mapping(source = "requestDto.location", target = "location")
+    @Mapping(source = "image_url", target = "image_url")
     @Mapping(source = "user",target = "user")
     @Mapping(source = "cafe", target = "cafe")
     @Mapping(source = "travel",target = "travel")
