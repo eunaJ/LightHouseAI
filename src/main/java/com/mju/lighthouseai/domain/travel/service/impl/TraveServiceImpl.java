@@ -65,17 +65,6 @@ public class TraveServiceImpl implements TravelService {
             Cafe cafe = cafeRepository.findCafeByTitle(travelVisitorCafeCreateServiceRequestDtos.get(i).cafe_title())
                 .orElseThrow(()->new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
             System.out.println(travelVisitorCafeImages.size());
-            if (travelVisitorCafeImages.size()==1){
-                String travelVisitorCafeImageName = null;
-                String travelVisitorCafeImageUrl = null;
-                if (!travelImageName.isEmpty()) {
-                    travelVisitorCafeImageUrl = s3Provider
-                        .getImagePath(travelFolderName + S3Provider.SEPARATOR + travelVisitorCafeImageName);
-                }
-                travelVisitorCafeImageNames.add(travelVisitorCafeImageName);
-                travelVisitorCafes.add(travelVisitorCafeEntityMapper.toTravelVisitorCafe(
-                    travelVisitorCafeCreateServiceRequestDtos.get(i), travelVisitorCafeImageUrl,user,cafe ,travel));
-            }else{
                 String travelVisitorCafeImageName =
                     s3Provider.originalFileName(travelVisitorCafeImages.get(i));
                 String travelVisitorCafeImageUrl = null;
@@ -86,7 +75,7 @@ public class TraveServiceImpl implements TravelService {
                 travelVisitorCafeImageNames.add(travelVisitorCafeImageName);
                 travelVisitorCafes.add(travelVisitorCafeEntityMapper.toTravelVisitorCafe(
                     travelVisitorCafeCreateServiceRequestDtos.get(i), travelVisitorCafeImageUrl,user,cafe ,travel));
-            }
+
         }
         travel.getTravelVisitorCafes().addAll(travelVisitorCafes);
         travelRepository.save(travel);
