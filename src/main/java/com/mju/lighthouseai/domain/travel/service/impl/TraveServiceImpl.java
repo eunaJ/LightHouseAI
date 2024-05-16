@@ -300,6 +300,8 @@ public class TraveServiceImpl implements TravelService {
     public void deleteTravel(Long id, User user) {
         Travel travel = findTravel(id,user);
         travelRepository.delete(travel);
+        //TODO S3 객체 모두 삭제 하는 기능 추가 필요
+        s3Provider.delete(travel.getFolderName());
     }
 /*
     public TravelVisitorCafeReadAllServiceResponseDto readTravelVisitorCafe(Long id){
