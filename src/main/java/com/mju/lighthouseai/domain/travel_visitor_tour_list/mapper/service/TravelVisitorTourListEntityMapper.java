@@ -1,6 +1,7 @@
 package com.mju.lighthouseai.domain.travel_visitor_tour_list.mapper.service;
 
 import com.mju.lighthouseai.domain.tour_list.entity.TourList;
+import com.mju.lighthouseai.domain.travel.entity.Travel;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.request.TravelVisitorTourListCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.response.TravelVisitorTourListReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.entity.TravelVisitorTourList;
@@ -18,9 +19,11 @@ public interface TravelVisitorTourListEntityMapper {
     @Mapping(source = "requestDto.opentime", target = "opentime")
     @Mapping(source = "requestDto.closetime", target = "closetime")
     @Mapping(source = "requestDto.location", target = "location")
+    @Mapping(source = "image_url", target = "image_url")
     @Mapping(source = "tourList", target = "tourList")
+    @Mapping(source = "travel",target = "travel")
     TravelVisitorTourList toTravelVisitorTourList(TravelVisitorTourListCreateServiceRequestDto requestDto,
-                                                  User user, TourList tourList, String image_url);
+        String image_url, User user, TourList tourList, Travel travel);
 
     default String toUserName(User user){
         return user.getNickname();
