@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface TravelVisitorTourListService {
-    void createTravelVisitorTourList(TravelVisitorTourListCreateServiceRequestDto requestDto, User user,
+    void createTravelVisitorTourList(Long id,TravelVisitorTourListCreateServiceRequestDto requestDto, User user,
                                      MultipartFile multipartFile) throws IOException;
 
     void updateTravelVisitorTourList(Long id, TravelVisitorTourListUpdateServiceRequestDto requestDto,
