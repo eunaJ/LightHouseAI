@@ -8,6 +8,8 @@ import com.mju.lighthouseai.domain.constituency.entity.Constituency;
 import com.mju.lighthouseai.domain.constituency.exception.ConstituencyErrorCode;
 import com.mju.lighthouseai.domain.constituency.exception.NotFoundConstituencyException;
 import com.mju.lighthouseai.domain.constituency.repository.ConstituencyRepository;
+import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
+import com.mju.lighthouseai.domain.restaurant.repository.RestaurantRepository;
 import com.mju.lighthouseai.domain.travel.dto.service.request.TravelCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel.dto.service.request.TravelUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel.dto.service.response.TravelVisitorCafeReadAllServiceResponseDto;
@@ -20,6 +22,9 @@ import com.mju.lighthouseai.domain.travel.service.TravelService;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request.TravelVisitorCafeCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.entity.TravelVisitorCafe;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.mapper.service.TravelVisitorCafeEntityMapper;
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.entity.TravelVisitorRestaurant;
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.mapper.service.TravelVisitorRestaurantEntityMapper;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.global.s3.S3Provider;
 import java.io.IOException;
@@ -41,6 +46,8 @@ public class TraveServiceImpl implements TravelService {
     private final ConstituencyRepository constituencyRepository;
     private final TravelVisitorCafeEntityMapper travelVisitorCafeEntityMapper;
     private final CafeRepository cafeRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final TravelVisitorRestaurantEntityMapper travelVisitorRestaurantEntityMapper;
 
     private final String SEPARATOR = "/";
     private final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
@@ -52,6 +59,8 @@ public class TraveServiceImpl implements TravelService {
         final MultipartFile travelImage,
         final List<TravelVisitorCafeCreateServiceRequestDto> travelVisitorCafeCreateServiceRequestDtos,
         final List<MultipartFile> travelVisitorCafeImages,
+        final List<TravelVisitorRestaurantCreateServiceRequestDto> travelVisitorRestaurantCreateServiceRequestDtos,
+        final List<MultipartFile> travelVisitorRestaurantImages,
         final User user
     ) throws IOException {
         Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency())
@@ -59,8 +68,13 @@ public class TraveServiceImpl implements TravelService {
         String travelFolderName = requestDto.title()+ UUID.randomUUID();
         String travelImageName = travelFolderName+SEPARATOR+s3Provider.originalFileName(travelImage);
         Travel travel = travelEntityMapper.toTravel(requestDto,travelFolderName,s3Provider.getImagePath(travelImageName),user,constituency);
+        // 여행지_방문지_카페
         List<TravelVisitorCafe> travelVisitorCafes = new ArrayList<>();
         List<String> travelVisitorCafeImageNames = new ArrayList<>();
+        //여행지_방문지_식당
+        List<TravelVisitorRestaurant> travelVisitorRestaurants = new ArrayList<>();
+        List<String> travelVisitorRestaurantImageNames = new ArrayList<>();
+        // 여행지 방문지 카페 생성
         for (int i = 0; i < travelVisitorCafeCreateServiceRequestDtos.size(); i++) {
             Cafe cafe = cafeRepository.findCafeByTitle(travelVisitorCafeCreateServiceRequestDtos.get(i).cafe_title())
                 .orElseThrow(()->new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
@@ -76,9 +90,25 @@ public class TraveServiceImpl implements TravelService {
                 travelVisitorCafes.add(travelVisitorCafeEntityMapper.toTravelVisitorCafe(
                     travelVisitorCafeCreateServiceRequestDtos.get(i), travelVisitorCafeImageUrl,user,cafe ,travel));
         }
+        //여행지_방문지_식당
+        for (int i = 0; i < travelVisitorRestaurantCreateServiceRequestDtos.size(); i++) {
+            Restaurant restaurant = restaurantRepository.findRestaurantByTitle(travelVisitorRestaurantCreateServiceRequestDtos.get(i).restaurant_title())
+                .orElseThrow(()->new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
+            String travelVisitorRestaurantImageName =
+                s3Provider.originalFileName(travelVisitorRestaurantImages.get(i));
+            String travelVisitorRestaurantImageUrl = null;
+            if (!travelVisitorRestaurantImageName.isEmpty()) {
+                travelVisitorRestaurantImageUrl = s3Provider
+                    .getImagePath(travelFolderName + S3Provider.SEPARATOR + travelVisitorRestaurantImageName);
+            }
+            travelVisitorRestaurantImageNames.add(travelVisitorRestaurantImageName);
+            travelVisitorRestaurants.add(travelVisitorRestaurantEntityMapper.toTravelVisitorRestaurant(
+                travelVisitorRestaurantCreateServiceRequestDtos.get(i), travelVisitorRestaurantImageUrl,user,restaurant ,travel));
+        }
         travel.getTravelVisitorCafes().addAll(travelVisitorCafes);
+        travel.getTravelVisitorRestaurants().addAll(travelVisitorRestaurants);
         travelRepository.save(travel);
-        saveImage(travel.getFolderName(),travelImage,travelImageName,travelVisitorCafeImages,travelVisitorCafeImageNames);
+        saveImage(travel.getFolderName(),travelImage,travelImageName,travelVisitorCafeImages,travelVisitorCafeImageNames,travelVisitorRestaurantImages,travelVisitorRestaurantImageNames);
         System.out.println("끝");
     }
     private void saveImage(
@@ -86,7 +116,9 @@ public class TraveServiceImpl implements TravelService {
         MultipartFile travelImage,
         String recipeImageName,
         List<MultipartFile> travelVisitorCafeImage,
-        List<String> travelVisitorCafeImageName
+        List<String> travelVisitorCafeImageName,
+        List<MultipartFile> travelVisitorRestaurantImage,
+        List<String> travelVisitorRestaurantImageName
     ) throws IOException {
         s3Provider.createFolder(travelFolderName);
         s3Provider.saveFile(travelImage, recipeImageName);
@@ -94,6 +126,12 @@ public class TraveServiceImpl implements TravelService {
             if (!travelVisitorCafeImage.get(i).isEmpty()) {
                 s3Provider.saveFile(travelVisitorCafeImage.get(i),
                     travelFolderName + S3Provider.SEPARATOR + travelVisitorCafeImageName.get(i));
+            }
+        }
+        for (int i = 0; i < travelVisitorRestaurantImage.size(); i++) {
+            if (!travelVisitorRestaurantImage.get(i).isEmpty()) {
+                s3Provider.saveFile(travelVisitorRestaurantImage.get(i),
+                    travelFolderName + S3Provider.SEPARATOR + travelVisitorRestaurantImageName.get(i));
             }
         }
     }

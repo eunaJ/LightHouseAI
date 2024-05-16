@@ -4,6 +4,10 @@ import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
 import com.mju.lighthouseai.domain.restaurant.exceoption.NotFoundRestaurantException;
 import com.mju.lighthouseai.domain.restaurant.exceoption.RestaurantErrorCode;
 import com.mju.lighthouseai.domain.restaurant.repository.RestaurantRepository;
+import com.mju.lighthouseai.domain.travel.entity.Travel;
+import com.mju.lighthouseai.domain.travel.exception.NotFoundTravelException;
+import com.mju.lighthouseai.domain.travel.exception.TravelErrorCode;
+import com.mju.lighthouseai.domain.travel.repository.TravelRepository;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.response.TravelVisitorRestaurantReadAllServiceResponseDto;
@@ -31,30 +35,35 @@ public class TravelVisitorRestaurantServiceImpl implements TravelVisitorRestaura
     private final TravelVisitorRestaurantEntityMapper travelVisitorRestaurantEntityMapper;
     private final RestaurantRepository restaurantRepository;
     private final S3Provider s3Provider;
+    private final TravelRepository travelRepository;
 
     private final String SEPARATOR = "/";
     private final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    public void createTravelVisitorRestaurant(TravelVisitorRestaurantCreateServiceRequestDto requestDto,
-                                              User user,
-                                              MultipartFile multipartFile
+    public void createTravelVisitorRestaurant(
+        Long id,
+        TravelVisitorRestaurantCreateServiceRequestDto requestDto,
+        User user,
+        MultipartFile multipartFile
     ) throws IOException {
         String fileName;
         String fileUrl;
+        Travel travel = travelRepository.findById(id)
+            .orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
         Restaurant restaurant = restaurantRepository.findRestaurantByTitle(requestDto.restaurant_title())
                 .orElseThrow(()->new NotFoundRestaurantException(RestaurantErrorCode.NOT_FOUND_Restaurant));
         if (multipartFile == null || multipartFile.isEmpty()){
             fileUrl = null;
             TravelVisitorRestaurant travelVisitorRestaurant =
-                    travelVisitorRestaurantEntityMapper.toTravelVisitorRestaurant(requestDto,user,restaurant,fileUrl);
+                    travelVisitorRestaurantEntityMapper.toTravelVisitorRestaurant(requestDto,fileUrl,user,restaurant,travel);
             travelVisitorRestaurantRepository.save(travelVisitorRestaurant);
         } else {
             fileName = s3Provider.originalFileName(multipartFile);
             fileUrl = url + requestDto.restaurant_title() + SEPARATOR + fileName;
             TravelVisitorRestaurant travelVisitorRestaurant =
-                    travelVisitorRestaurantEntityMapper.toTravelVisitorRestaurant(requestDto,user,restaurant,fileUrl);
+                    travelVisitorRestaurantEntityMapper.toTravelVisitorRestaurant(requestDto,fileUrl,user,restaurant,travel);
             travelVisitorRestaurantRepository.save(travelVisitorRestaurant);
             s3Provider.createFolder(requestDto.restaurant_title());
             fileUrl = requestDto.restaurant_title() + SEPARATOR + fileName;
