@@ -1,7 +1,9 @@
 package com.mju.lighthouseai.domain.travel.controller;
 
 import com.mju.lighthouseai.domain.travel.dto.controller.TravelCreateControllerRequestDto;
+import com.mju.lighthouseai.domain.travel.dto.controller.TravelUpdateControllerRequestDto;
 import com.mju.lighthouseai.domain.travel.dto.service.request.TravelCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel.dto.service.request.TravelUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel.mapper.dto.TravelDtoMapper;
 import com.mju.lighthouseai.domain.travel.service.TravelService;
 import com.mju.lighthouseai.domain.travel.service.impl.TraveServiceImpl;
@@ -34,6 +36,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -104,20 +107,22 @@ public class TravelController {
         travelService.deleteTravel(travelId, userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-/*
-    @PutMapping("/{travelVisitorCafeId}")
-    public ResponseEntity<?> updateTravelVisitorCafe(
-            @PathVariable Long travelVisitorCafeId,
-            @RequestBody TravelUpdateControllerRequestDto controllerRequestDto,
+
+    @PutMapping("/{travelId}")
+    public ResponseEntity<?> updateTravel(
+            @PathVariable Long travelId,
+            @RequestPart TravelUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart(required = false) MultipartFile multipartFile,
             @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+    )throws IOException
+    {
         TravelUpdateServiceRequestDto serviceRequestDto =
-                travelDtoMapper.toTravelVisitorCafeUpdateServiceDto(controllerRequestDto);
-        travelVisitorCafeService.updateTravelVisitorCafe(travelVisitorCafeId,serviceRequestDto,userDetails.user());
+                travelDtoMapper.toTravelUpdateServiceDto(controllerRequestDto);
+        travelService.updateTravel(travelId,serviceRequestDto,userDetails.user(),multipartFile);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-
+/*
     @GetMapping("/{travelVisitorCafeId}")
     public ResponseEntity<?> readTravelVisitorCafe(
             @PathVariable Long travelVisitorCafeId

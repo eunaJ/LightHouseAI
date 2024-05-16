@@ -273,20 +273,20 @@ public class TraveServiceImpl implements TravelService {
         String folderName = travel.getFolderName();
         String fileUrl;
         Constituency constituency = findConstituency(requestDto.constituency());
-        if (requestDto.imageChange()){
-            travel.UpdateTravel(requestDto.title(), requestDto.travel_expense(),travel.getImage_url(),
+        System.out.println(requestDto.imageChange());
+        if (!requestDto.imageChange()){
+            travel.UpdateTravel(requestDto.title(),travel.getImage_url(),
                 requestDto.serving(), requestDto.star(),constituency);
+        }else {
+            fileUrl = s3Provider.updateImage(travel.getImage_url(),folderName,multipartFile);
+            travel.UpdateTravel(
+                requestDto.title(),
+                fileUrl,
+                travel.getServing(),
+                travel.getStar(),
+                constituency
+            );
         }
-        fileUrl = s3Provider.updateImage(travel.getImage_url(),folderName,multipartFile);
-        travel.UpdateTravel(
-            requestDto.title(),
-            requestDto.travel_expense(),
-            fileUrl,
-            travel.getServing(),
-            travel.getStar(),
-            constituency
-        );
-
     }
     private Travel findTravel(Long id,User user){
         return travelRepository.findByIdAndUser(id,user)
