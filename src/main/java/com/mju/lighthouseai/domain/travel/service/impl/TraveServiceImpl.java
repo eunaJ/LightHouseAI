@@ -19,8 +19,12 @@ import com.mju.lighthouseai.domain.restaurant.exceoption.NotFoundRestaurantExcep
 import com.mju.lighthouseai.domain.restaurant.exceoption.RestaurantErrorCode;
 import com.mju.lighthouseai.domain.restaurant.repository.RestaurantRepository;
 import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
+import com.mju.lighthouseai.domain.shoppingmall.exception.NotFoundShoppingMallException;
+import com.mju.lighthouseai.domain.shoppingmall.exception.ShoppingMallErrorCode;
 import com.mju.lighthouseai.domain.shoppingmall.repository.ShoppingMallRepository;
 import com.mju.lighthouseai.domain.tour_list.entity.TourList;
+import com.mju.lighthouseai.domain.tour_list.exceoption.NotFoundTourListException;
+import com.mju.lighthouseai.domain.tour_list.exceoption.TourListErrorCode;
 import com.mju.lighthouseai.domain.tour_list.repository.TourListRepository;
 import com.mju.lighthouseai.domain.travel.dto.service.request.TravelCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel.dto.service.request.TravelUpdateServiceRequestDto;
@@ -151,7 +155,7 @@ public class TraveServiceImpl implements TravelService {
         // 여행지_방문지_쇼핑몰
         for (int i = 0; i < travelVisitorShoppingMallCreateServiceRequestDtos.size(); i++) {
             ShoppingMall shoppingMall = shoppingMallRepository.findShoppingMallByTitle(travelVisitorShoppingMallCreateServiceRequestDtos.get(i).shoppingMall_title())
-                .orElseThrow(()->new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
+                .orElseThrow(()->new NotFoundShoppingMallException(ShoppingMallErrorCode.NOT_FOUND_ShoppingMall));
             String travelVisitorShoppingMallImageName =
                 s3Provider.originalFileName(travelVisitorShoppingMallImages.get(i));
             String travelVisitorShoppingMallImageUrl = null;
@@ -166,7 +170,7 @@ public class TraveServiceImpl implements TravelService {
         //여행지_방문지_관광지
         for (int i = 0; i < travelVisitorTourListCreateServiceRequestDtos.size(); i++) {
             TourList tourList = tourListRepository.findTourListByTitle(travelVisitorTourListCreateServiceRequestDtos.get(i).tourList_title())
-                .orElseThrow(()->new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
+                .orElseThrow(()->new NotFoundTourListException(TourListErrorCode.NOT_FOUND_TOURLIST));
             String travelVisitorTourListsImageName =
                 s3Provider.originalFileName(travelVisitorTourListImages.get(i));
             String travelVisitorTourListImageUrl = null;
