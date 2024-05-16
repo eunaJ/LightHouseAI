@@ -24,6 +24,7 @@ public class TravelVisitorTourListController {
     private final TravelVisitorTourListServiceImpl travelVisitorTourListService;
     @PostMapping("/create")
     public ResponseEntity<?> createTravelVisitorTourList(
+            @PathVariable Long id,
             @RequestPart TravelVisitorTourListCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart MultipartFile multipartFile
@@ -31,7 +32,7 @@ public class TravelVisitorTourListController {
         TravelVisitorTourListCreateServiceRequestDto serviceRequestDto =
                 travelVisitorTourListDtoMapper.toTravelVisitorTourListCreateServiceDto(
                         controllerRequestDto);
-        travelVisitorTourListService.createTravelVisitorTourList(serviceRequestDto, userDetails.user(), multipartFile);
+        travelVisitorTourListService.createTravelVisitorTourList(id,serviceRequestDto, userDetails.user(), multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

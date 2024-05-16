@@ -4,6 +4,10 @@ import com.mju.lighthouseai.domain.tour_list.entity.TourList;
 import com.mju.lighthouseai.domain.tour_list.exceoption.NotFoundTourListException;
 import com.mju.lighthouseai.domain.tour_list.exceoption.TourListErrorCode;
 import com.mju.lighthouseai.domain.tour_list.repository.TourListRepository;
+import com.mju.lighthouseai.domain.travel.entity.Travel;
+import com.mju.lighthouseai.domain.travel.exception.NotFoundTravelException;
+import com.mju.lighthouseai.domain.travel.exception.TravelErrorCode;
+import com.mju.lighthouseai.domain.travel.repository.TravelRepository;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.request.TravelVisitorTourListCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.request.TravelVisitorTourListUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.response.TravelVisitorTourListReadAllServiceResponseDto;
@@ -31,30 +35,35 @@ public class TravelVisitorTourListServiceImpl implements TravelVisitorTourListSe
     private final TravelVisitorTourListEntityMapper travelVisitorTourListEntityMapper;
     private final TourListRepository tourListRepository;
     private final S3Provider s3Provider;
+    private final TravelRepository travelRepository;
 
     private final String SEPARATOR = "/";
     private final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    public void createTravelVisitorTourList(TravelVisitorTourListCreateServiceRequestDto requestDto,
-                                        User user,
-                                        MultipartFile multipartFile
+    public void createTravelVisitorTourList(
+        Long id,
+        TravelVisitorTourListCreateServiceRequestDto requestDto,
+        User user,
+        MultipartFile multipartFile
     ) throws IOException {
         String fileName;
         String fileUrl;
+        Travel travel = travelRepository.findById(id)
+            .orElseThrow(()-> new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
         TourList tourList = tourListRepository.findTourListByTitle(requestDto.tourList_title())
                 .orElseThrow(()->new NotFoundTourListException(TourListErrorCode.NOT_FOUND_TOURLIST));
         if (multipartFile == null || multipartFile.isEmpty()){
             fileUrl = null;
             TravelVisitorTourList travelVisitorTourList =
-                    travelVisitorTourListEntityMapper.toTravelVisitorTourList(requestDto,user,tourList,fileUrl);
+                    travelVisitorTourListEntityMapper.toTravelVisitorTourList(requestDto,fileUrl,user,tourList,travel);
             travelVisitorTourListRepository.save(travelVisitorTourList);
         } else {
             fileName = s3Provider.originalFileName(multipartFile);
             fileUrl = url + requestDto.tourList_title() + SEPARATOR + fileName;
             TravelVisitorTourList travelVisitorTourList =
-                    travelVisitorTourListEntityMapper.toTravelVisitorTourList(requestDto,user,tourList,fileUrl);
+                    travelVisitorTourListEntityMapper.toTravelVisitorTourList(requestDto,fileUrl,user,tourList,travel);
             travelVisitorTourListRepository.save(travelVisitorTourList);
             s3Provider.createFolder(requestDto.tourList_title());
             fileUrl = requestDto.tourList_title() + SEPARATOR + fileName;
