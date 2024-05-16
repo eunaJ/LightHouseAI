@@ -19,6 +19,7 @@ public interface TravelVisitorTourListEntityMapper {
     @Mapping(source = "requestDto.opentime", target = "opentime")
     @Mapping(source = "requestDto.closetime", target = "closetime")
     @Mapping(source = "requestDto.location", target = "location")
+    @Mapping(source = "image_url", target = "image_url")
     @Mapping(source = "tourList", target = "tourList")
     @Mapping(source = "travel",target = "travel")
     TravelVisitorTourList toTravelVisitorTourList(TravelVisitorTourListCreateServiceRequestDto requestDto,
