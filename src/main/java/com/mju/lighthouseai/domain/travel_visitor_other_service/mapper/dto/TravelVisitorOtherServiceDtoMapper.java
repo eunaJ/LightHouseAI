@@ -4,6 +4,7 @@ import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.controller.T
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.controller.TravelVisitorOtherServiceUpdateControllerRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceUpdateServiceRequestDto;
+import java.util.List;
 import org.mapstruct.Mapper;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
@@ -13,8 +14,10 @@ public interface TravelVisitorOtherServiceDtoMapper {
     TravelVisitorOtherServiceCreateServiceRequestDto toTravelVisitorOtherServiceCreateServiceDto(
             TravelVisitorOtherServiceCreateControllerRequestDto controllerRequestDto
     );
-
     TravelVisitorOtherServiceUpdateServiceRequestDto toTravelVisitorOtherServiceUpdateServiceDto(
             TravelVisitorOtherServiceUpdateControllerRequestDto controllerRequestDto
+    );
+    List<TravelVisitorOtherServiceCreateServiceRequestDto> toTravelVisitorOtherServiceCreateServiceDto(
+        List<TravelVisitorOtherServiceCreateControllerRequestDto>controllerRequestDto
     );
 }

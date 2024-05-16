@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface TravelVisitorOtherService {
-    void createTravelVisitorOtherService(TravelVisitorOtherServiceCreateServiceRequestDto requestDto,
+    void createTravelVisitorOtherService(
+        Long id,
+        TravelVisitorOtherServiceCreateServiceRequestDto requestDto,
                                          User user, MultipartFile multipartFile) throws IOException;
     void updateTravelVisitorOtherService(
             Long id, TravelVisitorOtherServiceUpdateServiceRequestDto requestDto, User user);
