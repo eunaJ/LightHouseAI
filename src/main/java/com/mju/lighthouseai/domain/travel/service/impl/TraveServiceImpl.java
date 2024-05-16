@@ -51,6 +51,9 @@ import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.request.
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.entity.TravelVisitorTourList;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.mapper.service.TravelVisitorTourListEntityMapper;
 import com.mju.lighthouseai.domain.user.entity.User;
+import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
+import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
+import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import com.mju.lighthouseai.global.s3.S3Provider;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,6 +82,7 @@ public class TraveServiceImpl implements TravelService {
     private final TravelVisitorTourListEntityMapper travelVisitorTourListEntityMapper;
     private final OtherServiceRepository otherServiceRepository;
     private final TravelVisitorOtherServiceEntityMapper travelVisitorOtherServiceEntityMapper;
+    private final UserRepository userRepository;
 
     private final String SEPARATOR = "/";
     private final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
@@ -284,8 +288,8 @@ public class TraveServiceImpl implements TravelService {
         );
 
     }
-    private Travel findTravel(Long id){
-        return travelRepository.findById(id)
+    private Travel findTravel(Long id,User user){
+        return travelRepository.findByIdAndUser(id,user)
                 .orElseThrow(()-> new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
     }
     private Constituency findConstituency(String constituency_name){
@@ -294,7 +298,7 @@ public class TraveServiceImpl implements TravelService {
     }
 
     public void deleteTravel(Long id, User user) {
-        Travel travel = findTravel(id);
+        Travel travel = findTravel(id,user);
         travelRepository.delete(travel);
     }
 /*

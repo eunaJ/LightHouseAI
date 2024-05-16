@@ -31,6 +31,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -94,6 +96,14 @@ public class TravelController {
         );
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+    @DeleteMapping("/{travelId}")
+    public ResponseEntity<?> deleteTravel(
+        @PathVariable Long travelId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        travelService.deleteTravel(travelId, userDetails.user());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 /*
     @PutMapping("/{travelVisitorCafeId}")
     public ResponseEntity<?> updateTravelVisitorCafe(
@@ -107,14 +117,6 @@ public class TravelController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/{travelVisitorCafeId}")
-    public ResponseEntity<?> deleteTravelVisitorCafe(
-            @PathVariable Long travelVisitorCafeId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
-        travelVisitorCafeService.deleteTravelVisitorCafe(travelVisitorCafeId, userDetails.user());
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
 
     @GetMapping("/{travelVisitorCafeId}")
     public ResponseEntity<?> readTravelVisitorCafe(
