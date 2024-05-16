@@ -6,6 +6,7 @@ import com.mju.lighthouseai.domain.travel.dto.service.response.TravelVisitorCafe
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request.TravelVisitorCafeCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.entity.TravelVisitorRestaurant;
+import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.user.entity.User;
 import java.io.IOException;
 import java.util.List;
@@ -19,6 +20,8 @@ public interface TravelService {
          List<MultipartFile> travelVisitorCafeImage,
         List<TravelVisitorRestaurantCreateServiceRequestDto> travelVisitorRestaurantCreateServiceRequestDtos,
         List<MultipartFile> travelVisitorRestaurantImage,
+        final List<TravelVisitorShoppingMallCreateServiceRequestDto> travelVisitorShoppingMallCreateServiceRequestDtos,
+        final List<MultipartFile> travelVisitorShoppingMallImages,
         User user
     ) throws IOException ;
     void updateTravel(Long id, TravelUpdateServiceRequestDto requestDto, User user,MultipartFile multipartFile) throws IOException;

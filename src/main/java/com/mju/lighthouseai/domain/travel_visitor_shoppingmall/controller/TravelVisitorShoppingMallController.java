@@ -24,13 +24,14 @@ public class TravelVisitorShoppingMallController {
     private final TravelVisitorShoppingMallServiceImpl travelVisitorShoppingMallService;
     @PostMapping("/create")
     public ResponseEntity<?> createTravelVisitorShoppingMall(
+            @PathVariable Long id,
             @RequestPart TravelVisitorShoppingMallCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart MultipartFile multipartFile
     )throws IOException {
         TravelVisitorShoppingMallCreateServiceRequestDto serviceRequestDto =
                 travelVisitorShoppingMallDtoMapper.toTravelVisitorShoppingMallCreateServiceDto(controllerRequestDto);
-        travelVisitorShoppingMallService.createTravelVisitorShoppingMall(serviceRequestDto, userDetails.user(), multipartFile);
+        travelVisitorShoppingMallService.createTravelVisitorShoppingMall(id,serviceRequestDto, userDetails.user(), multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
