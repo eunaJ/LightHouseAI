@@ -22,6 +22,7 @@ public interface TravelVisitorTourListEntityMapper {
     @Mapping(source = "image_url", target = "image_url")
     @Mapping(source = "tourList", target = "tourList")
     @Mapping(source = "travel",target = "travel")
+    @Mapping(source = "user",target = "user")
     TravelVisitorTourList toTravelVisitorTourList(TravelVisitorTourListCreateServiceRequestDto requestDto,
         String image_url, User user, TourList tourList, Travel travel);
 

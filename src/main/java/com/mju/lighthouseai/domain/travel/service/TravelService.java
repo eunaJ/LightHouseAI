@@ -4,6 +4,7 @@ import com.mju.lighthouseai.domain.travel.dto.service.request.TravelCreateServic
 import com.mju.lighthouseai.domain.travel.dto.service.request.TravelUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel.dto.service.response.TravelVisitorCafeReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request.TravelVisitorCafeCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.entity.TravelVisitorRestaurant;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallCreateServiceRequestDto;
@@ -25,6 +26,8 @@ public interface TravelService {
         final List<MultipartFile> travelVisitorShoppingMallImages,
         final List<TravelVisitorTourListCreateServiceRequestDto> travelVisitorTourListCreateServiceRequestDtos,
         final List<MultipartFile> travelVisitorTourListImages,
+        final List<TravelVisitorOtherServiceCreateServiceRequestDto> travelVisitorOtherServiceCreateServiceRequestDtos,
+        final List<MultipartFile> travelVisitorOtherServiceImages,
         User user
     ) throws IOException ;
     void updateTravel(Long id, TravelUpdateServiceRequestDto requestDto, User user,MultipartFile multipartFile) throws IOException;

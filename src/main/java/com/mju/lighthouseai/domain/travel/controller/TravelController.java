@@ -8,6 +8,9 @@ import com.mju.lighthouseai.domain.travel.service.impl.TraveServiceImpl;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.controller.TravelVisitorCafeCreateControllerRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.request.TravelVisitorCafeCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_cafe.mapper.dto.TravelVisitorCafeDtoMapper;
+import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.controller.TravelVisitorOtherServiceCreateControllerRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.travel_visitor_other_service.mapper.dto.TravelVisitorOtherServiceDtoMapper;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.controller.TravelVisitorRestaurantCreateControllerRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.entity.TravelVisitorRestaurant;
@@ -45,6 +48,7 @@ public class TravelController {
     private final TravelVisitorRestaurantDtoMapper travelVisitorRestaurantDtoMapper;
     private final TravelVisitorShoppingMallDtoMapper travelVisitorShoppingMallDtoMapper;
     private final TravelVisitorTourListDtoMapper travelVisitorTourListDtoMapper;
+    private final TravelVisitorOtherServiceDtoMapper travelVisitorOtherServiceDtoMapper;
     @PostMapping("/create")
     public ResponseEntity<?> createTravelVisitorCafe(
         @Valid @RequestPart(name = "travelCreateRequestDto") TravelCreateControllerRequestDto travelCreateControllerRequestDto,
@@ -57,6 +61,8 @@ public class TravelController {
         @RequestPart(name = "TravelVisitorShoppingMallImage",required = false) List<MultipartFile> TravelVisitorShoppingMallImage,
         @Valid @RequestPart(name = "TravelVisitorTourListCreateServiceRequestDto") List<TravelVisitorTourListCreateControllerRequestDto> TravelVisitorTourListCreateControllerRequestDto,
         @RequestPart(name = "TravelVisitorTourListImage",required = false) List<MultipartFile> TravelVisitorTourListImage,
+        @Valid @RequestPart(name = "TravelVisitorOtherServiceCreateServiceRequestDto") List<TravelVisitorOtherServiceCreateControllerRequestDto> TravelVisitorOtherserviceCreateControllerRequestDto,
+        @RequestPart(name = "TravelVisitorOtherServiceImage",required = false) List<MultipartFile> TravelVisitorOtherServiceImage,
         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         TravelCreateServiceRequestDto serviceRequestDto =
                 travelDtoMapper.toTravelCreateServiceDto(travelCreateControllerRequestDto);
@@ -69,7 +75,9 @@ public class TravelController {
             travelVisitorShoppingMallDtoMapper.toTravelVisitorShoppingMallCreateServiceDtos(TravelVisitorShoppingMallCreateControllerRequestDto);
         List<TravelVisitorTourListCreateServiceRequestDto> TravelVisitorTourListCreateServiceRequestDtos =
             travelVisitorTourListDtoMapper.toTravelVisitorTourListCreateServiceDtos(TravelVisitorTourListCreateControllerRequestDto);
-        travelService.createTravel(
+        List<TravelVisitorOtherServiceCreateServiceRequestDto> TravelVisitorOtherServiceCreateServiceRequestDtos =
+            travelVisitorOtherServiceDtoMapper.toTravelVisitorOtherServiceCreateServiceDto(TravelVisitorOtherserviceCreateControllerRequestDto);
+            travelService.createTravel(
             serviceRequestDto,
             travelImage,
             TravelVisitorCafeCreateServiceRequestDtos,
@@ -80,6 +88,8 @@ public class TravelController {
             TravelVisitorShoppingMallImage,
             TravelVisitorTourListCreateServiceRequestDtos,
             TravelVisitorTourListImage,
+            TravelVisitorOtherServiceCreateServiceRequestDtos,
+            TravelVisitorOtherServiceImage,
             userDetails.user()
         );
         return ResponseEntity.status(HttpStatus.CREATED).build();

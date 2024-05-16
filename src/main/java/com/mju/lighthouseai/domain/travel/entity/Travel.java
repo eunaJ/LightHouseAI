@@ -72,14 +72,14 @@ public class Travel extends BaseEntity {
    @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<TravelVisitorRestaurant> travelVisitorRestaurants = new ArrayList<>();
 
-  @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<TravelVisitorShoppingMall> travelVisitorShoppingMalls = new ArrayList<>();
 
     @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<TravelVisitorTourList> travelVisitorTourLists = new ArrayList<>();
 
-/*      @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<TravelVisitorOtherServiceEntity> travelVisitorOtherServiceEntities = new ArrayList<>();*/
+      @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<TravelVisitorOtherServiceEntity> travelVisitorOtherServiceEntities = new ArrayList<>();
 
     @Builder
     public Travel(

@@ -24,6 +24,7 @@ public class TravelVisitorOtherServiceController {
     private final TravelVisitorOtherServiceImpl travelVisitorOtherService;
     @PostMapping("/create")
     public ResponseEntity<?> createTravelVisitorOtherService(
+            @PathVariable Long id,
             @RequestPart TravelVisitorOtherServiceCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart MultipartFile multipartFile
@@ -31,7 +32,7 @@ public class TravelVisitorOtherServiceController {
         TravelVisitorOtherServiceCreateServiceRequestDto serviceRequestDto =
                 travelVisitorOtherServiceDtoMapper.toTravelVisitorOtherServiceCreateServiceDto(
                         controllerRequestDto);
-        travelVisitorOtherService.createTravelVisitorOtherService(
+        travelVisitorOtherService.createTravelVisitorOtherService(id,
                 serviceRequestDto, userDetails.user(), multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
