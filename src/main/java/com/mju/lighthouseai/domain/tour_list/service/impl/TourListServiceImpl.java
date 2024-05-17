@@ -46,7 +46,7 @@ public class TourListServiceImpl implements TourListService {
         TourList tourList = findTourList(id);
         Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
         ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
-        tourList.updateTourList(requestDto.title(), requestDto.location(), requestDto.price(),
+        tourList.updateTourList(requestDto.title(), requestDto.location(),
              requestDto.opentime(), requestDto.closetime(),constituency);
     }
 

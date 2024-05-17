@@ -31,9 +31,6 @@ public class TourList extends BaseEntity {
     @Column(nullable = false)
     private String location;
 
-    @Column(nullable = false)
-    private int price;
-
     @Column
     private String opentime;
 
@@ -52,7 +49,6 @@ public class TourList extends BaseEntity {
     public TourList(
         final String title,
         final String location,
-        final int price,
         final String opentime,
         final String closetime,
         final User user,
@@ -60,18 +56,16 @@ public class TourList extends BaseEntity {
     ){
         this.title = title;
         this.location = location;
-        this.price = price;
         this.opentime = opentime;
         this.closetime = closetime;
         this.user = user;
         this.constituency = constituency;
     }
     public void updateTourList(
-        String title, String location, int price,
+        String title, String location,
         String opentime,String closetime,Constituency constituency){
         this.title = title;
         this.location = location;
-        this.price = price;
         this.opentime = opentime;
         this.closetime = closetime;
         this.constituency = constituency;
