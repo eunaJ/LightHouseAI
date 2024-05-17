@@ -76,89 +76,428 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
     dbconn.execute(f"SELECT * FROM {category} WHERE location like '%{location}%' AND price <= {expense}")
     result = dbconn.fetchall()
 
-    df_travel_visitor_cafe = pd.DataFrame(result)
-    df_travel_visitor_cafe.columns = [
-        'id',
-        'closetime',
-        'image_url',
-        'location',
-        'opentime',
-        'price',
-        'cafe_id',
-        'user_id',
-        'createdAt',
-        'modifiedAt',
-        'menu',
-        'travel_id'
-    ]
+    if category == 'TB_TRAVEL_VISITOR_CAFE':
+        df_travel_visitor_cafe = pd.DataFrame(result)
+        df_travel_visitor_cafe.columns = [
+            'id',
+            'closetime',
+            'image_url',
+            'location',
+            'opentime',
+            'price',
+            'cafe_id',
+            'user_id',
+            'createdAt',
+            'modifiedAt',
+            'menu',
+            'travel_id'
+        ]
 
-    #필요한 데이터만 추출
-    df_travel_visitor_cafe = df_travel_visitor_cafe[['location', 'cafe_id', 'menu', 'price','travel_id']]
+        #필요한 데이터만 추출
+        df_travel_visitor_cafe = df_travel_visitor_cafe[['location', 'cafe_id', 'menu', 'price','travel_id']]
 
-    print(df_travel_visitor_cafe)
+        print(df_travel_visitor_cafe)
 
-    #TB_CAFE에서 데이터를 추출
-    dbconn.execute(f"SELECT * FROM {sub_category}")
-    result = dbconn.fetchall()
+        #TB_CAFE에서 데이터를 추출
+        dbconn.execute(f"SELECT * FROM {sub_category}")
+        result = dbconn.fetchall()
 
-    df_cafe = pd.DataFrame(result)
-    df_cafe.columns = [
-        'id',
-        'createdAt',
-        'modifiedAt',
-        'location',
-        'menu',
-        'price',
-        'title',
-        'user_id',
-        'closetime',
-        'opentime',
-        'constituency_id',
-    ]
+        df_cafe = pd.DataFrame(result)
+        df_cafe.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'location',
+            'menu',
+            'price',
+            'title',
+            'user_id',
+            'closetime',
+            'opentime',
+            'constituency_id',
+        ]
 
-    #필요한 데이터만 추출
-    df_cafe = df_cafe[['id', 'title']]
+        #필요한 데이터만 추출
+        df_cafe = df_cafe[['id', 'title']]
 
-    #두 데이터를 merge
-    df = pd.merge(df_travel_visitor_cafe, df_cafe, left_on='cafe_id', right_on='id', how='left')
+        #두 데이터를 merge
+        df = pd.merge(df_travel_visitor_cafe, df_cafe, left_on='cafe_id', right_on='id', how='left')
 
-    df = df[['cafe_id', 'menu', 'price', 'location', 'title','travel_id']]
+        df = df[['cafe_id', 'menu', 'price', 'location', 'title','travel_id']]
 
-    #TB_TRAVEl에서 데이터를 추출
-    dbconn.execute(f"SELECT * FROM TB_TRAVEL")
-    result = dbconn.fetchall()
+        #TB_TRAVEl에서 데이터를 추출
+        dbconn.execute(f"SELECT * FROM TB_TRAVEL")
+        result = dbconn.fetchall()
 
-    df_travel = pd.DataFrame(result)
-    df_travel.columns = [
-        'id',
-        'image_url',
-        'serving',
-        'star',
-        'title',
-        'travel_expense',
-        'region_id',
-        'user_id',
-        'createdAt',
-        'modifiedAt',
-        'folderName',
-        'constituency_id',
-    ]
+        df_travel = pd.DataFrame(result)
+        df_travel.columns = [
+            'id',
+            'image_url',
+            'serving',
+            'star',
+            'title',
+            'travel_expense',
+            'region_id',
+            'user_id',
+            'createdAt',
+            'modifiedAt',
+            'folderName',
+            'constituency_id',
+        ]
 
-    #필요한 데이터만 추출
-    df_travel = df_travel[['id','star']]
+        #필요한 데이터만 추출
+        df_travel = df_travel[['id','star']]
 
-    #두 데이터를 merge
-    df = pd.merge(df, df_travel, left_on='travel_id', right_on='id', how='left')
+        #두 데이터를 merge
+        df = pd.merge(df, df_travel, left_on='travel_id', right_on='id', how='left')
 
-    df = df[['cafe_id', 'star', 'menu', 'price','title', 'location']]
+        df = df[['cafe_id', 'star', 'menu', 'price','title', 'location']]
 
-    #star를 기준으로 내림차순 정렬
-    df = df.sort_values(by='star', ascending=False)[0:10]
+        #star를 기준으로 내림차순 정렬
+        df = df.sort_values(by='star', ascending=False)[0:10]
 
-    #TB_AI_CREATE에 df를 저장
-    engine = create_engine(f"mysql+pymysql://{config['spring']['datasource']['username']}:{config['spring']['datasource']['password']}@localhost/lighthouseAI")
-    dbconn.execute("DELETE FROM TB_AI_CREATE_CAFE")
-    conn.commit()
-    df.to_sql('TB_AI_CREATE_CAFE', engine, if_exists='append', index=False)
+        #TB_AI_CREATE에 df를 저장
+        engine = create_engine(f"mysql+pymysql://{config['spring']['datasource']['username']}:{config['spring']['datasource']['password']}@localhost/lighthouseAI")
+        dbconn.execute("DELETE FROM TB_AI_CREATE_CAFE")
+        conn.commit()
+        df.to_sql('TB_AI_CREATE_CAFE', engine, if_exists='append', index=False)
+
+    elif category == 'TB_TRAVEL_VISITOR_RESTAURANT':
+        df_travel_visitor_restaurant = pd.DataFrame(result)
+        df_travel_visitor_restaurant.columns = [
+            'id',
+            'closetime',
+            'image_url',
+            'location',
+            'opentime',
+            'price',
+            'restaurant_id',
+            'user_id',
+            'createdAt',
+            'modifiedAt',
+            'menu',
+            'travel_id'
+        ]
+
+        #필요한 데이터만 추출
+        df_travel_visitor_restaurant = df_travel_visitor_restaurant[['location', 'restaurant_id', 'menu', 'price','travel_id']]
+
+        print(df_travel_visitor_restaurant)
+
+        #TB_CAFE에서 데이터를 추출
+        dbconn.execute(f"SELECT * FROM {sub_category}")
+        result = dbconn.fetchall()
+
+        df_other_service = pd.DataFrame(result)
+        df_other_service.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'location',
+            'menu',
+            'price',
+            'title',
+            'user_id',
+            'closetime',
+            'opentime',
+            'constituency_id',
+        ]
+
+        #필요한 데이터만 추출
+        df_other_service = df_other_service[['id', 'title']]
+
+        #두 데이터를 merge
+        df = pd.merge(df_travel_visitor_restaurant, df_other_service, left_on='restaurant_id', right_on='id', how='left')
+
+        df = df[['restaurant_id', 'menu', 'price', 'location', 'title','travel_id']]
+
+        #TB_TRAVEl에서 데이터를 추출
+        dbconn.execute(f"SELECT * FROM TB_TRAVEL")
+        result = dbconn.fetchall()
+
+        df_travel = pd.DataFrame(result)
+        df_travel.columns = [
+            'id',
+            'image_url',
+            'serving',
+            'star',
+            'title',
+            'travel_expense',
+            'region_id',
+            'user_id',
+            'createdAt',
+            'modifiedAt',
+            'folderName',
+            'constituency_id',
+        ]
+
+        #필요한 데이터만 추출
+        df_travel = df_travel[['id','star']]
+
+        #두 데이터를 merge
+        df = pd.merge(df, df_travel, left_on='travel_id', right_on='id', how='left')
+
+        df = df[['restaurant_id', 'star', 'menu', 'price','title', 'location']]
+
+        #star를 기준으로 내림차순 정렬
+        df = df.sort_values(by='star', ascending=False)[0:10]
+
+        #TB_AI_CREATE에 df를 저장
+        engine = create_engine(f"mysql+pymysql://{config['spring']['datasource']['username']}:{config['spring']['datasource']['password']}@localhost/lighthouseAI")
+        dbconn.execute("DELETE FROM TB_AI_CREATE_RESTAURANT")
+        conn.commit()
+        df.to_sql('TB_AI_CREATE_RESTAURANT', engine, if_exists='append', index=False)
+
+    elif category == 'TB_TRAVEL_VISITOR_TOUR_LIST':
+        df_travel_visitor_tourlist = pd.DataFrame(result)
+        df_travel_visitor_tourlist.columns = [
+            'id',
+            'closetime',
+            'image_url',
+            'location',
+            'opentime',
+            'price',
+            'tourlist_id',
+            'user_id',
+            'createdAt',
+            'modifiedAt',
+            'travel_id'
+        ]
+
+        #필요한 데이터만 추출
+        df_travel_visitor_tourlist = df_travel_visitor_tourlist[['location', 'restaurant_id', 'price','travel_id']]
+
+        print(df_travel_visitor_tourlist)
+
+        #TB_CAFE에서 데이터를 추출
+        dbconn.execute(f"SELECT * FROM {sub_category}")
+        result = dbconn.fetchall()
+
+        df_tourlist = pd.DataFrame(result)
+        df_tourlist.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'location',
+            'price',
+            'title',
+            'closetime',
+            'opentime',
+            'constituency_id',
+            'user_id',
+        ]
+
+        #필요한 데이터만 추출
+        df_other_service = df_other_service[['id', 'title']]
+
+        #두 데이터를 merge
+        df = pd.merge(df_travel_visitor_restaurant, df_other_service, left_on='tourlist_id', right_on='id', how='left')
+
+        df = df[['tourlist_id', 'price', 'location', 'title','travel_id']]
+
+        #TB_TRAVEl에서 데이터를 추출
+        dbconn.execute(f"SELECT * FROM TB_TRAVEL")
+        result = dbconn.fetchall()
+
+        df_travel = pd.DataFrame(result)
+        df_travel.columns = [
+            'id',
+            'image_url',
+            'serving',
+            'star',
+            'title',
+            'travel_expense',
+            'region_id',
+            'user_id',
+            'createdAt',
+            'modifiedAt',
+            'folderName',
+            'constituency_id',
+        ]
+
+        #필요한 데이터만 추출
+        df_travel = df_travel[['id','star']]
+
+        #두 데이터를 merge
+        df = pd.merge(df, df_travel, left_on='travel_id', right_on='id', how='left')
+
+        df = df[['tourlist_id', 'star', 'menu', 'price','title', 'location']]
+
+        #star를 기준으로 내림차순 정렬
+        df = df.sort_values(by='star', ascending=False)[0:10]
+
+        #TB_AI_CREATE에 df를 저장
+        engine = create_engine(f"mysql+pymysql://{config['spring']['datasource']['username']}:{config['spring']['datasource']['password']}@localhost/lighthouseAI")
+        dbconn.execute("DELETE FROM TB_AI_CREATE_TOUR_LIST")
+        conn.commit()
+        df.to_sql('TB_AI_CREATE_TOUR_LIST', engine, if_exists='append', index=False)
+
+    elif category == 'TB_TRAVEL_VISITOR_SHOPPINGMALL':
+        df_travel_visitor_other_service = pd.DataFrame(result)
+        df_travel_visitor_other_service.columns = [
+            'id',
+            'closetime',
+            'image_url',
+            'location',
+            'opentime',
+            'price',
+            'otherservice_id',
+            'user_id',
+            'createdAt',
+            'modifiedAt',
+            'travel_id'
+        ]
+
+        #필요한 데이터만 추출
+        df_travel_visitor_other_service = df_travel_visitor_other_service[['location', 'otherservice_id', 'price','travel_id']]
+
+        print(df_travel_visitor_other_service)
+
+        #TB_CAFE에서 데이터를 추출
+        dbconn.execute(f"SELECT * FROM {sub_category}")
+        result = dbconn.fetchall()
+
+        df_other_service = pd.DataFrame(result)
+        df_other_service.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'location',
+            
+            'closetime',
+            
+            'opentime',
+            'title', 
+            'constituency_id',
+            'user_id',
+        ]
+
+        #필요한 데이터만 추출
+        df_other_service = df_other_service[['id', 'title']]
+
+        #두 데이터를 merge
+        df = pd.merge(df_travel_visitor_other_service, df_other_service, left_on='shoppingmall_id', right_on='id', how='left')
+
+        df = df[['shoppingmall_id', 'location', 'title','travel_id']]
+
+        #TB_TRAVEl에서 데이터를 추출
+        dbconn.execute(f"SELECT * FROM TB_TRAVEL")
+        result = dbconn.fetchall()
+
+        df_travel = pd.DataFrame(result)
+        df_travel.columns = [
+            'id',
+            'image_url',
+            'serving',
+            'star',
+            'title',
+            'travel_expense',
+            'region_id',
+            'user_id',
+            'createdAt',
+            'modifiedAt',
+            'folderName',
+            'constituency_id',
+        ]
+
+        #필요한 데이터만 추출
+        df_travel = df_travel[['id','star']]
+
+        #두 데이터를 merge
+        df = pd.merge(df, df_travel, left_on='travel_id', right_on='id', how='left')
+
+        df = df[['shoppingmall_id', 'star', 'menu', 'title', 'location']]
+
+        #star를 기준으로 내림차순 정렬
+        df = df.sort_values(by='star', ascending=False)[0:10]
+
+        #TB_AI_CREATE에 df를 저장
+        engine = create_engine(f"mysql+pymysql://{config['spring']['datasource']['username']}:{config['spring']['datasource']['password']}@localhost/lighthouseAI")
+        dbconn.execute("DELETE FROM TB_AI_CREATE_SHOPPINGMALL")
+        conn.commit()
+        df.to_sql('TB_AI_CREATE_SHOPPINGMALL', engine, if_exists='append', index=False)
+
+    elif category == 'TB_TRAVEL_VISITOR_OTHER_SERVICE':
+        df_travel_visitor_other_service = pd.DataFrame(result)
+        df_travel_visitor_other_service.columns = [
+            'id',
+            'closetime',
+            'image_url',
+            'location',
+            'opentime',
+            'price',
+            'other_service_id',
+            'user_id',
+            'createdAt',
+            'modifiedAt',
+            'travel_id'
+        ]
+
+        #필요한 데이터만 추출
+        df_travel_visitor_other_service = df_travel_visitor_other_service[['location', 'other_service_id', 'price','travel_id']]
+
+        print(df_travel_visitor_other_service)
+
+        #TB_CAFE에서 데이터를 추출
+        dbconn.execute(f"SELECT * FROM {sub_category}")
+        result = dbconn.fetchall()
+
+        df_other_service = pd.DataFrame(result)
+        df_other_service.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'closetime',
+            'location',
+            'opentime',
+            'title', 
+            'constituency_id',
+            'user_id',
+        ]
+
+        #필요한 데이터만 추출
+        df_other_service = df_other_service[['id', 'title']]
+
+        #두 데이터를 merge
+        df = pd.merge(df_travel_visitor_other_service, df_other_service, left_on='other_service_id', right_on='id', how='left')
+
+        df = df[['other_service_id', 'location', 'title','travel_id']]
+
+        #TB_TRAVEl에서 데이터를 추출
+        dbconn.execute(f"SELECT * FROM TB_TRAVEL")
+        result = dbconn.fetchall()
+
+        df_travel = pd.DataFrame(result)
+        df_travel.columns = [
+            'id',
+            'image_url',
+            'serving',
+            'star',
+            'title',
+            'travel_expense',
+            'region_id',
+            'user_id',
+            'createdAt',
+            'modifiedAt',
+            'folderName',
+            'constituency_id',
+        ]
+
+        #필요한 데이터만 추출
+        df_travel = df_travel[['id','star']]
+
+        #두 데이터를 merge
+        df = pd.merge(df, df_travel, left_on='travel_id', right_on='id', how='left')
+
+        df = df[['shoppingmall_id', 'star', 'menu', 'title', 'location']]
+
+        #star를 기준으로 내림차순 정렬
+        df = df.sort_values(by='star', ascending=False)[0:10]
+
+        #TB_AI_CREATE에 df를 저장
+        engine = create_engine(f"mysql+pymysql://{config['spring']['datasource']['username']}:{config['spring']['datasource']['password']}@localhost/lighthouseAI")
+        dbconn.execute("DELETE FROM TB_AI_CREATE_OTHER_SERVICE")
+        conn.commit()
+        df.to_sql('TB_AI_CREATE_OTHER_SERVICE', engine, if_exists='append', index=False)
 
     print(df)

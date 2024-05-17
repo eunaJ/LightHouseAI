@@ -13,36 +13,32 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "TB_AI_CREATE_CAFE")
-public class AICreateCafe
+@Table(name = "TB_AI_CREATE_RESTAURANT")
+public class AICreateRestaurant
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cafe_id;
+    private Integer restaurant_id;
     @Column
     private Integer star;
     @Column
     private String menu;
-
     @Column
     private Integer price;
-
     @Column
     private String title;
-
     @Column
     private String location;
-
     @Builder
-    public AICreateCafe(
-        final Integer cafe_id,
-        final Integer star,
-        final String menu,
-        final Integer price,
-        final String title,
-        final String location
+    public AICreateRestaurant(
+            final Integer restaurant_id,
+            final Integer star,
+            final String menu,
+            final Integer price,
+            final String title,
+            final String location
     ) {
-        this.cafe_id = cafe_id;
+        this.restaurant_id = restaurant_id;
         this.star = star;
         this.menu = menu;
         this.price = price;
