@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.domain.AI;
+package com.mju.lighthouseai.domain.AI.controller;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

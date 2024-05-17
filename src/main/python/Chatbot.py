@@ -4,6 +4,7 @@ import yaml
 import json
 import pandas as pd
 import os
+import jsonify
 from sqlalchemy import create_engine
 
 def generate_response(msg, model = "gpt-3.5-turbo"):
@@ -333,15 +334,15 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
         df.to_sql('TB_AI_CREATE_TOUR_LIST', engine, if_exists='append', index=False)
 
     elif category == 'TB_TRAVEL_VISITOR_SHOPPINGMALL':
-        df_travel_visitor_other_service = pd.DataFrame(result)
-        df_travel_visitor_other_service.columns = [
+        df_travel_visitor_shoppingmall = pd.DataFrame(result)
+        df_travel_visitor_shoppingmall.columns = [
             'id',
             'closetime',
             'image_url',
             'location',
             'opentime',
             'price',
-            'otherservice_id',
+            'shoppingmall_id',
             'user_id',
             'createdAt',
             'modifiedAt',
@@ -349,23 +350,21 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
         ]
 
         #필요한 데이터만 추출
-        df_travel_visitor_other_service = df_travel_visitor_other_service[['location', 'otherservice_id', 'price','travel_id']]
+        df_travel_visitor_shoppingmall = df_travel_visitor_shoppingmall[['location', 'shoppingmall_id', 'price','travel_id']]
 
-        print(df_travel_visitor_other_service)
+        print(df_travel_visitor_shoppingmall)
 
         #TB_CAFE에서 데이터를 추출
         dbconn.execute(f"SELECT * FROM {sub_category}")
         result = dbconn.fetchall()
 
-        df_other_service = pd.DataFrame(result)
-        df_other_service.columns = [
+        df_shoppingmall = pd.DataFrame(result)
+        df_shoppingmall.columns = [
             'id',
             'createdAt',
             'modifiedAt',
-            'location',
-            
             'closetime',
-            
+            'location',
             'opentime',
             'title', 
             'constituency_id',
@@ -373,10 +372,10 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
         ]
 
         #필요한 데이터만 추출
-        df_other_service = df_other_service[['id', 'title']]
+        df_shoppingmall = df_shoppingmall[['id', 'title']]
 
         #두 데이터를 merge
-        df = pd.merge(df_travel_visitor_other_service, df_other_service, left_on='shoppingmall_id', right_on='id', how='left')
+        df = pd.merge(df_travel_visitor_shoppingmall, df_shoppingmall, left_on='shoppingmall_id', right_on='id', how='left')
 
         df = df[['shoppingmall_id', 'location', 'title','travel_id']]
 
@@ -498,6 +497,10 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
         engine = create_engine(f"mysql+pymysql://{config['spring']['datasource']['username']}:{config['spring']['datasource']['password']}@localhost/lighthouseAI")
         dbconn.execute("DELETE FROM TB_AI_CREATE_OTHER_SERVICE")
         conn.commit()
-        df.to_sql('TB_AI_CREATE_OTHER_SERVICE', engine, if_exists='append', index=False)
+        df.to_sql('TB_AI_CREATE_OTHER_SERVI', engine, if_exists='append', index=False)
 
     print(df)
+
+    data_dict = df.to_dict(orient='records')
+
+    return data_dict

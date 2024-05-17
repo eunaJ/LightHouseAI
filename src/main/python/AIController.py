@@ -8,8 +8,10 @@ app = Flask(__name__)
 def process_command(command):
     if command["command"] == "run_script":
         msg = command["msg"]
+        print(msg)
         ans = chatbot.generate_response(msg)
         return ans
+    """
     elif command["command"] == "train":
         ai.dataTrain()
         return "Train command executed successfully"
@@ -41,14 +43,14 @@ def process_command(command):
         result = ai.cafePredict(user_id, serving, constituency_id, rank_s, rank_e)
         print(result)
         return result
-
+    """
     
 @app.route('/api/v1/run_command', methods=['POST'])
 def command():
     command = request.json
     response = process_command(command)
     print(response)
-    return jsonify({"response": response})
+    return jsonify({"response":response})
 
 if __name__ == '__main__':
     app.run(port=5000)
