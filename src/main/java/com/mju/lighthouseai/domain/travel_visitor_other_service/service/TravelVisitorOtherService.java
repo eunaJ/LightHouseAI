@@ -1,5 +1,6 @@
 package com.mju.lighthouseai.domain.travel_visitor_other_service.service;
 
+import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.response.TravelVisitorCafeReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.response.TravelVisitorOtherServiceReadAllServiceResponseDto;
@@ -19,4 +20,5 @@ public interface TravelVisitorOtherService {
     void deleteTravelVisitorOtherService(Long id, User user);
     TravelVisitorOtherServiceReadAllServiceResponseDto readTravelVisitorOtherService(Long id);
     List<TravelVisitorOtherServiceReadAllServiceResponseDto> readAllTravelVisitorOtherServices();
+    List<TravelVisitorOtherServiceReadAllServiceResponseDto> readAllTravelVisitorOtherServicesByTravelId(Long id);
 }

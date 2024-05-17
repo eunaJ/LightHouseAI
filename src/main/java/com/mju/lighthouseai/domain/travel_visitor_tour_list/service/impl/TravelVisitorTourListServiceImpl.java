@@ -107,4 +107,10 @@ public class TravelVisitorTourListServiceImpl implements TravelVisitorTourListSe
         return travelVisitorTourListEntityMapper.toTravelVisitorTourListReadAllResponseDto(
                 travelVisitorTourLists);
     }
+
+    public List<TravelVisitorTourListReadAllServiceResponseDto> readAllTravelVisitorTourListsByTravelId(Long id){
+        List<TravelVisitorTourList> travelVisitorTourLists = travelVisitorTourListRepository.findAllByTravelId(id);
+        return travelVisitorTourListEntityMapper.toTravelVisitorTourListReadAllResponseDto(
+                travelVisitorTourLists);
+    }
 }
