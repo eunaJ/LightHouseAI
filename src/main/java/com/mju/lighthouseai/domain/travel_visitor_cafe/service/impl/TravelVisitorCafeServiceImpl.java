@@ -101,4 +101,9 @@ public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
         List<TravelVisitorCafe> travelVisitorCafes = travelVisitorCafeRepository.findAll();
         return travelVisitorCafeEntityMapper.toTravelVisitorCafeReadAllResponseDto(travelVisitorCafes);
     }
+
+    public List<TravelVisitorCafeReadAllServiceResponseDto> readAllTravelVisitorCafesByTravelId(Long id){
+        List<TravelVisitorCafe> travelVisitorCafes = travelVisitorCafeRepository.findAllByTravelId(id);
+        return travelVisitorCafeEntityMapper.toTravelVisitorCafeReadAllResponseDto(travelVisitorCafes);
+    }
 }

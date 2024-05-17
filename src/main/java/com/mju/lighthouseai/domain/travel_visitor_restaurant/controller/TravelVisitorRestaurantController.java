@@ -69,4 +69,12 @@ public class TravelVisitorRestaurantController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(travelVisitorRestaurantService.readAllTravelVisitorRestaurants());
     }
+
+    @GetMapping("/travel/{travelId}")
+    public ResponseEntity<?> readAllTravelVisitorRestaurantsByTravelId(
+            @PathVariable Long travelId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorRestaurantService.readAllTravelVisitorRestaurantsByTravelId(travelId));
+    }
 }

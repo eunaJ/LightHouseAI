@@ -109,4 +109,10 @@ public class TravelVisitorShoppingMallServiceImpl {
         return travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMallReadAllResponseDto(
                 travelVisitorShoppingMalls);
     }
+
+    public List<TravelVisitorShoppingMallReadAllServiceResponseDto> readAllTravelVisitorShoppingMallsByTravelId(Long id){
+        List<TravelVisitorShoppingMall> travelVisitorShoppingMalls = travelVisitorShoppingMallRepository.findAllByTravelId(id);
+        return travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMallReadAllResponseDto(
+                travelVisitorShoppingMalls);
+    }
 }

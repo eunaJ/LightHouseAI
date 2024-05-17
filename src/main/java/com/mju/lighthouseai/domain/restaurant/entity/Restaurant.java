@@ -32,12 +32,6 @@ public class Restaurant extends BaseEntity {
     private String location;
 
     @Column
-    private String menu;
-
-    @Column
-    private int price;
-
-    @Column
     private String opentime;
 
     @Column
@@ -54,8 +48,6 @@ public class Restaurant extends BaseEntity {
     public Restaurant(
         final String title,
         final String location,
-        final String menu,
-        final int price,
         final String opentime,
         final String closetime,
         final User user,
@@ -63,8 +55,6 @@ public class Restaurant extends BaseEntity {
     ) {
         this.title = title;
         this.location = location;
-        this.menu = menu;
-        this.price = price;
         this.opentime = opentime;
         this.closetime = closetime;
         this.user = user;
@@ -72,12 +62,10 @@ public class Restaurant extends BaseEntity {
     }
 
     public void updateRestaurant(
-            String title, String location, String menu, int price,
+            String title, String location,
             String opentime, String closetime, Constituency constituency){
         this.title = title;
         this.location = location;
-        this.menu = menu;
-        this.price = price;
         this.opentime = opentime;
         this.closetime = closetime;
         this.constituency = constituency;

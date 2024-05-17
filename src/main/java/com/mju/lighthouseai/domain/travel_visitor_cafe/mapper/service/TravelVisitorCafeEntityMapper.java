@@ -35,7 +35,7 @@ public interface TravelVisitorCafeEntityMapper {
     }
     @Mapping(source = "user", target = "nickname")
     @Mapping(source = "cafe.title", target = "cafe_title")
-    TravelVisitorCafeReadAllServiceResponseDto toTravelVisitorCafeReadResponseDto(TravelVisitorCafe travelVisitorCafe);
+    TravelVisitorCafeReadAllServiceResponseDto toTravelVisitorCafeReadResponseDto(TravelVisitorCafe travel);
 
-    List<TravelVisitorCafeReadAllServiceResponseDto> toTravelVisitorCafeReadAllResponseDto(List<TravelVisitorCafe> travelVisitorCafes);
+    List<TravelVisitorCafeReadAllServiceResponseDto> toTravelVisitorCafeReadAllResponseDto(List<TravelVisitorCafe> travels);
 }

@@ -42,8 +42,7 @@ public class CafeServiceImpl implements CafeService {
     public void updateCafe(Long id,CafeUpdateServiceRequestDto requestDto,User user){
         checkUserRole(user);
         Cafe cafe = findCafe(id);
-        cafe.updateCafe(requestDto.title(), requestDto.location(), requestDto.price(),
-            requestDto.menu(), requestDto.opentime(), requestDto.closetime());
+        cafe.updateCafe(requestDto.title(), requestDto.location(),  requestDto.opentime(), requestDto.closetime());
     }
     private Cafe findCafe(Long id){
         return cafeRepository.findById(id)

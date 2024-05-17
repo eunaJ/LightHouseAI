@@ -8,6 +8,8 @@ import com.mju.lighthouseai.domain.travel.entity.Travel;
 import com.mju.lighthouseai.domain.travel.exception.NotFoundTravelException;
 import com.mju.lighthouseai.domain.travel.exception.TravelErrorCode;
 import com.mju.lighthouseai.domain.travel.repository.TravelRepository;
+import com.mju.lighthouseai.domain.travel_visitor_cafe.dto.service.response.TravelVisitorCafeReadAllServiceResponseDto;
+import com.mju.lighthouseai.domain.travel_visitor_cafe.entity.TravelVisitorCafe;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.request.TravelVisitorOtherServiceUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.response.TravelVisitorOtherServiceReadAllServiceResponseDto;
@@ -111,6 +113,13 @@ public class TravelVisitorOtherServiceImpl implements TravelVisitorOtherService 
     public List<TravelVisitorOtherServiceReadAllServiceResponseDto> readAllTravelVisitorOtherServices(){
         List<TravelVisitorOtherServiceEntity> travelVisitorOtherServiceEntities
                 = travelVisitorOtherServiceRepository.findAll();
+        return travelVisitorOtherServiceEntityMapper.toTravelVisitorOtherServiceReadAllResponseDto(
+                travelVisitorOtherServiceEntities);
+    }
+
+    public List<TravelVisitorOtherServiceReadAllServiceResponseDto> readAllTravelVisitorOtherServicesByTravelId(Long id){
+        List<TravelVisitorOtherServiceEntity> travelVisitorOtherServiceEntities
+                = travelVisitorOtherServiceRepository.findAllByTravelId(id);
         return travelVisitorOtherServiceEntityMapper.toTravelVisitorOtherServiceReadAllResponseDto(
                 travelVisitorOtherServiceEntities);
     }
