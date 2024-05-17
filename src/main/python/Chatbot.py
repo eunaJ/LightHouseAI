@@ -266,7 +266,7 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
         ]
 
         #필요한 데이터만 추출
-        df_travel_visitor_tourlist = df_travel_visitor_tourlist[['location', 'restaurant_id', 'price','travel_id']]
+        df_travel_visitor_tourlist = df_travel_visitor_tourlist[['location', 'tourlist_id', 'price','travel_id']]
 
         print(df_travel_visitor_tourlist)
 
@@ -289,10 +289,10 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
         ]
 
         #필요한 데이터만 추출
-        df_other_service = df_other_service[['id', 'title']]
+        df_tourlist = df_tourlist[['id', 'title']]
 
         #두 데이터를 merge
-        df = pd.merge(df_travel_visitor_restaurant, df_other_service, left_on='tourlist_id', right_on='id', how='left')
+        df = pd.merge(df_travel_visitor_tourlist, df_tourlist, left_on='tourlist_id', right_on='id', how='left')
 
         df = df[['tourlist_id', 'price', 'location', 'title','travel_id']]
 
@@ -322,7 +322,7 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
         #두 데이터를 merge
         df = pd.merge(df, df_travel, left_on='travel_id', right_on='id', how='left')
 
-        df = df[['tourlist_id', 'star', 'menu', 'price','title', 'location']]
+        df = df[['tourlist_id','location' , 'price','star','title' ]]
 
         #star를 기준으로 내림차순 정렬
         df = df.sort_values(by='star', ascending=False)[0:10]
@@ -405,7 +405,7 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
         #두 데이터를 merge
         df = pd.merge(df, df_travel, left_on='travel_id', right_on='id', how='left')
 
-        df = df[['shoppingmall_id', 'star', 'menu', 'title', 'location']]
+        df = df[['shoppingmall_id', 'star', 'title', 'location']]
 
         #star를 기준으로 내림차순 정렬
         df = df.sort_values(by='star', ascending=False)[0:10]
@@ -425,7 +425,7 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
             'location',
             'opentime',
             'price',
-            'other_service_id',
+            'otherservice_id',
             'user_id',
             'createdAt',
             'modifiedAt',
@@ -433,7 +433,7 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
         ]
 
         #필요한 데이터만 추출
-        df_travel_visitor_other_service = df_travel_visitor_other_service[['location', 'other_service_id', 'price','travel_id']]
+        df_travel_visitor_other_service = df_travel_visitor_other_service[['location', 'otherservice_id', 'price','travel_id']]
 
         print(df_travel_visitor_other_service)
 
@@ -446,10 +446,11 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
             'id',
             'createdAt',
             'modifiedAt',
-            'closetime',
             'location',
-            'opentime',
+            'price',
             'title', 
+            'closetime',
+            'opentime',
             'constituency_id',
             'user_id',
         ]
@@ -458,9 +459,9 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
         df_other_service = df_other_service[['id', 'title']]
 
         #두 데이터를 merge
-        df = pd.merge(df_travel_visitor_other_service, df_other_service, left_on='other_service_id', right_on='id', how='left')
+        df = pd.merge(df_travel_visitor_other_service, df_other_service, left_on='otherservice_id', right_on='id', how='left')
 
-        df = df[['other_service_id', 'location', 'title','travel_id']]
+        df = df[['otherservice_id', 'location', 'title','travel_id']]
 
         #TB_TRAVEl에서 데이터를 추출
         dbconn.execute(f"SELECT * FROM TB_TRAVEL")
@@ -488,7 +489,7 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
         #두 데이터를 merge
         df = pd.merge(df, df_travel, left_on='travel_id', right_on='id', how='left')
 
-        df = df[['shoppingmall_id', 'star', 'menu', 'title', 'location']]
+        df = df[['otherservice_id', 'star', 'title', 'location']]
 
         #star를 기준으로 내림차순 정렬
         df = df.sort_values(by='star', ascending=False)[0:10]
@@ -497,7 +498,7 @@ def generate_response(msg, model = "gpt-3.5-turbo"):
         engine = create_engine(f"mysql+pymysql://{config['spring']['datasource']['username']}:{config['spring']['datasource']['password']}@localhost/lighthouseAI")
         dbconn.execute("DELETE FROM TB_AI_CREATE_OTHER_SERVICE")
         conn.commit()
-        df.to_sql('TB_AI_CREATE_OTHER_SERVI', engine, if_exists='append', index=False)
+        df.to_sql('TB_AI_CREATE_OTHER_SERVICE', engine, if_exists='append', index=False)
 
     print(df)
 

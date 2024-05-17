@@ -18,7 +18,7 @@ public class AICreateTourList
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer tour_list_id;
+    private Integer tourlist_id;
     @Column
     private Integer star;
     @Column
@@ -29,13 +29,13 @@ public class AICreateTourList
     private String location;
     @Builder
     public AICreateTourList(
-            final Integer tour_list_id,
+            final Integer tourlist_id,
             final Integer star,
             final Integer price,
             final String title,
             final String location
     ) {
-        this.tour_list_id = tour_list_id;
+        this.tourlist_id = tourlist_id;
         this.star = star;
         this.price = price;
         this.title = title;

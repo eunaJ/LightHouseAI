@@ -18,7 +18,7 @@ public class AICreateOtherService
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer other_service_id;
+    private Integer otherservice_id;
     @Column
     private Integer star;
     @Column
@@ -31,14 +31,14 @@ public class AICreateOtherService
     private String location;
     @Builder
     public AICreateOtherService(
-            final Integer other_service_id,
+            final Integer otherservice_id,
             final Integer star,
             final String menu,
             final Integer price,
             final String title,
             final String location
     ) {
-        this.other_service_id = other_service_id;
+        this.otherservice_id = otherservice_id;
         this.star = star;
         this.menu = menu;
         this.price = price;
