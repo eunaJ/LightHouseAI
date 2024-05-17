@@ -75,4 +75,12 @@ public class TravelVisitorOtherServiceController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(travelVisitorOtherService.readAllTravelVisitorOtherServices());
     }
+
+    @GetMapping("/travel/{travelId}")
+    public ResponseEntity<?> readAllTravelVisitorOtherServicesByTravelId(
+            @PathVariable Long travelId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorOtherService.readAllTravelVisitorOtherServicesByTravelId(travelId));
+    }
 }

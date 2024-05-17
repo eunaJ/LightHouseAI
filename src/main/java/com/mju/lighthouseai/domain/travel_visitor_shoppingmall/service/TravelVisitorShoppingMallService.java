@@ -1,5 +1,6 @@
 package com.mju.lighthouseai.domain.travel_visitor_shoppingmall.service;
 
+import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.response.TravelVisitorRestaurantReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.response.TravelVisitorShoppingMallReadAllServiceResponseDto;
@@ -16,6 +17,6 @@ public interface TravelVisitorShoppingMallService {
                                          TravelVisitorShoppingMallUpdateServiceRequestDto requestDto, User user);
     void deleteTravelVisitorShoppingMall(Long id, User user);
     TravelVisitorShoppingMallReadAllServiceResponseDto readTravelVisitorShoppingMall(Long id);
-
     List<TravelVisitorShoppingMallReadAllServiceResponseDto> readAllTravelVisitorShoppingMalls();
+    List<TravelVisitorShoppingMallReadAllServiceResponseDto> readAllTravelVisitorShoppingMallsByTravelId(Long id);
 }
