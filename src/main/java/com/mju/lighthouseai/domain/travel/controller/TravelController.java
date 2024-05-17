@@ -34,6 +34,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -122,18 +123,25 @@ public class TravelController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-/*
-    @GetMapping("/{travelVisitorCafeId}")
-    public ResponseEntity<?> readTravelVisitorCafe(
-            @PathVariable Long travelVisitorCafeId
+
+    @GetMapping("/{travelId}")
+    public ResponseEntity<?> readTravel(
+            @PathVariable Long travelId
     ){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(travelVisitorCafeService.readTravelVisitorCafe(travelVisitorCafeId));
+                .body(travelService.readTravel(travelId));
     }
 
-    @GetMapping("/")
-    public ResponseEntity<?> readAllTravelVisitorCafes(){
+    @GetMapping()
+    public ResponseEntity<?> readAllTravel(){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(travelVisitorCafeService.readAllTravelVisitorCafes());
-    }*/
+                .body(travelService.readlAllTravel());
+    }
+    @GetMapping("/user")
+    public ResponseEntity<?> readAllUserTravels(
+        @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(travelService.readUserTravels(userDetails.user()));
+    }
 }

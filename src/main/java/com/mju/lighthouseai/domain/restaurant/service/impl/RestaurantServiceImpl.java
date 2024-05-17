@@ -44,7 +44,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         Restaurant restaurant = findRestaurant(id);
         Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
         ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
-        restaurant.updateRestaurant(requestDto.title(), requestDto.location(), requestDto.menu(), requestDto.price(),
+        restaurant.updateRestaurant(requestDto.title(), requestDto.location(),
                 requestDto.opentime(), requestDto.closetime(),constituency);
     }
 

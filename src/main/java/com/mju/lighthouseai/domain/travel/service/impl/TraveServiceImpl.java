@@ -11,9 +11,7 @@ import com.mju.lighthouseai.domain.constituency.repository.ConstituencyRepositor
 import com.mju.lighthouseai.domain.other_service.entity.OtherServiceEntity;
 import com.mju.lighthouseai.domain.other_service.exception.NotFoundOtherServiceException;
 import com.mju.lighthouseai.domain.other_service.exception.OtherServiceErrorCode;
-import com.mju.lighthouseai.domain.other_service.mapper.service.OtherServiceEntityMapper;
 import com.mju.lighthouseai.domain.other_service.repository.OtherServiceRepository;
-import com.mju.lighthouseai.domain.other_service.service.OtherService;
 import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
 import com.mju.lighthouseai.domain.restaurant.exceoption.NotFoundRestaurantException;
 import com.mju.lighthouseai.domain.restaurant.exceoption.RestaurantErrorCode;
@@ -28,7 +26,7 @@ import com.mju.lighthouseai.domain.tour_list.exceoption.TourListErrorCode;
 import com.mju.lighthouseai.domain.tour_list.repository.TourListRepository;
 import com.mju.lighthouseai.domain.travel.dto.service.request.TravelCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel.dto.service.request.TravelUpdateServiceRequestDto;
-import com.mju.lighthouseai.domain.travel.dto.service.response.TravelVisitorCafeReadAllServiceResponseDto;
+import com.mju.lighthouseai.domain.travel.dto.service.response.TravelReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.travel.entity.Travel;
 import com.mju.lighthouseai.domain.travel.exception.NotFoundTravelException;
 import com.mju.lighthouseai.domain.travel.exception.TravelErrorCode;
@@ -51,10 +49,9 @@ import com.mju.lighthouseai.domain.travel_visitor_tour_list.dto.service.request.
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.entity.TravelVisitorTourList;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.mapper.service.TravelVisitorTourListEntityMapper;
 import com.mju.lighthouseai.domain.user.entity.User;
-import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
-import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import com.mju.lighthouseai.global.s3.S3Provider;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,6 +106,7 @@ public class TraveServiceImpl implements TravelService {
         String travelFolderName = requestDto.title()+ UUID.randomUUID();
         String travelImageName = travelFolderName+SEPARATOR+s3Provider.originalFileName(travelImage);
         Travel travel = travelEntityMapper.toTravel(requestDto,travelFolderName,s3Provider.getImagePath(travelImageName),user,constituency);
+        Integer expense = 0;
         // 여행지_방문지_카페
         List<TravelVisitorCafe> travelVisitorCafes = new ArrayList<>();
         List<String> travelVisitorCafeImageNames = new ArrayList<>();
@@ -140,6 +138,15 @@ public class TraveServiceImpl implements TravelService {
                 travelVisitorCafeImageNames.add(travelVisitorCafeImageName);
                 travelVisitorCafes.add(travelVisitorCafeEntityMapper.toTravelVisitorCafe(
                     travelVisitorCafeCreateServiceRequestDtos.get(i), travelVisitorCafeImageUrl,user,cafe ,travel));
+            expense = travel.getTravel_expense();
+            if (travelVisitorCafeCreateServiceRequestDtos.get(i).price() == null){
+                    Integer visitor_expense = 0;
+                    expense = expense +visitor_expense;
+                    travel.updateExpense(expense);
+                }else {
+                    expense = expense+travelVisitorCafeCreateServiceRequestDtos.get(i).price();
+                    travel.updateExpense(expense);
+                }
         }
         //여행지_방문지_식당
         for (int i = 0; i < travelVisitorRestaurantCreateServiceRequestDtos.size(); i++) {
@@ -155,6 +162,15 @@ public class TraveServiceImpl implements TravelService {
             travelVisitorRestaurantImageNames.add(travelVisitorRestaurantImageName);
             travelVisitorRestaurants.add(travelVisitorRestaurantEntityMapper.toTravelVisitorRestaurant(
                 travelVisitorRestaurantCreateServiceRequestDtos.get(i), travelVisitorRestaurantImageUrl,user,restaurant ,travel));
+            expense = travel.getTravel_expense();
+            if (travelVisitorRestaurantCreateServiceRequestDtos.get(i).price() == null) {
+                Integer travel_expense = 0;
+                expense = expense+travel_expense;
+                travel.updateExpense(expense);
+            }else {
+                expense = expense + travelVisitorRestaurantCreateServiceRequestDtos.get(i).price();
+                travel.updateExpense(expense);
+            }
         }
         // 여행지_방문지_쇼핑몰
         for (int i = 0; i < travelVisitorShoppingMallCreateServiceRequestDtos.size(); i++) {
@@ -170,6 +186,15 @@ public class TraveServiceImpl implements TravelService {
             travelVisitorShoppingMallImageNames.add(travelVisitorShoppingMallImageName);
             travelVisitorShoppingMalls.add(travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMall(
                 travelVisitorShoppingMallCreateServiceRequestDtos.get(i), travelVisitorShoppingMallImageUrl,user,shoppingMall ,travel));
+            expense = travel.getTravel_expense();
+            if (travelVisitorShoppingMallCreateServiceRequestDtos.get(i).price() == null) {
+                Integer travel_expense = 0;
+                expense = expense+travel_expense;
+                travel.updateExpense(expense);
+            }else {
+                expense = expense + travelVisitorShoppingMallCreateServiceRequestDtos.get(i).price();
+                travel.updateExpense(expense);
+            }
         }
         //여행지_방문지_관광지
         for (int i = 0; i < travelVisitorTourListCreateServiceRequestDtos.size(); i++) {
@@ -185,6 +210,15 @@ public class TraveServiceImpl implements TravelService {
             travelVisitorTourListImageNames.add(travelVisitorTourListsImageName);
             travelVisitorTourLists.add(travelVisitorTourListEntityMapper.toTravelVisitorTourList(
                 travelVisitorTourListCreateServiceRequestDtos.get(i), travelVisitorTourListImageUrl,user,tourList ,travel));
+            expense = travel.getTravel_expense();
+            if (travelVisitorTourListCreateServiceRequestDtos.get(i).price() == null) {
+                Integer travel_expense = 0;
+                expense = expense+travel_expense;
+                travel.updateExpense(expense);
+            }else {
+                expense = expense + travelVisitorTourListCreateServiceRequestDtos.get(i).price();
+                travel.updateExpense(expense);
+            }
         }
         //여행지_방문지_기타서비스
         for (int i = 0; i < travelVisitorOtherServiceCreateServiceRequestDtos.size(); i++) {
@@ -200,6 +234,15 @@ public class TraveServiceImpl implements TravelService {
             travelVisitorOtherServiceImageNames.add(travelOtherServicesImageName);
             travelVisitorOtherServices.add(travelVisitorOtherServiceEntityMapper.toTravelVisitorOtherService(
                 travelVisitorOtherServiceCreateServiceRequestDtos.get(i), travelVisitorOtherSerivceImageUrl,user,otherService ,travel));
+            expense = travel.getTravel_expense();
+            if (travelVisitorOtherServiceCreateServiceRequestDtos.get(i).price() == null) {
+                Integer travel_expense = 0;
+                expense = expense+travel_expense;
+                travel.updateExpense(expense);
+            }else {
+                expense = expense + travelVisitorOtherServiceCreateServiceRequestDtos.get(i).price();
+                travel.updateExpense(expense);
+            }
         }
         travel.getTravelVisitorCafes().addAll(travelVisitorCafes);
         travel.getTravelVisitorRestaurants().addAll(travelVisitorRestaurants);
@@ -268,12 +311,11 @@ public class TraveServiceImpl implements TravelService {
         TravelUpdateServiceRequestDto requestDto,
         User user,
         MultipartFile multipartFile)throws  IOException{
-        Travel travel = travelRepository.findByIdAndUser(id, user)
+        com.mju.lighthouseai.domain.travel.entity.Travel travel = travelRepository.findByIdAndUser(id, user)
             .orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
         String folderName = travel.getFolderName();
         String fileUrl;
         Constituency constituency = findConstituency(requestDto.constituency());
-        System.out.println(requestDto.imageChange());
         if (!requestDto.imageChange()){
             travel.UpdateTravel(requestDto.title(),travel.getImage_url(),
                 requestDto.serving(), requestDto.star(),constituency);
@@ -298,21 +340,46 @@ public class TraveServiceImpl implements TravelService {
     }
 
     public void deleteTravel(Long id, User user) {
-        Travel travel = findTravel(id,user);
+        com.mju.lighthouseai.domain.travel.entity.Travel travel = findTravel(id,user);
         travelRepository.delete(travel);
         //TODO S3 객체 모두 삭제 하는 기능 추가 필요
         s3Provider.delete(travel.getFolderName());
     }
-/*
-    public TravelVisitorCafeReadAllServiceResponseDto readTravelVisitorCafe(Long id){
-        TravelVisitorCafe travelVisitorCafe = travelRepository.findById(id).
-                orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL_VISITOR_CAFE));
-        return travelVisitorCafeEntityMapper.toTravelVisitorCafeReadResponseDto(travelVisitorCafe);
-    }
 
-    public List<TravelVisitorCafeReadAllServiceResponseDto> readAllTravelVisitorCafes(){
-        List<TravelVisitorCafe> travelVisitorCafes = travelRepository.findAll();
-        return travelVisitorCafeEntityMapper.toTravelVisitorCafeReadAllResponseDto(travelVisitorCafes);
+    public TravelReadAllServiceResponseDto readTravel(Long id){
+        Travel travel = travelRepository.findById(id)
+            .orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
+        TravelReadAllServiceResponseDto travelReadAllServiceResponseDto = TravelReadAllServiceResponseDto.builder()
+            .id(travel.getId())
+            .image_url(travel.getImage_url())
+            .travel_expense(travel.getTravel_expense())
+            .title(travel.getTitle())
+            .serving(travel.getServing())
+            .star(travel.getStar())
+            .writer(travel.getUser().getNickname())
+            .build();
+        return travelReadAllServiceResponseDto;
+
     }
-*/
+    public List<TravelReadAllServiceResponseDto> readlAllTravel(){
+        return travelRepository.findAll().stream().map(travel -> readTravel(travel.getId()))
+            .toList();
+    }
+    public List<TravelReadAllServiceResponseDto> readUserTravels(User user){
+        List<Travel> travel = travelRepository.findByUser(user);
+        List<TravelReadAllServiceResponseDto> userTravels = new ArrayList<>();
+        for (int i = 0; i<travel.size();i++){
+            TravelReadAllServiceResponseDto travelReadAllServiceResponseDto = TravelReadAllServiceResponseDto.builder()
+                .id(travel.get(i).getId())
+                .image_url(travel.get(i).getImage_url())
+                .travel_expense(travel.get(i).getTravel_expense())
+                .title(travel.get(i).getTitle())
+                .serving(travel.get(i).getServing())
+                .star(travel.get(i).getStar())
+                .writer(travel.get(i).getUser().getNickname())
+                .build();
+            userTravels.add(travelReadAllServiceResponseDto);
+        }
+        return userTravels;
+    }
 }

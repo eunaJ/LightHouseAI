@@ -7,7 +7,6 @@ import com.mju.lighthouseai.domain.travel_visitor_restaurant.entity.TravelVisito
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.entity.TravelVisitorShoppingMall;
 import com.mju.lighthouseai.domain.travel_visitor_tour_list.entity.TravelVisitorTourList;
 import com.mju.lighthouseai.global.entity.BaseEntity;
-import com.mju.lighthouseai.domain.region.entity.Region;
 import com.mju.lighthouseai.domain.user.entity.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -84,7 +83,6 @@ public class Travel extends BaseEntity {
     @Builder
     public Travel(
         final String title,
-        final Integer travel_expense,
         final String image_url,
         final Byte serving,
         final Byte star,
@@ -93,9 +91,9 @@ public class Travel extends BaseEntity {
         final Constituency constituency
     ){
         this.title = title;
-        this.travel_expense = travel_expense;
+        this.travel_expense = 0;
         this.image_url = image_url;
-        this.serving = 4;
+        this.serving = serving;
         this.star = star;
         this.folderName=folderName;
         this.user = user;
@@ -113,5 +111,8 @@ public class Travel extends BaseEntity {
         this.serving = serving;
         this.star = star;
         this.constituency = constituency;
+    }
+    public void updateExpense(Integer travel_expense){
+        this.travel_expense = travel_expense;
     }
 }
