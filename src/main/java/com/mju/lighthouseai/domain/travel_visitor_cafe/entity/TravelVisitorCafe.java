@@ -24,7 +24,8 @@ public class TravelVisitorCafe extends BaseEntity
     private String menu;
     @Column
     private Integer price;
-
+    @Column
+    private String content;
     @Column
     private String opentime;
 
@@ -53,6 +54,7 @@ public class TravelVisitorCafe extends BaseEntity
     public TravelVisitorCafe(
         final String menu,
         final Integer price,
+        final String content,
         final String opentime,
         final String closetime,
         final String location,
@@ -63,6 +65,7 @@ public class TravelVisitorCafe extends BaseEntity
     ) {
         this.menu = menu;
         this.price = price;
+        this.content = content;
         this.opentime = opentime;
         this.closetime = closetime;
         this.location = location;
@@ -73,9 +76,10 @@ public class TravelVisitorCafe extends BaseEntity
     }
 
     public void updateTravelVisitorCafe(
-            String menu, int price, String opentime, String closetime, String location, String image_url) {
+            String menu, Integer price, String content,String opentime, String closetime, String location, String image_url) {
         this.menu = menu;
         this.price = price;
+        this.content = content;
         this.opentime = opentime;
         this.closetime = closetime;
         this.location = location;
