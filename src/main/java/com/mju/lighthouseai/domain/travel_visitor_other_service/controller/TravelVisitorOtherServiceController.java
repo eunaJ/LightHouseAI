@@ -22,7 +22,7 @@ import java.io.IOException;
 public class TravelVisitorOtherServiceController {
     private final TravelVisitorOtherServiceDtoMapper travelVisitorOtherServiceDtoMapper;
     private final TravelVisitorOtherServiceImpl travelVisitorOtherService;
-    @PostMapping("/create")
+    @PostMapping("/create/{id}")
     public ResponseEntity<?> createTravelVisitorOtherService(
             @PathVariable Long id,
             @RequestPart TravelVisitorOtherServiceCreateControllerRequestDto controllerRequestDto,
