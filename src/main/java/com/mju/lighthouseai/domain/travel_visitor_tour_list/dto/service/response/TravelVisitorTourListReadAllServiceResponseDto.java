@@ -8,6 +8,7 @@ public record TravelVisitorTourListReadAllServiceResponseDto(
         String location,
         String nickname,
         String tourList_title,
-        String image_url
+        String image_url,
+        String content
 ) {
 }

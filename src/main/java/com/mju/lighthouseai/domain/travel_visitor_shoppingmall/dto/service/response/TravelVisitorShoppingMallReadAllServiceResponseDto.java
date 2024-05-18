@@ -8,6 +8,7 @@ public record TravelVisitorShoppingMallReadAllServiceResponseDto(
         String location,
         String nickname,
         String shoppingMall_title,
-        String image_url
+        String image_url,
+        String content
 ) {
 }
