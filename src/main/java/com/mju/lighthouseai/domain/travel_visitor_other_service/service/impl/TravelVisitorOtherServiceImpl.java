@@ -78,13 +78,17 @@ public class TravelVisitorOtherServiceImpl implements TravelVisitorOtherService 
 
     @Transactional
     public void updateTravelVisitorOtherService(
-            Long id, TravelVisitorOtherServiceUpdateServiceRequestDto requestDto,
+        Long id,
+        TravelVisitorOtherServiceUpdateServiceRequestDto requestDto,
         MultipartFile multipartFile ,
         User user) throws IOException {
         TravelVisitorOtherServiceEntity travelVisitorOtherServiceEntity = travelVisitorOtherServiceRepository.findByIdAndUser(id,user)
             .orElseThrow(()->new NotFoundTravelVisitorOtherServiceException(TravelVisitorOtherServiceErrorCode.NOT_FOUND_TRAVEL_VISITOR_OtherService));
+        Travel travel = travelRepository.findById(travelVisitorOtherServiceEntity.getTravel().getId())
+            .orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
         String folderName = travelVisitorOtherServiceEntity.getTravel().getFolderName();
         String fileUrl;
+        Integer travel_expense = travel.getTravel_expense() - travelVisitorOtherServiceEntity.getPrice();
         if(!requestDto.imageChange()){
           travelVisitorOtherServiceEntity.updateTravelVisitorOtherServiceEntity(
               requestDto.price(),
@@ -94,6 +98,7 @@ public class TravelVisitorOtherServiceImpl implements TravelVisitorOtherService 
               requestDto.location(),
               travelVisitorOtherServiceEntity.getImage_url()
           );
+          travel.updateExpense(travel_expense+requestDto.price());
         }else {
             fileUrl = s3Provider.updateImage(travelVisitorOtherServiceEntity.getImage_url(),folderName,multipartFile);
             travelVisitorOtherServiceEntity.updateTravelVisitorOtherServiceEntity(
@@ -104,6 +109,7 @@ public class TravelVisitorOtherServiceImpl implements TravelVisitorOtherService 
                 requestDto.location(),
                 fileUrl
             );
+            travel.updateExpense(travel_expense+requestDto.price());
         }
     }
     private TravelVisitorOtherServiceEntity findTravelVisitorOtherService(Long id){

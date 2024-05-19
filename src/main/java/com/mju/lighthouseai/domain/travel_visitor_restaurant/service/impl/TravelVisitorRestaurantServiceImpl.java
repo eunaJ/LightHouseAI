@@ -81,8 +81,12 @@ public class TravelVisitorRestaurantServiceImpl implements TravelVisitorRestaura
         User user) throws IOException{
         TravelVisitorRestaurant travelVisitorRestaurant = travelVisitorRestaurantRepository.findByIdAndUser(id,user)
             .orElseThrow(()->new NotFoundTravelVisitorRestaurant(TravelVisitorRestaurantErrorCode.NOT_FOUND_TRAVEL_VISITOR_RESTAURANT));
+        Travel travel = travelRepository.findById(travelVisitorRestaurant.getTravel().getId())
+            .orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
         String folderName = travelVisitorRestaurant.getTravel().getFolderName();
         String fileUrl;
+        Integer travel_expense = travel.getTravel_expense();
+        travel_expense = travel_expense - travelVisitorRestaurant.getPrice();
         if (!requestDto.imageChange()){
             travelVisitorRestaurant.updateTravelVisitorRestaurant(
                 requestDto.menu(),
@@ -92,6 +96,7 @@ public class TravelVisitorRestaurantServiceImpl implements TravelVisitorRestaura
                 requestDto.closetime(),
                 requestDto.location(),
                 travelVisitorRestaurant.getImage_url());
+            travel.updateExpense(travel_expense+requestDto.price());
         }else {
             fileUrl = s3Provider.updateImage(travelVisitorRestaurant.getImage_url(),folderName,multipartFile);
             travelVisitorRestaurant.updateTravelVisitorRestaurant(
@@ -103,6 +108,7 @@ public class TravelVisitorRestaurantServiceImpl implements TravelVisitorRestaura
                 requestDto.location(),
                 fileUrl
             );
+            travel.updateExpense(travel_expense+requestDto.price());
         }
     }
     private TravelVisitorRestaurant findTravelVisitorRestaurant(Long id){

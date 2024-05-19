@@ -74,8 +74,12 @@ public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
     public void updateTravelVisitorCafe(Long id, TravelVisitorCafeUpdateServiceRequestDto requestDto,MultipartFile multipartFile ,User user)
     throws IOException{
         TravelVisitorCafe travelVisitorCafe = findTravelVisitorCafe(id,user);
+        Travel travel = travelRepository.findById(travelVisitorCafe.getTravel().getId())
+            .orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
         String folderName = travelVisitorCafe.getTravel().getFolderName();
         String fileUrl;
+        Integer travel_expense = travel.getTravel_expense();
+        travel_expense = travel_expense - travelVisitorCafe.getPrice();
         if (!requestDto.imageChange()){
             travelVisitorCafe.updateTravelVisitorCafe(
                 requestDto.menu(),
@@ -85,6 +89,7 @@ public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
                 requestDto.closetime(),
                 requestDto.location(),
                 travelVisitorCafe.getImage_url());
+            travel.updateExpense(travel_expense+requestDto.price());
         }else {
             fileUrl = s3Provider.updateImage(travelVisitorCafe.getImage_url(),folderName,multipartFile);
             travelVisitorCafe.updateTravelVisitorCafe(
@@ -96,6 +101,7 @@ public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
                 requestDto.location(),
                 fileUrl
             );
+            travel.updateExpense(travel_expense+requestDto.price());
         }
     }
     private TravelVisitorCafe findTravelVisitorCafe(Long id,User user){

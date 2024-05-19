@@ -81,8 +81,11 @@ public class TravelVisitorShoppingMallServiceImpl {
         User user)throws IOException{
         TravelVisitorShoppingMall travelVisitorShoppingMall = travelVisitorShoppingMallRepository.findByIdAndUser(id,user)
             .orElseThrow(()->new NotFoundTravelVisitorShoppingMallException(ShoppingMallErrorCode.NOT_FOUND_ShoppingMall));
+        Travel travel = travelRepository.findById(travelVisitorShoppingMall.getTravel().getId())
+            .orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
         String folderName = travelVisitorShoppingMall.getTravel().getFolderName();
         String fileUrl;
+        Integer travel_expense = travel.getTravel_expense() - travelVisitorShoppingMall.getPrice();
         if (!requestDto.imageChange()){
             travelVisitorShoppingMall.updateTravelVisitorShoppingMall(
                 requestDto.price(),
@@ -91,6 +94,7 @@ public class TravelVisitorShoppingMallServiceImpl {
                 requestDto.closetime(),
                 requestDto.location(),
                 travelVisitorShoppingMall.getImage_url());
+            travel.updateExpense(travel_expense+requestDto.price());
         }else {
             fileUrl = s3Provider.updateImage(travelVisitorShoppingMall.getImage_url(),folderName,multipartFile);
             travelVisitorShoppingMall.updateTravelVisitorShoppingMall(
@@ -101,7 +105,8 @@ public class TravelVisitorShoppingMallServiceImpl {
                 requestDto.location(),
                 fileUrl
             );
-    }
+            travel.updateExpense(travel_expense+requestDto.price());
+        }
 
     }
 
