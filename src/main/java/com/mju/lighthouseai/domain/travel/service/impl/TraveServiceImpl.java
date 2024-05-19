@@ -323,8 +323,8 @@ public class TraveServiceImpl implements TravelService {
             travel.UpdateTravel(
                 requestDto.title(),
                 fileUrl,
-                travel.getServing(),
-                travel.getStar()
+                requestDto.serving(),
+                requestDto.star()
             );
         }
     }
