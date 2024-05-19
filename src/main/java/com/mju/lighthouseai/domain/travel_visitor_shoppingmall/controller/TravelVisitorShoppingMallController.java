@@ -38,13 +38,14 @@ public class TravelVisitorShoppingMallController {
     @PutMapping("/{travelVisitorShoppingMallId}")
     public ResponseEntity<?> updateTravelVisitorShoppingMall(
             @PathVariable Long travelVisitorShoppingMallId,
-            @RequestBody TravelVisitorShoppingMallUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart TravelVisitorShoppingMallUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart(required = false) MultipartFile multipartFile,
             @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+    )throws IOException{
         TravelVisitorShoppingMallUpdateServiceRequestDto serviceRequestDto =
                 travelVisitorShoppingMallDtoMapper.toTravelVisitorShoppingMallUpdateServiceDto(controllerRequestDto);
         travelVisitorShoppingMallService.updateTravelVisitorShoppingMall(
-                travelVisitorShoppingMallId,serviceRequestDto,userDetails.user());
+                travelVisitorShoppingMallId,serviceRequestDto,multipartFile,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

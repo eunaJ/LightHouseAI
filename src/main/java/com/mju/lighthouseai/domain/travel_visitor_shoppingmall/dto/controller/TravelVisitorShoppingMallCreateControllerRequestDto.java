@@ -1,7 +1,8 @@
 package com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.controller;
 
 public record TravelVisitorShoppingMallCreateControllerRequestDto(
-        int price,
+        Integer price,
+        String content,
         String opentime,
         String closetime,
         String location,

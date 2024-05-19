@@ -2,7 +2,7 @@ package com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.resp
 
 public record TravelVisitorShoppingMallReadAllServiceResponseDto(
         Long id,
-        int price,
+        Integer price,
         String opentime,
         String closetime,
         String location,
