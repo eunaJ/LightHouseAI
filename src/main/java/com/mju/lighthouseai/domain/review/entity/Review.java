@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.domain.board_review.entity;
+package com.mju.lighthouseai.domain.review.entity;
 
 import com.mju.lighthouseai.domain.board.entity.Board;
 import com.mju.lighthouseai.domain.user.entity.User;
@@ -22,16 +22,13 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "TB_BOARD_REVIEW")
-public class BoardReview extends BaseEntity {
+public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String title;
-
-    @Column
-    private String image_url;
+    private String content;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -43,18 +40,19 @@ public class BoardReview extends BaseEntity {
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
-
-
     @Builder
-    public BoardReview(
+    public Review(
         final User user,
         final Board board,
-        final String title,
-        final String image_url
+        final String content
     ){
         this.user = user;
         this.board = board;
-        this.title  = title;
-        this.image_url = image_url;
+        this.content  = content;
+    }
+    public void updateReview(
+        final  String content
+    ){
+        this.content = content;
     }
 }
