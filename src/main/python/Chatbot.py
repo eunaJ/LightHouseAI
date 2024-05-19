@@ -88,7 +88,8 @@ def generate_response(msg):
         'price',
         'cafe_id',
         'travel_id',
-        'user_id',        
+        'user_id', 
+        'content',       
     ]
 
     #cafe_id가 중복되는 데이터를 제거
