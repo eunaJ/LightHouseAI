@@ -15,7 +15,8 @@ public interface TravelVisitorTourListService {
                                      MultipartFile multipartFile) throws IOException;
 
     void updateTravelVisitorTourList(Long id, TravelVisitorTourListUpdateServiceRequestDto requestDto,
-                                     User user);
+                                     MultipartFile multipartFile,
+                                     User user) throws  IOException;
     void deleteTravelVisitorTourList(Long id, User user);
     TravelVisitorTourListReadAllServiceResponseDto readTravelVisitorTourList(Long id);
     List<TravelVisitorTourListReadAllServiceResponseDto> readAllTravelVisitorTourLists();

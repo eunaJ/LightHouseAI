@@ -72,21 +72,35 @@ public class TravelVisitorTourListServiceImpl implements TravelVisitorTourListSe
     }
 
     @Transactional
-    public void updateTravelVisitorTourList(Long id, TravelVisitorTourListUpdateServiceRequestDto requestDto, User user){
-        TravelVisitorTourList travelVisitorTourList = findTravelVisitorTourList(id);
-        String fileName;
+    public void updateTravelVisitorTourList(
+        Long id,
+        TravelVisitorTourListUpdateServiceRequestDto requestDto,
+        MultipartFile multipartFile,
+        User user) throws IOException{
+        TravelVisitorTourList travelVisitorTourList = travelVisitorTourListRepository.findByIdAndUser(id,user)
+            .orElseThrow(()->new NotFoundTravelVisitorTourListException(TravelVisitorTourListErrorCode.NOT_FOUND_TRAVEL_VISITOR_TourList));
+        String folderName = travelVisitorTourList.getTravel().getFolderName();
         String fileUrl;
-        fileUrl = null;
-        // 없어져도 방문 기록은 남아야
-        travelVisitorTourList.updateTravelVisitorTourList(requestDto.price(), requestDto.opentime(),
-                requestDto.closetime(), requestDto.location(), fileUrl);
+        if (!requestDto.imageChange()){
+            travelVisitorTourList.updateTravelVisitorTourList(
+                requestDto.price(),
+                requestDto.content(),
+                requestDto.opentime(),
+                requestDto.closetime(),
+                requestDto.location(),
+                travelVisitorTourList.getImage_url());
+        }else {
+            fileUrl = s3Provider.updateImage(travelVisitorTourList.getImage_url(),folderName,multipartFile);
+            travelVisitorTourList.updateTravelVisitorTourList(
+                requestDto.price(),
+                requestDto.content(),
+                requestDto.opentime(),
+                requestDto.closetime(),
+                requestDto.location(),
+                fileUrl
+            );
+        }
     }
-    private TravelVisitorTourList findTravelVisitorTourList(Long id){
-        return travelVisitorTourListRepository.findById(id)
-                .orElseThrow(()-> new NotFoundTravelVisitorTourListException(
-                        TravelVisitorTourListErrorCode.NOT_FOUND_TRAVEL_VISITOR_TourList));
-    }
-
     public void deleteTravelVisitorTourList(Long id, User user) {
         TravelVisitorTourList travelVisitorTourList = travelVisitorTourListRepository.findById(id)
                 .orElseThrow(()-> new NotFoundTravelVisitorTourListException(
