@@ -73,6 +73,7 @@ public class TravelVisitorOtherServiceEntity extends BaseEntity {
     public void updateTravelVisitorOtherServiceEntity(
             Integer price,String content ,String opentime, String closetime, String location, String image_url) {
         this.price = price;
+        this.content = content;
         this.opentime = opentime;
         this.closetime = closetime;
         this.location = location;
