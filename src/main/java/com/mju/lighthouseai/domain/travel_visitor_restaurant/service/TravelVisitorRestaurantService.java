@@ -13,8 +13,11 @@ import java.util.List;
 public interface TravelVisitorRestaurantService {
     void createTravelVisitorRestaurant(Long id,TravelVisitorRestaurantCreateServiceRequestDto requestDto, User user,
                                        MultipartFile multipartFile) throws IOException;
-    void updateTravelVisitorRestaurant(Long id,
-                                       TravelVisitorRestaurantUpdateServiceRequestDto requestDto, User user);
+    void updateTravelVisitorRestaurant(
+        Long id,
+        TravelVisitorRestaurantUpdateServiceRequestDto requestDto,
+        MultipartFile multipartFile ,
+        User user) throws IOException;
     void deleteTravelVisitorRestaurant(Long id, User user);
     TravelVisitorRestaurantReadAllServiceResponseDto readTravelVisitorRestaurant(Long id);
     List<TravelVisitorRestaurantReadAllServiceResponseDto> readAllTravelVisitorRestaurants();

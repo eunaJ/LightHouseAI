@@ -22,7 +22,7 @@ public class TravelVisitorOtherServiceEntity extends BaseEntity {
     private String image_url;
 
     @Column
-    private int price;
+    private Integer price;
 
     @Column
     private String opentime;
@@ -66,7 +66,7 @@ public class TravelVisitorOtherServiceEntity extends BaseEntity {
     }
 
     public void updateTravelVisitorOtherServiceEntity(
-            int price, String opentime, String closetime, String location, String image_url) {
+            Integer price, String opentime, String closetime, String location, String image_url) {
         this.price = price;
         this.opentime = opentime;
         this.closetime = closetime;
