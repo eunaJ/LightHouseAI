@@ -88,6 +88,7 @@ public class TravelVisitorOtherServiceImpl implements TravelVisitorOtherService 
         if(!requestDto.imageChange()){
           travelVisitorOtherServiceEntity.updateTravelVisitorOtherServiceEntity(
               requestDto.price(),
+              requestDto.content(),
               requestDto.opentime(),
               requestDto.closetime(),
               requestDto.location(),
@@ -97,6 +98,7 @@ public class TravelVisitorOtherServiceImpl implements TravelVisitorOtherService 
             fileUrl = s3Provider.updateImage(travelVisitorOtherServiceEntity.getImage_url(),folderName,multipartFile);
             travelVisitorOtherServiceEntity.updateTravelVisitorOtherServiceEntity(
                 requestDto.price(),
+                requestDto.content(),
                 requestDto.opentime(),
                 requestDto.closetime(),
                 requestDto.location(),
