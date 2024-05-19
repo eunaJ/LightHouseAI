@@ -9,6 +9,7 @@ public record TravelVisitorCafeReadAllServiceResponseDto (
         String location,
         String nickname,
         String cafe_title,
-        String image_url
+        String image_url,
+        String content
 ){
 }

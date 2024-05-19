@@ -5,7 +5,6 @@ public record TravelUpdateServiceRequestDto(
     Integer travel_expense,
     Byte serving,
     Byte star,
-    String constituency,
     Boolean imageChange
 
 ) {

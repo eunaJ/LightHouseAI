@@ -74,19 +74,35 @@ public class TravelVisitorShoppingMallServiceImpl {
     }
 
     @Transactional
-    public void updateTravelVisitorShoppingMall(Long id, TravelVisitorShoppingMallUpdateServiceRequestDto requestDto, User user){
-        TravelVisitorShoppingMall travelVisitorShoppingMall = findTravelVisitorShoppingMall(id);
-        String fileName;
+    public void updateTravelVisitorShoppingMall(
+        Long id,
+        TravelVisitorShoppingMallUpdateServiceRequestDto requestDto,
+        MultipartFile multipartFile ,
+        User user)throws IOException{
+        TravelVisitorShoppingMall travelVisitorShoppingMall = travelVisitorShoppingMallRepository.findByIdAndUser(id,user)
+            .orElseThrow(()->new NotFoundTravelVisitorShoppingMallException(ShoppingMallErrorCode.NOT_FOUND_ShoppingMall));
+        String folderName = travelVisitorShoppingMall.getTravel().getFolderName();
         String fileUrl;
-        fileUrl = null;
-        // 없어져도 방문 기록은 남아야?
-        travelVisitorShoppingMall.updateTravelVisitorShoppingMall(requestDto.price(),
-                requestDto.opentime(), requestDto.closetime(), requestDto.location(), fileUrl);
+        if (!requestDto.imageChange()){
+            travelVisitorShoppingMall.updateTravelVisitorShoppingMall(
+                requestDto.price(),
+                requestDto.content(),
+                requestDto.opentime(),
+                requestDto.closetime(),
+                requestDto.location(),
+                travelVisitorShoppingMall.getImage_url());
+        }else {
+            fileUrl = s3Provider.updateImage(travelVisitorShoppingMall.getImage_url(),folderName,multipartFile);
+            travelVisitorShoppingMall.updateTravelVisitorShoppingMall(
+                requestDto.price(),
+                requestDto.content(),
+                requestDto.opentime(),
+                requestDto.closetime(),
+                requestDto.location(),
+                fileUrl
+            );
     }
-    private TravelVisitorShoppingMall findTravelVisitorShoppingMall(Long id){
-        return travelVisitorShoppingMallRepository.findById(id)
-                .orElseThrow(()-> new NotFoundTravelVisitorShoppingMallException(
-                        TravelVisitorShoppingMallErrorCode.NOT_FOUND_TRAVEL_VISITOR_ShoppingMall));
+
     }
 
     public void deleteTravelVisitorShoppingMall(Long id, User user) {

@@ -3,12 +3,13 @@ package com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.respon
 public record TravelVisitorRestaurantReadAllServiceResponseDto(
         Long id,
         String menu,
-        int price,
+        Integer price,
         String opentime,
         String closetime,
         String location,
         String nickname,
         String restaurant_title,
-        String image_url
+        String image_url,
+        String content
 ) {
 }

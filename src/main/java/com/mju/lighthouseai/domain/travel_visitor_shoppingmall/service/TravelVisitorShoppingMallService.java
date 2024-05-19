@@ -14,7 +14,7 @@ public interface TravelVisitorShoppingMallService {
     void createTravelVisitorShoppingMall(Long id,TravelVisitorShoppingMallCreateServiceRequestDto requestDto,
                                          User user, MultipartFile multipartFile) throws IOException;
     void updateTravelVisitorShoppingMall(Long id,
-                                         TravelVisitorShoppingMallUpdateServiceRequestDto requestDto, User user);
+                                         TravelVisitorShoppingMallUpdateServiceRequestDto requestDto,MultipartFile multipartFile ,User user) throws IOException;
     void deleteTravelVisitorShoppingMall(Long id, User user);
     TravelVisitorShoppingMallReadAllServiceResponseDto readTravelVisitorShoppingMall(Long id);
     List<TravelVisitorShoppingMallReadAllServiceResponseDto> readAllTravelVisitorShoppingMalls();

@@ -74,17 +74,36 @@ public class TravelVisitorRestaurantServiceImpl implements TravelVisitorRestaura
     }
 
     @Transactional
-    public void updateTravelVisitorRestaurant(Long id,
-                                              TravelVisitorRestaurantUpdateServiceRequestDto requestDto,
-                                              User user){
-        TravelVisitorRestaurant travelVisitorRestaurant = findTravelVisitorRestaurant(id);
-        String fileName;
+    public void updateTravelVisitorRestaurant(
+        Long id,
+        TravelVisitorRestaurantUpdateServiceRequestDto requestDto,
+        MultipartFile multipartFile,
+        User user) throws IOException{
+        TravelVisitorRestaurant travelVisitorRestaurant = travelVisitorRestaurantRepository.findByIdAndUser(id,user)
+            .orElseThrow(()->new NotFoundTravelVisitorRestaurant(TravelVisitorRestaurantErrorCode.NOT_FOUND_TRAVEL_VISITOR_RESTAURANT));
+        String folderName = travelVisitorRestaurant.getTravel().getFolderName();
         String fileUrl;
-        fileUrl = null;
-        // 방문 기록은 남아야?
-        travelVisitorRestaurant.updateTravelVisitorRestaurant(requestDto.menu(),
-                requestDto.price(), requestDto.opentime(),
-                requestDto.closetime(), requestDto.location(), fileUrl);
+        if (!requestDto.imageChange()){
+            travelVisitorRestaurant.updateTravelVisitorRestaurant(
+                requestDto.menu(),
+                requestDto.price(),
+                requestDto.content(),
+                requestDto.opentime(),
+                requestDto.closetime(),
+                requestDto.location(),
+                travelVisitorRestaurant.getImage_url());
+        }else {
+            fileUrl = s3Provider.updateImage(travelVisitorRestaurant.getImage_url(),folderName,multipartFile);
+            travelVisitorRestaurant.updateTravelVisitorRestaurant(
+                requestDto.menu(),
+                requestDto.price(),
+                requestDto.content(),
+                requestDto.opentime(),
+                requestDto.closetime(),
+                requestDto.location(),
+                fileUrl
+            );
+        }
     }
     private TravelVisitorRestaurant findTravelVisitorRestaurant(Long id){
         return travelVisitorRestaurantRepository.findById(id)

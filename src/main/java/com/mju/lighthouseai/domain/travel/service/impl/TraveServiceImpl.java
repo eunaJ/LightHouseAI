@@ -311,22 +311,20 @@ public class TraveServiceImpl implements TravelService {
         TravelUpdateServiceRequestDto requestDto,
         User user,
         MultipartFile multipartFile)throws  IOException{
-        com.mju.lighthouseai.domain.travel.entity.Travel travel = travelRepository.findByIdAndUser(id, user)
+        Travel travel = travelRepository.findByIdAndUser(id, user)
             .orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
         String folderName = travel.getFolderName();
         String fileUrl;
-        Constituency constituency = findConstituency(requestDto.constituency());
         if (!requestDto.imageChange()){
             travel.UpdateTravel(requestDto.title(),travel.getImage_url(),
-                requestDto.serving(), requestDto.star(),constituency);
+                requestDto.serving(), requestDto.star());
         }else {
             fileUrl = s3Provider.updateImage(travel.getImage_url(),folderName,multipartFile);
             travel.UpdateTravel(
                 requestDto.title(),
                 fileUrl,
                 travel.getServing(),
-                travel.getStar(),
-                constituency
+                travel.getStar()
             );
         }
     }
@@ -351,6 +349,7 @@ public class TraveServiceImpl implements TravelService {
             .orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
         TravelReadAllServiceResponseDto travelReadAllServiceResponseDto = TravelReadAllServiceResponseDto.builder()
             .id(travel.getId())
+            .constituency_name(travel.getConstituency().getConstituency())
             .image_url(travel.getImage_url())
             .travel_expense(travel.getTravel_expense())
             .title(travel.getTitle())
@@ -371,6 +370,7 @@ public class TraveServiceImpl implements TravelService {
         for (int i = 0; i<travel.size();i++){
             TravelReadAllServiceResponseDto travelReadAllServiceResponseDto = TravelReadAllServiceResponseDto.builder()
                 .id(travel.get(i).getId())
+                .constituency_name(travel.get(i).getConstituency().getConstituency())
                 .image_url(travel.get(i).getImage_url())
                 .travel_expense(travel.get(i).getTravel_expense())
                 .title(travel.get(i).getTitle())

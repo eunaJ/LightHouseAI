@@ -22,12 +22,12 @@ import java.io.IOException;
 public class TravelVisitorCafeController {
     private final TravelVisitorCafeDtoMapper travelVisitorCafeDtoMapper;
     private final TravelVisitorCafeServiceImpl travelVisitorCafeService;
-    @PostMapping("/create")
+    @PostMapping("/create/{travelId}")
     public ResponseEntity<?> createTravelVisitorCafe(
             @RequestPart TravelVisitorCafeCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long travelId,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart(required = false) MultipartFile multipartFile
     )throws IOException {
         TravelVisitorCafeCreateServiceRequestDto serviceRequestDto =
                 travelVisitorCafeDtoMapper.toTravelVisitorCafeCreateServiceDto(controllerRequestDto);
@@ -38,12 +38,13 @@ public class TravelVisitorCafeController {
     @PutMapping("/{travelVisitorCafeId}")
     public ResponseEntity<?> updateTravelVisitorCafe(
             @PathVariable Long travelVisitorCafeId,
-            @RequestBody TravelVisitorCafeUpdateControllerRequestDto controllerRequestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+            @RequestPart TravelVisitorCafeUpdateControllerRequestDto controllerRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestPart(required = false)MultipartFile multipartFile
+    )throws IOException{
         TravelVisitorCafeUpdateServiceRequestDto serviceRequestDto =
                 travelVisitorCafeDtoMapper.toTravelVisitorCafeUpdateServiceDto(controllerRequestDto);
-        travelVisitorCafeService.updateTravelVisitorCafe(travelVisitorCafeId,serviceRequestDto,userDetails.user());
+        travelVisitorCafeService.updateTravelVisitorCafe(travelVisitorCafeId,serviceRequestDto,multipartFile,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

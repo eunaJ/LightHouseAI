@@ -25,7 +25,7 @@ public class TravelVisitorRestaurant extends BaseEntity {
     private String menu;
 
     @Column
-    private int price;
+    private Integer price;
 
     @Column
     private String opentime;
@@ -35,6 +35,9 @@ public class TravelVisitorRestaurant extends BaseEntity {
 
     @Column
     private String location;
+
+    @Column
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -51,7 +54,8 @@ public class TravelVisitorRestaurant extends BaseEntity {
     public TravelVisitorRestaurant(
             final String image_url,
             final String menu,
-            final int price,
+            final Integer price,
+            final String content,
             final String opentime,
             final String closetime,
             final String location,
@@ -62,6 +66,7 @@ public class TravelVisitorRestaurant extends BaseEntity {
         this.image_url = image_url;
         this.menu = menu;
         this.price = price;
+        this.content = content;
         this.opentime = opentime;
         this.closetime = closetime;
         this.location = location;
@@ -71,9 +76,10 @@ public class TravelVisitorRestaurant extends BaseEntity {
     }
 
     public void updateTravelVisitorRestaurant(
-            String menu, int price, String opentime, String closetime, String location, String image_url) {
+            String menu, Integer price,String content ,String opentime, String closetime, String location, String image_url) {
         this.menu = menu;
         this.price = price;
+        this.content = content;
         this.opentime = opentime;
         this.closetime = closetime;
         this.location = location;

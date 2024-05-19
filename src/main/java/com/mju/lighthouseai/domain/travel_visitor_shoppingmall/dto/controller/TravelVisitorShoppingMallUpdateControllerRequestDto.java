@@ -1,9 +1,12 @@
 package com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.controller;
 
 public record TravelVisitorShoppingMallUpdateControllerRequestDto(
-        int price,
+        Integer price,
+        String content,
         String opentime,
         String closetime,
-        String location
+        String location,
+        Boolean imageChange
+
 ) {
 }

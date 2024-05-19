@@ -71,17 +71,35 @@ public class TravelVisitorCafeServiceImpl implements TravelVisitorCafeService {
     }
 
     @Transactional
-    public void updateTravelVisitorCafe(Long id, TravelVisitorCafeUpdateServiceRequestDto requestDto, User user){
-        TravelVisitorCafe travelVisitorCafe = findTravelVisitorCafe(id);
-        String fileName;
+    public void updateTravelVisitorCafe(Long id, TravelVisitorCafeUpdateServiceRequestDto requestDto,MultipartFile multipartFile ,User user)
+    throws IOException{
+        TravelVisitorCafe travelVisitorCafe = findTravelVisitorCafe(id,user);
+        String folderName = travelVisitorCafe.getTravel().getFolderName();
         String fileUrl;
-        fileUrl = null;
-        // 카페가 없어져도 방문 기록은 남아야
-        travelVisitorCafe.updateTravelVisitorCafe(requestDto.menu(), requestDto.price(), requestDto.opentime(),
-                requestDto.closetime(), requestDto.location(), fileUrl);
+        if (!requestDto.imageChange()){
+            travelVisitorCafe.updateTravelVisitorCafe(
+                requestDto.menu(),
+                requestDto.price(),
+                requestDto.content(),
+                requestDto.opentime(),
+                requestDto.closetime(),
+                requestDto.location(),
+                travelVisitorCafe.getImage_url());
+        }else {
+            fileUrl = s3Provider.updateImage(travelVisitorCafe.getImage_url(),folderName,multipartFile);
+            travelVisitorCafe.updateTravelVisitorCafe(
+               requestDto.menu(),
+                requestDto.price(),
+                requestDto.content(),
+                requestDto.opentime(),
+                requestDto.closetime(),
+                requestDto.location(),
+                fileUrl
+            );
+        }
     }
-    private TravelVisitorCafe findTravelVisitorCafe(Long id){
-        return travelVisitorCafeRepository.findById(id)
+    private TravelVisitorCafe findTravelVisitorCafe(Long id,User user){
+        return travelVisitorCafeRepository.findByIdAndUser(id,user)
                 .orElseThrow(()-> new NotFoundTravelVisitorCafeException(TravelVisitorCafeErrorCode.NOT_FOUND_TRAVEL_VISITOR_CAFE));
     }
 
