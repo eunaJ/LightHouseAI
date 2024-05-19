@@ -78,14 +78,31 @@ public class TravelVisitorOtherServiceImpl implements TravelVisitorOtherService 
 
     @Transactional
     public void updateTravelVisitorOtherService(
-            Long id, TravelVisitorOtherServiceUpdateServiceRequestDto requestDto, User user){
-        TravelVisitorOtherServiceEntity travelVisitorOtherServiceEntity = findTravelVisitorOtherService(id);
-        String fileName;
+            Long id, TravelVisitorOtherServiceUpdateServiceRequestDto requestDto,
+        MultipartFile multipartFile ,
+        User user) throws IOException {
+        TravelVisitorOtherServiceEntity travelVisitorOtherServiceEntity = travelVisitorOtherServiceRepository.findByIdAndUser(id,user)
+            .orElseThrow(()->new NotFoundTravelVisitorOtherServiceException(TravelVisitorOtherServiceErrorCode.NOT_FOUND_TRAVEL_VISITOR_OtherService));
+        String folderName = travelVisitorOtherServiceEntity.getTravel().getFolderName();
         String fileUrl;
-        fileUrl = null;
-        // 없어져도 방문 기록은 남아야?
-        travelVisitorOtherServiceEntity.updateTravelVisitorOtherServiceEntity(requestDto.price(),
-                requestDto.opentime(), requestDto.closetime(), requestDto.location(), fileUrl);
+        if(!requestDto.imageChange()){
+          travelVisitorOtherServiceEntity.updateTravelVisitorOtherServiceEntity(
+              requestDto.price(),
+              requestDto.opentime(),
+              requestDto.closetime(),
+              requestDto.location(),
+              travelVisitorOtherServiceEntity.getImage_url()
+          );
+        }else {
+            fileUrl = s3Provider.updateImage(travelVisitorOtherServiceEntity.getImage_url(),folderName,multipartFile);
+            travelVisitorOtherServiceEntity.updateTravelVisitorOtherServiceEntity(
+                requestDto.price(),
+                requestDto.opentime(),
+                requestDto.closetime(),
+                requestDto.location(),
+                fileUrl
+            );
+        }
     }
     private TravelVisitorOtherServiceEntity findTravelVisitorOtherService(Long id){
         return travelVisitorOtherServiceRepository.findById(id)

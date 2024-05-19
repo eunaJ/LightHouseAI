@@ -40,14 +40,15 @@ public class TravelVisitorOtherServiceController {
     @PutMapping("/{travelVisitorOtherServiceId}")
     public ResponseEntity<?> updateTravelVisitorOtherService(
             @PathVariable Long travelVisitorOtherServiceId,
-            @RequestBody TravelVisitorOtherServiceUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart TravelVisitorOtherServiceUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart(required = false) MultipartFile multipartFile,
             @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+    )throws IOException{
         TravelVisitorOtherServiceUpdateServiceRequestDto serviceRequestDto =
                 travelVisitorOtherServiceDtoMapper.toTravelVisitorOtherServiceUpdateServiceDto(
                         controllerRequestDto);
         travelVisitorOtherService.updateTravelVisitorOtherService(
-                travelVisitorOtherServiceId,serviceRequestDto,userDetails.user());
+                travelVisitorOtherServiceId,serviceRequestDto,multipartFile,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

@@ -16,7 +16,7 @@ public interface TravelVisitorOtherService {
         TravelVisitorOtherServiceCreateServiceRequestDto requestDto,
                                          User user, MultipartFile multipartFile) throws IOException;
     void updateTravelVisitorOtherService(
-            Long id, TravelVisitorOtherServiceUpdateServiceRequestDto requestDto, User user);
+            Long id, TravelVisitorOtherServiceUpdateServiceRequestDto requestDto, MultipartFile multipartFile,User user) throws IOException;
     void deleteTravelVisitorOtherService(Long id, User user);
     TravelVisitorOtherServiceReadAllServiceResponseDto readTravelVisitorOtherService(Long id);
     List<TravelVisitorOtherServiceReadAllServiceResponseDto> readAllTravelVisitorOtherServices();
