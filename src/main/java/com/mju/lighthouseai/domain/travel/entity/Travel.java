@@ -103,14 +103,12 @@ public class Travel extends BaseEntity {
         String title,
         String image_url,
         Byte serving,
-        Byte star,
-        Constituency constituency
+        Byte star
     ){
         this.title = title;
         this.image_url = image_url;
         this.serving = serving;
         this.star = star;
-        this.constituency = constituency;
     }
     public void updateExpense(Integer travel_expense){
         this.travel_expense = travel_expense;

@@ -22,7 +22,7 @@ import java.io.IOException;
 public class TravelVisitorShoppingMallController {
     private final TravelVisitorShoppingMallDtoMapper travelVisitorShoppingMallDtoMapper;
     private final TravelVisitorShoppingMallServiceImpl travelVisitorShoppingMallService;
-    @PostMapping("/create")
+    @PostMapping("/create/{id}")
     public ResponseEntity<?> createTravelVisitorShoppingMall(
             @PathVariable Long id,
             @RequestPart TravelVisitorShoppingMallCreateControllerRequestDto controllerRequestDto,

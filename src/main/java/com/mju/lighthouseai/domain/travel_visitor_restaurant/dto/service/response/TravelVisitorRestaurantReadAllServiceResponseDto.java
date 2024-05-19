@@ -9,6 +9,7 @@ public record TravelVisitorRestaurantReadAllServiceResponseDto(
         String location,
         String nickname,
         String restaurant_title,
-        String image_url
+        String image_url,
+        String content
 ) {
 }
