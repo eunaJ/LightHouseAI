@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 import json
-import AIMain as ai
 import Chatbot as chatbot
 
 app = Flask(__name__)
@@ -10,6 +9,10 @@ def process_command(command):
         msg = command["msg"]
         print(msg)
         ans = chatbot.generate_response(msg)
+        return ans
+    if(command["command"] == "test"):
+        msg = command["msg"]
+        ans = chatbot.agenerate_response(msg)
         return ans
     """
     elif command["command"] == "train":
