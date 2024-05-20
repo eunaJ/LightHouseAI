@@ -79,6 +79,9 @@ public class TravelVisitorTourListServiceImpl implements TravelVisitorTourListSe
         User user) throws IOException{
         TravelVisitorTourList travelVisitorTourList = travelVisitorTourListRepository.findByIdAndUser(id,user)
             .orElseThrow(()->new NotFoundTravelVisitorTourListException(TravelVisitorTourListErrorCode.NOT_FOUND_TRAVEL_VISITOR_TourList));
+        Travel travel =travelRepository.findById(travelVisitorTourList.getTravel().getId())
+            .orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
+        Integer travel_expense = travel.getTravel_expense()-travelVisitorTourList.getPrice();
         String folderName = travelVisitorTourList.getTravel().getFolderName();
         String fileUrl;
         if (!requestDto.imageChange()){
@@ -89,6 +92,7 @@ public class TravelVisitorTourListServiceImpl implements TravelVisitorTourListSe
                 requestDto.closetime(),
                 requestDto.location(),
                 travelVisitorTourList.getImage_url());
+            travel.updateExpense(travel_expense+requestDto.price());
         }else {
             fileUrl = s3Provider.updateImage(travelVisitorTourList.getImage_url(),folderName,multipartFile);
             travelVisitorTourList.updateTravelVisitorTourList(
@@ -99,6 +103,7 @@ public class TravelVisitorTourListServiceImpl implements TravelVisitorTourListSe
                 requestDto.location(),
                 fileUrl
             );
+            travel.updateExpense(travel_expense+requestDto.price());
         }
     }
     public void deleteTravelVisitorTourList(Long id, User user) {
