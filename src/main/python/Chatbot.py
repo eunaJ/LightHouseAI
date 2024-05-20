@@ -197,7 +197,6 @@ def other_cheap(location):
     return travel_id
 
 def find_at_travel_id(travel_id):
-    print(travel_id)
     #TB_TRAVEL_VISITOR_CAFE에서 travel_id가 travel_id인 데이터를 추출
     dbconn = conn.cursor()
     dbconn.execute(f"SELECT * FROM TB_TRAVEL_VISITOR_CAFE WHERE travel_id = {travel_id}")
@@ -227,12 +226,10 @@ def find_at_travel_id(travel_id):
     #id를 TRAVEL_CAFE_ID로 변경
     df_travel_visitor_cafe = df_travel_visitor_cafe.rename(columns={'id': 'travel_cafe_id'})
 
-    print(df_travel_visitor_cafe)
-
     #TB_AI_CREATE_TRAVEL_LIST에 데이터를 삽입
-    engine = create_engine('mysql+pymysql://root:1231@localhost:3306/lighthouseAI', echo=True)
+    engine = create_engine('mysql+pymysql://root:1231@localhost:3306/lighthouseAI', echo=False)
     df_travel_visitor_cafe.to_sql('TB_AI_CREATE_TRAVEL_LIST', con=engine, if_exists='append', index=False)
-
+    
     #TB_TRAVEL_VISITOR_RESTAURANT에서 travel_id가 travel_id인 데이터를 추출
     dbconn = conn.cursor()
     dbconn.execute(f"SELECT * FROM TB_TRAVEL_VISITOR_RESTAURANT WHERE travel_id = {travel_id}")
@@ -263,7 +260,7 @@ def find_at_travel_id(travel_id):
     df_travel_visitor_restaurant = df_travel_visitor_restaurant.rename(columns={'id': 'travel_restaurant_id'})
 
     #TB_AI_CREATE_TRAVEL_LIST에 데이터를 삽입
-    engine = create_engine('mysql+pymysql://root:1231@localhost:3306/lighthouseAI', echo=True)
+    engine = create_engine('mysql+pymysql://root:1231@localhost:3306/lighthouseAI', echo=False)
     df_travel_visitor_restaurant.to_sql('TB_AI_CREATE_TRAVEL_LIST', con=engine, if_exists='append', index=False)
 
     #TB_TRAVEL_VISITOR_SHOPPINGMALL에서 travel_id가 travel_id인 데이터를 추출
@@ -295,7 +292,7 @@ def find_at_travel_id(travel_id):
     df_travel_visitor_shopping = df_travel_visitor_shopping.rename(columns={'id': 'travel_shoppingmall_id'})
 
     #TB_AI_CREATE_TRAVEL_LIST에 데이터를 삽입
-    engine = create_engine('mysql+pymysql://root:1231@localhost:3306/lighthouseAI', echo=True)
+    engine = create_engine('mysql+pymysql://root:1231@localhost:3306/lighthouseAI', echo=False)
     df_travel_visitor_shopping.to_sql('TB_AI_CREATE_TRAVEL_LIST', con=engine, if_exists='append', index=False)
 
     #TB_TRAVEL_VISITOR_TOUR_LIST에서 travel_id가 travel_id인 데이터를 추출
@@ -327,8 +324,9 @@ def find_at_travel_id(travel_id):
     df_travel_visitor_tourist = df_travel_visitor_tourist.rename(columns={'id': 'travel_tourlist_id'})
 
     #TB_AI_CREATE_TRAVEL_LIST에 데이터를 삽입
-    engine = create_engine('mysql+pymysql://root:1231@localhost:3306/lighthouseAI', echo=True)
+    engine = create_engine('mysql+pymysql://root:1231@localhost:3306/lighthouseAI', echo=False)
     df_travel_visitor_tourist.to_sql('TB_AI_CREATE_TRAVEL_LIST', con=engine, if_exists='append', index=False)
+
 
     #TB_TRAVEL_VISITOR_OTHER_SERVICE에서 travel_id가 travel_id인 데이터를 추출
     dbconn = conn.cursor()
@@ -359,8 +357,11 @@ def find_at_travel_id(travel_id):
     df_travel_visitor_other = df_travel_visitor_other.rename(columns={'id': 'travel_otherservice_id'})
 
     #TB_AI_CREATE_TRAVEL_LIST에 데이터를 삽입
-    engine = create_engine('mysql+pymysql://root:1231@localhost:3306/lighthouseAI', echo=True)
+    engine = create_engine('mysql+pymysql://root:1231@localhost:3306/lighthouseAI', echo=False)
     df_travel_visitor_other.to_sql('TB_AI_CREATE_TRAVEL_LIST', con=engine, if_exists='append', index=False)
+
+
+    
 
 
 
@@ -422,14 +423,13 @@ def generate_response(msg):
         'user_id',
     ]
 
-    print(df_travel)
-
     #travel_id만 추출
     travel_id = df_travel['id'].tolist()
 
     #TB_AI_CREATE_TRAVEL_LIST를 초기화
     dbconn.execute(f"DELETE FROM TB_AI_CREATE_TRAVEL_LIST")
     conn.commit()
+
 
     #travel_id의 개수만큼 반복
     for i in travel_id:
@@ -438,4 +438,5 @@ def generate_response(msg):
     #df_travel을 json으로 변환
     df_travel_json = df_travel.to_json(orient='records')
 
-    return df_travel_json
+
+    return travel_id
