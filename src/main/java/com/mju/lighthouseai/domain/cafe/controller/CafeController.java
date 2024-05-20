@@ -68,4 +68,11 @@ public class CafeController {
         return ResponseEntity.status(HttpStatus.OK)
             .body(cafeService.readCafe(cafeId));
     }
+    @GetMapping("/{constituency_id}/cafes")
+    public ResponseEntity<?> readConstituencyCafe(
+        @PathVariable Long constituency_id
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(cafeService.readConstituencyCafe(constituency_id));
+    }
  }
