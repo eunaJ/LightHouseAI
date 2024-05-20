@@ -32,6 +32,6 @@ public interface TravelService {
     void updateTravel(Long id, TravelUpdateServiceRequestDto requestDto, User user,MultipartFile multipartFile) throws IOException;
     void deleteTravel(Long id, User user);
       TravelReadAllServiceResponseDto readTravel(Long id);
-      List<TravelReadAllServiceResponseDto> readlAllTravel();
+      List<TravelReadAllServiceResponseDto> readlAllTravel(Integer page);
     List<TravelReadAllServiceResponseDto> readUserTravels(User user);
 }
