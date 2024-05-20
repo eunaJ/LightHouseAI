@@ -84,7 +84,7 @@ public class TraveServiceImpl implements TravelService {
     private final OtherServiceRepository otherServiceRepository;
     private final TravelVisitorOtherServiceEntityMapper travelVisitorOtherServiceEntityMapper;
     private final UserRepository userRepository;
-    private final int PAGE_SIZE = 10;
+    private final int PAGE_SIZE = 9;
     private final String SEPARATOR = "/";
     private final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
     @Value("${cloud.aws.s3.bucket}")
