@@ -10,6 +10,7 @@ import com.mju.lighthouseai.domain.board.repository.BoardRepository;
 import com.mju.lighthouseai.domain.board.service.BoardService;
 import com.mju.lighthouseai.domain.board.dto.service.respone.BoardReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.cafe.exception.NotFoundCafeException;
+import com.mju.lighthouseai.domain.review.entity.Review;
 import com.mju.lighthouseai.domain.user.entity.UserRole;
 import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
 import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
@@ -20,6 +21,10 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.buf.Utf8Encoder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.mju.lighthouseai.domain.user.entity.User;
@@ -40,6 +45,8 @@ public class BoardServiceImpl implements BoardService {
     private final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
+
+    private final int PAGE_SIZE = 10;
 
     public void createBoard(
         BoardCreateServiceRequestDto requestDto,
@@ -103,9 +110,10 @@ public class BoardServiceImpl implements BoardService {
         }
 
     }
-    public List<BoardReadAllServiceResponseDto> readAllBoards(){
-        List<Board> boards = boardRepository.findAll();
-        return boardEntityMapper.toBoardReadAllResponseDto(boards);
+    public List<BoardReadAllServiceResponseDto> readAllBoards(final Integer page){
+        PageRequest pageRequest = PageRequest.of(page,PAGE_SIZE, Sort.by(Direction.ASC,"id"));
+        Slice<Board> boards = boardRepository.findAll(pageRequest);
+        return boardEntityMapper.toBoardReadAllResponseDto(boards.getContent());
     }
 
     public BoardReadAllServiceResponseDto readBoard(Long id){
