@@ -58,6 +58,10 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,7 +84,7 @@ public class TraveServiceImpl implements TravelService {
     private final OtherServiceRepository otherServiceRepository;
     private final TravelVisitorOtherServiceEntityMapper travelVisitorOtherServiceEntityMapper;
     private final UserRepository userRepository;
-
+    private final int PAGE_SIZE = 9;
     private final String SEPARATOR = "/";
     private final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
     @Value("${cloud.aws.s3.bucket}")
@@ -360,8 +364,9 @@ public class TraveServiceImpl implements TravelService {
         return travelReadAllServiceResponseDto;
 
     }
-    public List<TravelReadAllServiceResponseDto> readlAllTravel(){
-        return travelRepository.findAll().stream().map(travel -> readTravel(travel.getId()))
+    public List<TravelReadAllServiceResponseDto> readlAllTravel(final Integer page){
+        PageRequest pageRequest = PageRequest.of(page,PAGE_SIZE, Sort.by(Direction.DESC,"id"));
+        return travelRepository.findAll(pageRequest).stream().map(travel -> readTravel(travel.getId()))
             .toList();
     }
     public List<TravelReadAllServiceResponseDto> readUserTravels(User user){
