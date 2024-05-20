@@ -17,7 +17,7 @@ public interface BoardService {
     void deleteBoard(Long id, User user);
 
     BoardReadAllServiceResponseDto readBoard(Long id);
-    List<BoardReadAllServiceResponseDto> readAllBoards();
+    List<BoardReadAllServiceResponseDto> readAllBoards(final Integer page);
 
 
 
