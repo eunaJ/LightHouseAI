@@ -365,7 +365,7 @@ public class TraveServiceImpl implements TravelService {
 
     }
     public List<TravelReadAllServiceResponseDto> readlAllTravel(final Integer page){
-        PageRequest pageRequest = PageRequest.of(page,PAGE_SIZE, Sort.by(Direction.ASC,"id"));
+        PageRequest pageRequest = PageRequest.of(page,PAGE_SIZE, Sort.by(Direction.DESC,"id"));
         return travelRepository.findAll(pageRequest).stream().map(travel -> readTravel(travel.getId()))
             .toList();
     }
