@@ -359,9 +359,11 @@ def find_at_travel_id(travel_id):
     #TB_AI_CREATE_TRAVEL_LIST에 데이터를 삽입
     engine = create_engine('mysql+pymysql://root:1231@localhost:3306/lighthouseAI', echo=False)
     df_travel_visitor_other.to_sql('TB_AI_CREATE_TRAVEL_LIST', con=engine, if_exists='append', index=False)
-
-
     
+
+def find_using_id():
+    
+    return
 
 
 
@@ -435,6 +437,33 @@ def generate_response(msg):
     for i in travel_id:
         find_at_travel_id(i)
 
+    conn.commit()
+    
+    dbconn.execute(f"SELECT travel_id, cafe_id, restaurant_id, shoppingmall_id, tourlist_id, otherservice_id FROM TB_AI_CREATE_TRAVEL_LIST")
+    result = dbconn.fetchall()
+    
+    df_travel = pd.DataFrame(result)
+    df_travel.columns = [
+        'travel_id',
+        'cafe_id',
+        'restaurant_id',
+        'shoppingmall_id',
+        'tourlist_id',
+        'otherservice_id',
+    ]
+    
+    print(df_travel)
+    
+    
+    
+    #travel_id가 같은 데이터끼리 리스트로 묶음
+    df_travel = df_travel.groupby('travel_id').agg(lambda x: x.tolist()).reset_index()
+    
+    #각 리스트에서 nan을 제거
+    df_travel = df_travel.applymap(lambda x: [i for i in x if str(i) != 'nan'] if isinstance(x, list) else x)
+    
+    print(df_travel)
+    
     #df_travel을 json으로 변환
     df_travel_json = df_travel.to_json(orient='records')
 
