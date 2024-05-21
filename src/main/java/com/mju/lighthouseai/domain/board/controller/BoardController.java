@@ -67,12 +67,20 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @GetMapping("/boards")
-    public ResponseEntity<?> readAllBoards(
+    public ResponseEntity<?> readAllBoard(
         @RequestParam(name = "page",defaultValue = "0") Integer page
         ){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(boardService.readAllBoards(page));
+                .body(boardService.readAllBoard(page));
     }
+
+    @GetMapping("/boards/")
+    public ResponseEntity<?> readAllBoards(
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(boardService.readAllBoards());
+    }
+
 
     @GetMapping("/boards/{boardId}")
     public ResponseEntity<?> readBoard(

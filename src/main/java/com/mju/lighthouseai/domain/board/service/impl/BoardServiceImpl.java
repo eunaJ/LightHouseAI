@@ -110,10 +110,15 @@ public class BoardServiceImpl implements BoardService {
         }
 
     }
-    public List<BoardReadAllServiceResponseDto> readAllBoards(final Integer page){
+    public List<BoardReadAllServiceResponseDto> readAllBoard(final Integer page){
         PageRequest pageRequest = PageRequest.of(page,PAGE_SIZE, Sort.by(Direction.DESC,"id"));
         Slice<Board> boards = boardRepository.findAll(pageRequest);
         return boardEntityMapper.toBoardReadAllResponseDto(boards.getContent());
+    }
+
+    public List<BoardReadAllServiceResponseDto> readAllBoards() {
+        List<Board> boards = boardRepository.findAll();
+        return boardEntityMapper.toBoardReadAllResponseDto(boards);
     }
 
     public BoardReadAllServiceResponseDto readBoard(Long id){
