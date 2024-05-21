@@ -62,7 +62,7 @@ public class BoardServiceImpl implements BoardService {
             boardRepository.save(board);
         }else {
             fileName = s3Provider.originalFileName(multipartFile);
-            fileUrl = url + requestDto.title() + SEPARATOR + fileName;
+            fileUrl = url + folderName + SEPARATOR + fileName;
             Board board = boardEntityMapper.toboard(requestDto,user,fileUrl,folderName);
             boardRepository.save(board);
             s3Provider.createFolder(folderName);
