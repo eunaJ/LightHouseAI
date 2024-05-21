@@ -369,6 +369,10 @@ public class TraveServiceImpl implements TravelService {
         return travelRepository.findAll(pageRequest).stream().map(travel -> readTravel(travel.getId()))
             .toList();
     }
+
+    public List<TravelReadAllServiceResponseDto> readlAllTravels() {
+        return travelRepository.findAll().stream().map(travel -> readTravel(travel.getId())).toList();
+    }
     public List<TravelReadAllServiceResponseDto> readUserTravels(User user){
         List<Travel> travel = travelRepository.findByUser(user);
         List<TravelReadAllServiceResponseDto> userTravels = new ArrayList<>();
