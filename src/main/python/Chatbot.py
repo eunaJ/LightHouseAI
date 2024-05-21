@@ -39,6 +39,7 @@ def cafe_cheap(location):
         'createdAt',
         'modifiedAt',
         'closetime',
+        'content',
         'image_url',
         'location',
         'menu',
@@ -47,7 +48,6 @@ def cafe_cheap(location):
         'cafe_id',
         'travel_id',
         'user_id', 
-        'content',       
     ]
 
     #cafe_id가 중복되는 데이터를 제거
@@ -75,6 +75,7 @@ def restaurant_cheap(location):
         'createdAt',
         'modifiedAt',
         'closetime',
+        'content',
         'image_url',
         'location',
         'menu',
@@ -83,7 +84,6 @@ def restaurant_cheap(location):
         'restaurant_id',
         'travel_id',
         'user_id', 
-        'content',       
     ]
 
     #restaurant_id가 중복되는 데이터를 제거
@@ -109,6 +109,7 @@ def shopping_cheap(location):
         'createdAt',
         'modifiedAt',
         'closetime',
+        'content',
         'image_url',
         'location',
         'opentime',
@@ -116,7 +117,6 @@ def shopping_cheap(location):
         'shopping_id',
         'travel_id',
         'user_id', 
-        'content',       
     ]
 
     #shopping_id가 중복되는 데이터를 제거
@@ -141,15 +141,15 @@ def tourist_cheap(location):
         'id',
         'createdAt',
         'modifiedAt',
-        'closetime',
+        'closetime', 
+        'content',
         'image_url',
         'location',
         'opentime',
         'price',
         'tourist_id',
         'travel_id',
-        'user_id', 
-        'content',       
+        'user_id',       
     ]
 
     #tourist_id가 중복되는 데이터를 제거
@@ -174,15 +174,15 @@ def other_cheap(location):
         'id',
         'createdAt',
         'modifiedAt',
-        'closetime',
+        'closetime', 
+        'content',
         'image_url',
         'location',
         'opentime',
         'price',
         'otherservice_id',
         'travel_id',
-        'user_id', 
-        'content',       
+        'user_id',       
     ]
 
     #other_id가 중복되는 데이터를 제거
@@ -208,7 +208,8 @@ def find_at_travel_id(travel_id):
         'id',
         'createdAt',
         'modifiedAt',
-        'closetime',
+        'closetime', 
+        'content',
         'image_url',
         'location',
         'menu',
@@ -216,8 +217,7 @@ def find_at_travel_id(travel_id):
         'price',
         'cafe_id',
         'travel_id',
-        'user_id', 
-        'content',       
+        'user_id',       
     ]
 
     #createAT, modifiedAt 컬럼을 제거
@@ -241,7 +241,8 @@ def find_at_travel_id(travel_id):
         'id',
         'createdAt',
         'modifiedAt',
-        'closetime',
+        'closetime', 
+        'content',
         'image_url',
         'location',
         'menu',
@@ -249,8 +250,7 @@ def find_at_travel_id(travel_id):
         'price',
         'restaurant_id',
         'travel_id',
-        'user_id', 
-        'content',       
+        'user_id',       
     ]
 
     #createAT, modifiedAt 컬럼을 제거
@@ -274,15 +274,15 @@ def find_at_travel_id(travel_id):
         'id',
         'createdAt',
         'modifiedAt',
-        'closetime',
+        'closetime', 
+        'content',
         'image_url',
         'location',
         'opentime',
         'price',
         'shoppingmall_id',
         'travel_id',
-        'user_id', 
-        'content',       
+        'user_id',       
     ]
 
     #createAT, modifiedAt 컬럼을 제거
@@ -306,15 +306,15 @@ def find_at_travel_id(travel_id):
         'id',
         'createdAt',
         'modifiedAt',
-        'closetime',
+        'closetime', 
+        'content',
         'image_url',
         'location',
         'opentime',
         'price',
         'tourlist_id',
         'travel_id',
-        'user_id', 
-        'content',       
+        'user_id',       
     ]
 
     #createAT, modifiedAt 컬럼을 제거
@@ -339,15 +339,15 @@ def find_at_travel_id(travel_id):
         'id',
         'createdAt',
         'modifiedAt',
-        'closetime',
+        'closetime', 
+        'content', 
         'image_url',
         'location',
         'opentime',
         'price',
         'otherservice_id',
         'travel_id',
-        'user_id', 
-        'content',       
+        'user_id',      
     ]
 
     #createAT, modifiedAt 컬럼을 제거
