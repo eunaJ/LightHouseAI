@@ -17,7 +17,6 @@ import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.domain.user.entity.UserRole;
 import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
 import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
-import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -62,6 +61,12 @@ public class CafeServiceImpl implements CafeService {
         Cafe cafe = cafeRepository.findById(id).
             orElseThrow(()->new NotFoundCafeException(CafeErrorCode.NOT_FOUND_CAFE));
         return cafeEntityMapper.toCafeReadResponseDto(cafe);
+    }
+    public List<CafeReadAllServiceResponseDto> readConstituencyCafe(Long id){
+        Constituency constituency = constituencyRepository.findById(id).
+            orElseThrow(()->new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
+        List<Cafe> cafes = cafeRepository.findByConstituencyId(constituency.getId());
+        return cafeEntityMapper.toCafeReadAllResponseDto(cafes);
     }
     private void checkUserRole(User user) {
         if (!(user.getRole().equals(UserRole.ADMIN))) {
