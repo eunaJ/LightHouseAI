@@ -15,6 +15,6 @@ public interface OtherService {
     void deleteOtherService(Long id, User user);
 
     List<OtherServiceReadAllServiceResponseDto> readAllOtherServices();
-
+    List<OtherServiceReadAllServiceResponseDto> readConstituencyOtherServices(Long id);
     OtherServiceReadAllServiceResponseDto readOtherService(Long id);
 }

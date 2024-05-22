@@ -11,4 +11,6 @@ public interface ShoppingMallService {
     void updateShoppingMall(Long id, ShoppingMallUpdateServiceRequestDto requestDto,User user);
     ShoppingMallReadAllServiceResponseDto readShoppingMall(Long id);
     List<ShoppingMallReadAllServiceResponseDto> readAllShoppingMall();
+    List<ShoppingMallReadAllServiceResponseDto> readConstituencyShoppingMall(Long id);
+
 }

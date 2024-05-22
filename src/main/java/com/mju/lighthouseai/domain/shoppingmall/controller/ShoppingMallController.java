@@ -59,4 +59,12 @@ public class ShoppingMallController {
         return ResponseEntity.status(HttpStatus.OK).
             body(shoppingMallService.readAllShoppingMall());
     }
+    @GetMapping("/{constituency_id}/shoppingmalls")
+    public ResponseEntity<?> readConstituencyShoppingMall(
+        @PathVariable Long constituency_id
+
+    ){
+        return ResponseEntity.status(HttpStatus.OK).
+            body(shoppingMallService.readConstituencyShoppingMall(constituency_id));
+    }
  }
