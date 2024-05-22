@@ -33,5 +33,7 @@ public interface TravelService {
     void deleteTravel(Long id, User user);
       TravelReadAllServiceResponseDto readTravel(Long id);
       List<TravelReadAllServiceResponseDto> readlAllTravel(Integer page);
+
+    List<TravelReadAllServiceResponseDto> readlAllTravels();
     List<TravelReadAllServiceResponseDto> readUserTravels(User user);
 }

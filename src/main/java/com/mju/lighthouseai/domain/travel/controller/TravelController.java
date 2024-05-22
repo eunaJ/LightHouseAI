@@ -140,6 +140,14 @@ public class TravelController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(travelService.readlAllTravel(page));
     }
+
+    @GetMapping("/")
+    public ResponseEntity<?> readAllTravels(
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelService.readlAllTravels());
+    }
+
     @GetMapping("/user")
     public ResponseEntity<?> readAllUserTravels(
         @AuthenticationPrincipal UserDetailsImpl userDetails
