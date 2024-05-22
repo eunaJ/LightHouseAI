@@ -12,4 +12,5 @@ public interface TourListService {
     void deleteTourList(Long id,User user);
      List<TourListReadAllServiceResponseDto> readAllTourLists();
     TourListReadAllServiceResponseDto readTourList(Long id);
+    List<TourListReadAllServiceResponseDto>readConstituencyTourLists(Long id);
 }
