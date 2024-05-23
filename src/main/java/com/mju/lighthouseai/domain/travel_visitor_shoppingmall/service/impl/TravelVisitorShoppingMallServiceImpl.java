@@ -4,6 +4,10 @@ import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
 import com.mju.lighthouseai.domain.shoppingmall.exception.NotFoundShoppingMallException;
 import com.mju.lighthouseai.domain.shoppingmall.exception.ShoppingMallErrorCode;
 import com.mju.lighthouseai.domain.shoppingmall.repository.ShoppingMallRepository;
+import com.mju.lighthouseai.domain.travel.entity.Travel;
+import com.mju.lighthouseai.domain.travel.exception.NotFoundTravelException;
+import com.mju.lighthouseai.domain.travel.exception.TravelErrorCode;
+import com.mju.lighthouseai.domain.travel.repository.TravelRepository;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.request.TravelVisitorShoppingMallUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_shoppingmall.dto.service.response.TravelVisitorShoppingMallReadAllServiceResponseDto;
@@ -30,18 +34,24 @@ public class TravelVisitorShoppingMallServiceImpl {
     private final TravelVisitorShoppingMallEntityMapper travelVisitorShoppingMallEntityMapper;
     private final ShoppingMallRepository shoppingMallRepository;
     private final S3Provider s3Provider;
+    private final TravelRepository travelRepository;
 
     private final String SEPARATOR = "/";
     private final String url = "https://light-house-ai.s3.ap-northeast-2.amazonaws.com/";
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    public void createTravelVisitorShoppingMall(TravelVisitorShoppingMallCreateServiceRequestDto requestDto,
-                                                User user,
-                                                MultipartFile multipartFile
+    public void createTravelVisitorShoppingMall(
+        Long id,
+        TravelVisitorShoppingMallCreateServiceRequestDto requestDto,
+        User user,
+        MultipartFile multipartFile
     ) throws IOException {
         String fileName;
         String fileUrl;
+        Travel travel = travelRepository.findById(id).orElseThrow(
+            () -> new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL)
+        );
         ShoppingMall shoppingMall = shoppingMallRepository.findShoppingMallByTitle(
                 requestDto.shoppingMall_title())
                 .orElseThrow(()->new NotFoundShoppingMallException(ShoppingMallErrorCode.NOT_FOUND_ShoppingMall));
@@ -49,13 +59,13 @@ public class TravelVisitorShoppingMallServiceImpl {
             fileUrl = null;
             TravelVisitorShoppingMall travelVisitorShoppingMall =
                     travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMall(
-                            requestDto,user,shoppingMall,fileUrl);
+                            requestDto,fileUrl,user,shoppingMall,travel);
             travelVisitorShoppingMallRepository.save(travelVisitorShoppingMall);
         } else {
             fileName = s3Provider.originalFileName(multipartFile);
             fileUrl = url + requestDto.shoppingMall_title() + SEPARATOR + fileName;
             TravelVisitorShoppingMall travelVisitorShoppingMall =
-                    travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMall(requestDto,user,shoppingMall,fileUrl);
+                    travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMall(requestDto,fileUrl,user,shoppingMall,travel);
             travelVisitorShoppingMallRepository.save(travelVisitorShoppingMall);
             s3Provider.createFolder(requestDto.shoppingMall_title());
             fileUrl = requestDto.shoppingMall_title() + SEPARATOR + fileName;
@@ -64,19 +74,40 @@ public class TravelVisitorShoppingMallServiceImpl {
     }
 
     @Transactional
-    public void updateTravelVisitorShoppingMall(Long id, TravelVisitorShoppingMallUpdateServiceRequestDto requestDto, User user){
-        TravelVisitorShoppingMall travelVisitorShoppingMall = findTravelVisitorShoppingMall(id);
-        String fileName;
+    public void updateTravelVisitorShoppingMall(
+        Long id,
+        TravelVisitorShoppingMallUpdateServiceRequestDto requestDto,
+        MultipartFile multipartFile ,
+        User user)throws IOException{
+        TravelVisitorShoppingMall travelVisitorShoppingMall = travelVisitorShoppingMallRepository.findByIdAndUser(id,user)
+            .orElseThrow(()->new NotFoundTravelVisitorShoppingMallException(ShoppingMallErrorCode.NOT_FOUND_ShoppingMall));
+        Travel travel = travelRepository.findById(travelVisitorShoppingMall.getTravel().getId())
+            .orElseThrow(()->new NotFoundTravelException(TravelErrorCode.NOT_FOUND_TRAVEL));
+        String folderName = travelVisitorShoppingMall.getTravel().getFolderName();
         String fileUrl;
-        fileUrl = null;
-        // 없어져도 방문 기록은 남아야?
-        travelVisitorShoppingMall.updateTravelVisitorShoppingMall(requestDto.price(),
-                requestDto.opentime(), requestDto.closetime(), requestDto.location(), fileUrl);
-    }
-    private TravelVisitorShoppingMall findTravelVisitorShoppingMall(Long id){
-        return travelVisitorShoppingMallRepository.findById(id)
-                .orElseThrow(()-> new NotFoundTravelVisitorShoppingMallException(
-                        TravelVisitorShoppingMallErrorCode.NOT_FOUND_TRAVEL_VISITOR_ShoppingMall));
+        Integer travel_expense = travel.getTravel_expense() - travelVisitorShoppingMall.getPrice();
+        if (!requestDto.imageChange()){
+            travelVisitorShoppingMall.updateTravelVisitorShoppingMall(
+                requestDto.price(),
+                requestDto.content(),
+                requestDto.opentime(),
+                requestDto.closetime(),
+                requestDto.location(),
+                travelVisitorShoppingMall.getImage_url());
+            travel.updateExpense(travel_expense+requestDto.price());
+        }else {
+            fileUrl = s3Provider.updateImage(travelVisitorShoppingMall.getImage_url(),folderName,multipartFile);
+            travelVisitorShoppingMall.updateTravelVisitorShoppingMall(
+                requestDto.price(),
+                requestDto.content(),
+                requestDto.opentime(),
+                requestDto.closetime(),
+                requestDto.location(),
+                fileUrl
+            );
+            travel.updateExpense(travel_expense+requestDto.price());
+        }
+
     }
 
     public void deleteTravelVisitorShoppingMall(Long id, User user) {
@@ -96,6 +127,12 @@ public class TravelVisitorShoppingMallServiceImpl {
 
     public List<TravelVisitorShoppingMallReadAllServiceResponseDto> readAllTravelVisitorShoppingMalls(){
         List<TravelVisitorShoppingMall> travelVisitorShoppingMalls = travelVisitorShoppingMallRepository.findAll();
+        return travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMallReadAllResponseDto(
+                travelVisitorShoppingMalls);
+    }
+
+    public List<TravelVisitorShoppingMallReadAllServiceResponseDto> readAllTravelVisitorShoppingMallsByTravelId(Long id){
+        List<TravelVisitorShoppingMall> travelVisitorShoppingMalls = travelVisitorShoppingMallRepository.findAllByTravelId(id);
         return travelVisitorShoppingMallEntityMapper.toTravelVisitorShoppingMallReadAllResponseDto(
                 travelVisitorShoppingMalls);
     }

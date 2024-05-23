@@ -11,9 +11,10 @@ import java.util.List;
 
 public interface TravelVisitorCafeService {
     void createTravelVisitorCafe(TravelVisitorCafeCreateServiceRequestDto requestDto, User user,
-                                 MultipartFile multipartFile) throws IOException;
-    void updateTravelVisitorCafe(Long id, TravelVisitorCafeUpdateServiceRequestDto requestDto, User user);
+                                 Long travelId, MultipartFile multipartFile) throws IOException;
+    void updateTravelVisitorCafe(Long id, TravelVisitorCafeUpdateServiceRequestDto requestDto,MultipartFile multipartFile ,User user) throws IOException;
     void deleteTravelVisitorCafe(Long id, User user);
     TravelVisitorCafeReadAllServiceResponseDto readTravelVisitorCafe(Long id);
     List<TravelVisitorCafeReadAllServiceResponseDto> readAllTravelVisitorCafes();
+    List<TravelVisitorCafeReadAllServiceResponseDto> readAllTravelVisitorCafesByTravelId(Long id);
 }

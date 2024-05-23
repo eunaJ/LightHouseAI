@@ -22,28 +22,30 @@ import java.io.IOException;
 public class TravelVisitorShoppingMallController {
     private final TravelVisitorShoppingMallDtoMapper travelVisitorShoppingMallDtoMapper;
     private final TravelVisitorShoppingMallServiceImpl travelVisitorShoppingMallService;
-    @PostMapping("/create")
+    @PostMapping("/create/{id}")
     public ResponseEntity<?> createTravelVisitorShoppingMall(
+            @PathVariable Long id,
             @RequestPart TravelVisitorShoppingMallCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart MultipartFile multipartFile
     )throws IOException {
         TravelVisitorShoppingMallCreateServiceRequestDto serviceRequestDto =
                 travelVisitorShoppingMallDtoMapper.toTravelVisitorShoppingMallCreateServiceDto(controllerRequestDto);
-        travelVisitorShoppingMallService.createTravelVisitorShoppingMall(serviceRequestDto, userDetails.user(), multipartFile);
+        travelVisitorShoppingMallService.createTravelVisitorShoppingMall(id,serviceRequestDto, userDetails.user(), multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{travelVisitorShoppingMallId}")
     public ResponseEntity<?> updateTravelVisitorShoppingMall(
             @PathVariable Long travelVisitorShoppingMallId,
-            @RequestBody TravelVisitorShoppingMallUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart TravelVisitorShoppingMallUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart(required = false) MultipartFile multipartFile,
             @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+    )throws IOException{
         TravelVisitorShoppingMallUpdateServiceRequestDto serviceRequestDto =
                 travelVisitorShoppingMallDtoMapper.toTravelVisitorShoppingMallUpdateServiceDto(controllerRequestDto);
         travelVisitorShoppingMallService.updateTravelVisitorShoppingMall(
-                travelVisitorShoppingMallId,serviceRequestDto,userDetails.user());
+                travelVisitorShoppingMallId,serviceRequestDto,multipartFile,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -69,5 +71,13 @@ public class TravelVisitorShoppingMallController {
     public ResponseEntity<?> readAllTravelVisitorShoppingMalls(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(travelVisitorShoppingMallService.readAllTravelVisitorShoppingMalls());
+    }
+
+    @GetMapping("/travel/{travelId}")
+    public ResponseEntity<?> readAllTravelVisitorShoppingMallsByTravelId(
+            @PathVariable Long travelId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorShoppingMallService.readAllTravelVisitorShoppingMallsByTravelId(travelId));
     }
 }

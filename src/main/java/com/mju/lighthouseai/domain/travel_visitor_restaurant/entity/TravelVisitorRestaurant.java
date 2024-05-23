@@ -1,6 +1,7 @@
 package com.mju.lighthouseai.domain.travel_visitor_restaurant.entity;
 
 import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
+import com.mju.lighthouseai.domain.travel.entity.Travel;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -24,7 +25,7 @@ public class TravelVisitorRestaurant extends BaseEntity {
     private String menu;
 
     @Column
-    private int price;
+    private Integer price;
 
     @Column
     private String opentime;
@@ -35,6 +36,9 @@ public class TravelVisitorRestaurant extends BaseEntity {
     @Column
     private String location;
 
+    @Column
+    private String content;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -43,30 +47,39 @@ public class TravelVisitorRestaurant extends BaseEntity {
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
+    @ManyToOne
+    @JoinColumn(name = "travel_id",nullable = false)
+    private Travel travel;
+
     public TravelVisitorRestaurant(
             final String image_url,
             final String menu,
-            final int price,
+            final Integer price,
+            final String content,
             final String opentime,
             final String closetime,
             final String location,
             final User user,
-            final Restaurant restaurant
+            final Restaurant restaurant,
+            final Travel travel
     ) {
         this.image_url = image_url;
         this.menu = menu;
         this.price = price;
+        this.content = content;
         this.opentime = opentime;
         this.closetime = closetime;
         this.location = location;
         this.user = user;
         this.restaurant = restaurant;
+        this.travel = travel;
     }
 
     public void updateTravelVisitorRestaurant(
-            String menu, int price, String opentime, String closetime, String location, String image_url) {
+            String menu, Integer price,String content ,String opentime, String closetime, String location, String image_url) {
         this.menu = menu;
         this.price = price;
+        this.content = content;
         this.opentime = opentime;
         this.closetime = closetime;
         this.location = location;

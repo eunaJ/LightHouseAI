@@ -1,6 +1,7 @@
 package com.mju.lighthouseai.domain.travel_visitor_other_service.entity;
 
 import com.mju.lighthouseai.domain.other_service.entity.OtherServiceEntity;
+import com.mju.lighthouseai.domain.travel.entity.Travel;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -21,7 +22,10 @@ public class TravelVisitorOtherServiceEntity extends BaseEntity {
     private String image_url;
 
     @Column
-    private int price;
+    private Integer price;
+
+    @Column
+    private String content;
 
     @Column
     private String opentime;
@@ -40,27 +44,36 @@ public class TravelVisitorOtherServiceEntity extends BaseEntity {
     @JoinColumn(name = "otherservice_id", nullable = false)
     private OtherServiceEntity otherServiceEntity;
 
+    @ManyToOne
+    @JoinColumn(name = "travel_id",nullable = false)
+    private Travel travel;
+
     public TravelVisitorOtherServiceEntity(
             final String image_url,
-            final int price,
+            final Integer price,
+            final String content,
             final String opentime,
             final String closetime,
             final String location,
             final User user,
-            final OtherServiceEntity otherServiceEntity
+            final OtherServiceEntity otherServiceEntity,
+            final Travel travel
     ) {
         this.image_url = image_url;
         this.price = price;
+        this.content = content;
         this.opentime = opentime;
         this.closetime = closetime;
         this.location = location;
         this.user = user;
         this.otherServiceEntity = otherServiceEntity;
+        this.travel = travel;
     }
 
     public void updateTravelVisitorOtherServiceEntity(
-            int price, String opentime, String closetime, String location, String image_url) {
+            Integer price,String content ,String opentime, String closetime, String location, String image_url) {
         this.price = price;
+        this.content = content;
         this.opentime = opentime;
         this.closetime = closetime;
         this.location = location;

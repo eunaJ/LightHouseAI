@@ -10,6 +10,7 @@ import com.mju.lighthouseai.domain.board.repository.BoardRepository;
 import com.mju.lighthouseai.domain.board.service.BoardService;
 import com.mju.lighthouseai.domain.board.dto.service.respone.BoardReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.cafe.exception.NotFoundCafeException;
+import com.mju.lighthouseai.domain.review.entity.Review;
 import com.mju.lighthouseai.domain.user.entity.UserRole;
 import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
 import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
@@ -20,6 +21,10 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.buf.Utf8Encoder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.mju.lighthouseai.domain.user.entity.User;
@@ -41,6 +46,8 @@ public class BoardServiceImpl implements BoardService {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
+    private final int PAGE_SIZE = 10;
+
     public void createBoard(
         BoardCreateServiceRequestDto requestDto,
         User user,
@@ -55,7 +62,7 @@ public class BoardServiceImpl implements BoardService {
             boardRepository.save(board);
         }else {
             fileName = s3Provider.originalFileName(multipartFile);
-            fileUrl = url + requestDto.title() + SEPARATOR + fileName;
+            fileUrl = url + folderName + SEPARATOR + fileName;
             Board board = boardEntityMapper.toboard(requestDto,user,fileUrl,folderName);
             boardRepository.save(board);
             s3Provider.createFolder(folderName);
@@ -103,7 +110,13 @@ public class BoardServiceImpl implements BoardService {
         }
 
     }
-    public List<BoardReadAllServiceResponseDto> readAllBoards(){
+    public List<BoardReadAllServiceResponseDto> readAllBoard(final Integer page){
+        PageRequest pageRequest = PageRequest.of(page,PAGE_SIZE, Sort.by(Direction.DESC,"id"));
+        Slice<Board> boards = boardRepository.findAll(pageRequest);
+        return boardEntityMapper.toBoardReadAllResponseDto(boards.getContent());
+    }
+
+    public List<BoardReadAllServiceResponseDto> readAllBoards() {
         List<Board> boards = boardRepository.findAll();
         return boardEntityMapper.toBoardReadAllResponseDto(boards);
     }

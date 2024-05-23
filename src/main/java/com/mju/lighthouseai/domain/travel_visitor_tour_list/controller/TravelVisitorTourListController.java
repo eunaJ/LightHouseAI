@@ -22,8 +22,9 @@ import java.io.IOException;
 public class TravelVisitorTourListController {
     private final TravelVisitorTourListDtoMapper travelVisitorTourListDtoMapper;
     private final TravelVisitorTourListServiceImpl travelVisitorTourListService;
-    @PostMapping("/create")
+    @PostMapping("/create/{id}")
     public ResponseEntity<?> createTravelVisitorTourList(
+            @PathVariable Long id,
             @RequestPart TravelVisitorTourListCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart MultipartFile multipartFile
@@ -31,20 +32,21 @@ public class TravelVisitorTourListController {
         TravelVisitorTourListCreateServiceRequestDto serviceRequestDto =
                 travelVisitorTourListDtoMapper.toTravelVisitorTourListCreateServiceDto(
                         controllerRequestDto);
-        travelVisitorTourListService.createTravelVisitorTourList(serviceRequestDto, userDetails.user(), multipartFile);
+        travelVisitorTourListService.createTravelVisitorTourList(id,serviceRequestDto, userDetails.user(), multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{travelVisitorTourListId}")
     public ResponseEntity<?> updateTravelVisitorTourList(
             @PathVariable Long travelVisitorTourListId,
-            @RequestBody TravelVisitorTourListUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart TravelVisitorTourListUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart(required = false) MultipartFile multipartFile,
             @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+    )throws IOException{
         TravelVisitorTourListUpdateServiceRequestDto serviceRequestDto =
                 travelVisitorTourListDtoMapper.toTravelVisitorTourListUpdateServiceDto(controllerRequestDto);
         travelVisitorTourListService.updateTravelVisitorTourList(
-                travelVisitorTourListId,serviceRequestDto,userDetails.user());
+                travelVisitorTourListId,serviceRequestDto,multipartFile,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -71,5 +73,13 @@ public class TravelVisitorTourListController {
     public ResponseEntity<?> readAllTravelVisitorTourLists(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(travelVisitorTourListService.readAllTravelVisitorTourLists());
+    }
+
+    @GetMapping("/travel/{travelId}")
+    public ResponseEntity<?> readAllTravelVisitorTourListsByTravelId(
+            @PathVariable Long travelId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorTourListService.readAllTravelVisitorTourListsByTravelId(travelId));
     }
 }

@@ -2,7 +2,8 @@ package com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.reques
 
 public record TravelVisitorRestaurantCreateServiceRequestDto(
         String menu,
-        int price,
+        Integer price,
+        String content,
         String opentime,
         String closetime,
         String location,

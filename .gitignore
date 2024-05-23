@@ -39,3 +39,12 @@ out/
 
 ### generated ###
 /src/main/generated/
+
+### catboost ###
+catboost_info/
+*.pyc
+/src/main/python/__pycache__
+src/main/python/__pycache__/AIMain.cpython-311.pyc
+src/main/python/__pycache__/AIMain.cpython-311.pyc
+src/main/python/__pycache__/Chatbot.cpython-311.pyc
+*.pyc

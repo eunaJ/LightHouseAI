@@ -22,27 +22,29 @@ import java.io.IOException;
 public class TravelVisitorRestaurantController {
     private final TravelVisitorRestaurantDtoMapper travelVisitorRestaurantDtoMapper;
     private final TravelVisitorRestaurantServiceImpl travelVisitorRestaurantService;
-    @PostMapping("/create")
+    @PostMapping("/create/{id}")
     public ResponseEntity<?> createTravelVisitorCafe(
+            @PathVariable Long id,
             @RequestPart TravelVisitorRestaurantCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart MultipartFile multipartFile
     )throws IOException {
         TravelVisitorRestaurantCreateServiceRequestDto serviceRequestDto =
                 travelVisitorRestaurantDtoMapper.toTravelVisitorRestaurantCreateServiceDto(controllerRequestDto);
-        travelVisitorRestaurantService.createTravelVisitorRestaurant(serviceRequestDto, userDetails.user(), multipartFile);
+        travelVisitorRestaurantService.createTravelVisitorRestaurant(id,serviceRequestDto, userDetails.user(), multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{travelVisitorRestaurantId}")
     public ResponseEntity<?> updateTravelVisitorRestaurant(
             @PathVariable Long travelVisitorRestaurantId,
-            @RequestBody TravelVisitorRestaurantUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart TravelVisitorRestaurantUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart(required = false) MultipartFile multipartFile,
             @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+    )throws IOException{
         TravelVisitorRestaurantUpdateServiceRequestDto serviceRequestDto =
                 travelVisitorRestaurantDtoMapper.toTravelVisitorRestaurantUpdateServiceDto(controllerRequestDto);
-        travelVisitorRestaurantService.updateTravelVisitorRestaurant(travelVisitorRestaurantId,serviceRequestDto,userDetails.user());
+        travelVisitorRestaurantService.updateTravelVisitorRestaurant(travelVisitorRestaurantId,serviceRequestDto,multipartFile,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -67,5 +69,13 @@ public class TravelVisitorRestaurantController {
     public ResponseEntity<?> readAllTravelVisitorRestaurant(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(travelVisitorRestaurantService.readAllTravelVisitorRestaurants());
+    }
+
+    @GetMapping("/travel/{travelId}")
+    public ResponseEntity<?> readAllTravelVisitorRestaurantsByTravelId(
+            @PathVariable Long travelId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorRestaurantService.readAllTravelVisitorRestaurantsByTravelId(travelId));
     }
 }

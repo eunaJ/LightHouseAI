@@ -44,7 +44,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         Restaurant restaurant = findRestaurant(id);
         Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
         ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
-        restaurant.updateRestaurant(requestDto.title(), requestDto.location(), requestDto.menu(), requestDto.price(),
+        restaurant.updateRestaurant(requestDto.title(), requestDto.location(),
                 requestDto.opentime(), requestDto.closetime(),constituency);
     }
 
@@ -75,5 +75,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         if (!(user.getRole().equals(UserRole.ADMIN))) {
             throw new NotFoundUserException(UserErrorCode.NOT_ADMIN);
         }
+    }
+    public List<RestaurantReadAllServiceResponseDto> readConstituencyRestaurants(Long id){
+        Constituency constituency = constituencyRepository.findById(id)
+            .orElseThrow(()->new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
+        List<Restaurant> restaurants = restaurantRepository.findByConstituencyId(constituency.getId());
+        return restaurantEntityMapper.toRestaurantReadAllResponseDto(restaurants);
     }
 }

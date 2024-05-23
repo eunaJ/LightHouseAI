@@ -11,5 +11,6 @@ public interface CafeService {
     void updateCafe(Long id, CafeUpdateServiceRequestDto requestDto,User user);
     void deleteCafe(Long id,User user);
     CafeReadAllServiceResponseDto readCafe(Long id);
+    List<CafeReadAllServiceResponseDto> readConstituencyCafe(Long id);
     List<CafeReadAllServiceResponseDto> readAllCafes();
 }

@@ -16,6 +16,7 @@ public interface BoardService {
         throws IOException;
     void deleteBoard(Long id, User user);
     BoardReadAllServiceResponseDto readBoard(Long id);
+    List<BoardReadAllServiceResponseDto> readAllBoard(final Integer page);
     List<BoardReadAllServiceResponseDto> readAllBoards();
 
 

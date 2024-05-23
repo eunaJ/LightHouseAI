@@ -22,8 +22,9 @@ import java.io.IOException;
 public class TravelVisitorOtherServiceController {
     private final TravelVisitorOtherServiceDtoMapper travelVisitorOtherServiceDtoMapper;
     private final TravelVisitorOtherServiceImpl travelVisitorOtherService;
-    @PostMapping("/create")
+    @PostMapping("/create/{id}")
     public ResponseEntity<?> createTravelVisitorOtherService(
+            @PathVariable Long id,
             @RequestPart TravelVisitorOtherServiceCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart MultipartFile multipartFile
@@ -31,7 +32,7 @@ public class TravelVisitorOtherServiceController {
         TravelVisitorOtherServiceCreateServiceRequestDto serviceRequestDto =
                 travelVisitorOtherServiceDtoMapper.toTravelVisitorOtherServiceCreateServiceDto(
                         controllerRequestDto);
-        travelVisitorOtherService.createTravelVisitorOtherService(
+        travelVisitorOtherService.createTravelVisitorOtherService(id,
                 serviceRequestDto, userDetails.user(), multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -39,14 +40,15 @@ public class TravelVisitorOtherServiceController {
     @PutMapping("/{travelVisitorOtherServiceId}")
     public ResponseEntity<?> updateTravelVisitorOtherService(
             @PathVariable Long travelVisitorOtherServiceId,
-            @RequestBody TravelVisitorOtherServiceUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart TravelVisitorOtherServiceUpdateControllerRequestDto controllerRequestDto,
+            @RequestPart(required = false) MultipartFile multipartFile,
             @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+    )throws IOException{
         TravelVisitorOtherServiceUpdateServiceRequestDto serviceRequestDto =
                 travelVisitorOtherServiceDtoMapper.toTravelVisitorOtherServiceUpdateServiceDto(
                         controllerRequestDto);
         travelVisitorOtherService.updateTravelVisitorOtherService(
-                travelVisitorOtherServiceId,serviceRequestDto,userDetails.user());
+                travelVisitorOtherServiceId,serviceRequestDto,multipartFile,userDetails.user());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -73,5 +75,13 @@ public class TravelVisitorOtherServiceController {
     public ResponseEntity<?> readAllTravelVisitorOtherServices(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(travelVisitorOtherService.readAllTravelVisitorOtherServices());
+    }
+
+    @GetMapping("/travel/{travelId}")
+    public ResponseEntity<?> readAllTravelVisitorOtherServicesByTravelId(
+            @PathVariable Long travelId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelVisitorOtherService.readAllTravelVisitorOtherServicesByTravelId(travelId));
     }
 }

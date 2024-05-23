@@ -53,6 +53,12 @@ public class ShoppingMallServiceImpl implements ShoppingMallService {
         List<ShoppingMall> shoppingMall= shoppingMallRepository.findAll();
         return shoppingMallEntityMapper.toShoppingMallReadAllResponseDto(shoppingMall);
     }
+    public List<ShoppingMallReadAllServiceResponseDto> readConstituencyShoppingMall(Long id){
+        Constituency constituency = constituencyRepository.findById(id)
+            .orElseThrow(()->new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
+        List<ShoppingMall> shoppingMall= shoppingMallRepository.findByConstituencyId(constituency.getId());
+        return shoppingMallEntityMapper.toShoppingMallReadAllResponseDto(shoppingMall);
+    }
 
     private ShoppingMall findShoppingMall(Long id){
         return shoppingMallRepository.findById(id)
