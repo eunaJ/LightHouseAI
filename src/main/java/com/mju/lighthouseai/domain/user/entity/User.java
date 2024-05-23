@@ -84,4 +84,6 @@ public class User extends BaseEntity {
     public void updateProfile_img_url(String profile_img_url) {
         this.profile_img_url = profile_img_url;
     }
+
+
 }

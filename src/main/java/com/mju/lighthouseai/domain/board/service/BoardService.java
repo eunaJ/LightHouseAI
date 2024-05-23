@@ -15,7 +15,6 @@ public interface BoardService {
     void updateBoard (Long id, BoardUpdateServiceRequestDto requestDto, User user,MultipartFile multipartFile)
         throws IOException;
     void deleteBoard(Long id, User user);
-
     BoardReadAllServiceResponseDto readBoard(Long id);
     List<BoardReadAllServiceResponseDto> readAllBoard(final Integer page);
     List<BoardReadAllServiceResponseDto> readAllBoards();

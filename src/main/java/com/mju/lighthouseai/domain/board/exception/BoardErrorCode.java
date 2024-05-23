@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum BoardErrorCode implements ErrorCode {
 
-
     // 403
     FORBIDDEN_ACCESS_Board(HttpStatus.FORBIDDEN, "게시물에 접근할 수 없습니다."),
 
