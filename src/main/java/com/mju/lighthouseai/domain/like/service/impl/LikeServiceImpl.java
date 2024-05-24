@@ -48,4 +48,16 @@ public class LikeServiceImpl implements LikeService {
                 .orElseThrow(() -> new NotFoundBoardException(LikeErrorCode.NOT_FOUND_Board));
         return likeRepository.countByBoardId(boardId);
     }
+
+    public Boolean isLike(Long boardId, User user) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(()->new NotFoundBoardException(LikeErrorCode.NOT_FOUND_Board));
+        try {
+            likeRepository.findByBoardAndUser(board, user)
+                    .orElseThrow(() -> new NotFoundLikeException(LikeErrorCode.Not_Found_Like));
+            return true;
+        } catch (NotFoundLikeException e) {
+            return false;
+        }
+    }
 }
