@@ -10,6 +10,11 @@ def process_command(command):
         print(msg)
         ans = chatbot.generate_response(msg)
         return ans
+    if(command["command"] == "travelList"):
+        id = command["id"]
+        print("id: ", id)
+        ans = chatbot.find_using_id(id)
+        return ans
     if(command["command"] == "test"):
         msg = command["msg"]
         ans = chatbot.agenerate_response(msg)

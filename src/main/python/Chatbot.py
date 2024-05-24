@@ -22,6 +22,8 @@ conn = pymysql.connect(
     db='lighthouseAI'
 )
 
+
+
 def cafe_cheap(location):
     #TB_TRAVEL_VISITOR_CAFE에서 location이 location이며 price가 낮은 데이터를 추출
     #dbconn = conn.cursor()
@@ -360,12 +362,214 @@ def find_at_travel_id(travel_id):
     engine = create_engine('mysql+pymysql://root:1231@localhost:3306/lighthouseAI', echo=False)
     df_travel_visitor_other.to_sql('TB_AI_CREATE_TRAVEL_LIST', con=engine, if_exists='append', index=False)
     
-
-def find_using_id():
+def find_using_id(travel_id):
     
-    return
+    #TB_TRAVEL에서 travel_id가 travel_id인 데이터를 추출
+    dbconn = conn.cursor()
+    dbconn.execute(f"SELECT * FROM TB_TRAVEL WHERE id = {travel_id}")
+    
+    result = dbconn.fetchall()
+    
+    df_travel = pd.DataFrame(result)
+    df_travel.columns = [
+        'id',
+        'createdAt',
+        'modifiedAt',
+        'folderName',
+        'image_url',
+        'serving',
+        'star',
+        'title',
+        'travel_expense',
+        'constituency_id',
+        'user_id',
+    ]
+    
+    #TB_TRAVEL_VISITOR_CAFE에서 travel_id가 travel_id인 데이터를 추출
+    dbconn = conn.cursor()
+    dbconn.execute(f"SELECT * FROM TB_TRAVEL_VISITOR_CAFE WHERE travel_id = {travel_id}")
 
+    result = dbconn.fetchall()
 
+    df_travel_visitor_cafe = pd.DataFrame(result)
+    df_travel_visitor_cafe.columns = [
+        'id',
+        'createdAt',
+        'modifiedAt',
+        'closetime', 
+        'content',
+        'image_url',
+        'location',
+        'menu',
+        'opentime',
+        'price',
+        'cafe_id',
+        'travel_id',
+        'user_id',       
+    ]
+
+    #createAT, modifiedAt 컬럼을 제거
+    df_travel_visitor_cafe = df_travel_visitor_cafe.drop(['createdAt', 'modifiedAt'], axis=1)
+
+    #id를 TRAVEL_CAFE_ID로 변경
+    df_travel_visitor_cafe = df_travel_visitor_cafe.rename(columns={'id': 'travel_cafe_id'})
+    
+    #TB_CAFE에서 cafe_id가 cafe_id인 데이터를 추출해 title을 추출하여 df_travel_visitor_cafe에 추가
+    dbconn = conn.cursor()
+    dbconn.execute(f"SELECT * FROM TB_CAFE WHERE id = {df_travel_visitor_cafe['cafe_id'].values[0]}")
+    
+    result = dbconn.fetchall()
+    
+    df_cafe = pd.DataFrame(result)
+    df_cafe.columns = [
+        'id',
+        'createdAt',
+        'modifiedAt',
+        'image_url',
+        'location',
+        'menu',
+        'opentime',
+        'price',
+        'star',
+        'title',
+        'user_id',
+    ]
+    
+    #title만 df_travel_visitor_cafe에 추가
+    df_travel_visitor_cafe['title'] = df_cafe['title'].values[0]
+    
+    #TB_TRAVEL_VISITOR_RESTAURANT에서 travel_id가 travel_id인 데이터를 추출
+    dbconn = conn.cursor()
+    dbconn.execute(f"SELECT * FROM TB_TRAVEL_VISITOR_RESTAURANT WHERE travel_id = {travel_id}")
+
+    result = dbconn.fetchall()
+
+    df_travel_visitor_restaurant = pd.DataFrame(result)
+    df_travel_visitor_restaurant.columns = [
+        'id',
+        'createdAt',
+        'modifiedAt',
+        'closetime', 
+        'content',
+        'image_url',
+        'location',
+        'menu',
+        'opentime',
+        'price',
+        'restaurant_id',
+        'travel_id',
+        'user_id',       
+    ]
+
+    #createAT, modifiedAt 컬럼을 제거
+    df_travel_visitor_restaurant = df_travel_visitor_restaurant.drop(['createdAt', 'modifiedAt'], axis=1)
+
+    #id를 TRAVEL_RESTAURANT_ID로 변경
+    df_travel_visitor_restaurant = df_travel_visitor_restaurant.rename(columns={'id': 'travel_restaurant_id'})
+
+    #TB_TRAVEL_VISITOR_SHOPPINGMALL에서 travel_id가 travel_id인 데이터를 추출
+    dbconn = conn.cursor()
+    dbconn.execute(f"SELECT * FROM TB_TRAVEL_VISITOR_SHOPPINGMALL WHERE travel_id = {travel_id}")
+
+    result = dbconn.fetchall()
+
+    df_travel_visitor_shopping = pd.DataFrame(result)
+    df_travel_visitor_shopping.columns = [
+        'id',
+        'createdAt',
+        'modifiedAt',
+        'closetime', 
+        'content',
+        'image_url',
+        'location',
+        'opentime',
+        'price',
+        'shoppingmall_id',
+        'travel_id',
+        'user_id',       
+    ]
+
+    #createAT, modifiedAt 컬럼을 제거
+    df_travel_visitor_shopping = df_travel_visitor_shopping.drop(['createdAt', 'modifiedAt'], axis=1)
+
+    #id를 TRAVEL_SHOPPING_ID로 변경
+    df_travel_visitor_shopping = df_travel_visitor_shopping.rename(columns={'id': 'travel_shoppingmall_id'})
+
+    #TB_TRAVEL_VISITOR_TOUR_LIST에서 travel_id가 travel_id인 데이터를 추출
+    dbconn = conn.cursor()
+    dbconn.execute(f"SELECT * FROM TB_TRAVEL_VISITOR_TOUR_LIST WHERE travel_id = {travel_id}")
+
+    result = dbconn.fetchall()
+
+    df_travel_visitor_tourist = pd.DataFrame(result)
+    df_travel_visitor_tourist.columns = [
+        'id',
+        'createdAt',
+        'modifiedAt',
+        'closetime', 
+        'content',
+        'image_url',
+        'location',
+        'opentime',
+        'price',
+        'tourlist_id',
+        'travel_id',
+        'user_id',       
+    ]
+
+    #createAT, modifiedAt 컬럼을 제거
+    df_travel_visitor_tourist = df_travel_visitor_tourist.drop(['createdAt', 'modifiedAt'], axis=1)
+
+    #id를 TRAVEL_TOUR_ID로 변경
+    df_travel_visitor_tourist = df_travel_visitor_tourist.rename(columns={'id': 'travel_tourlist_id'})
+
+    #TB_TRAVEL_VISITOR_OTHER_SERVICE에서 travel_id가 travel_id인 데이터를 추출
+    dbconn = conn.cursor()
+    dbconn.execute(f"SELECT * FROM TB_TRAVEL_VISITOR_OTHER_SERVICE WHERE travel_id = {travel_id}")
+
+    result = dbconn.fetchall()
+
+    df_travel_visitor_other = pd.DataFrame(result)
+    df_travel_visitor_other.columns = [
+        'id',
+        'createdAt',
+        'modifiedAt',
+        'closetime', 
+        'content', 
+        'image_url',
+        'location',
+        'opentime',
+        'price',
+        'otherservice_id',
+        'travel_id',
+        'user_id',      
+    ]
+
+    #createAT, modifiedAt 컬럼을 제거
+    df_travel_visitor_other = df_travel_visitor_other.drop(['createdAt', 'modifiedAt'], axis=1)
+
+    #id를 TRAVEL_OTHER_ID로 변경
+    df_travel_visitor_other = df_travel_visitor_other.rename(columns={'id': 'travel_otherservice_id'})
+    
+    #df_travel, df_travel_visitor_cafe, df_travel_visitor_restaurant, df_travel_visitor_shopping, df_travel_visitor_tourist, df_travel_visitor_other을 dict로 변환
+    travel = df_travel.to_dict(orient='records')
+    cafe = df_travel_visitor_cafe.to_dict(orient='records')
+    restaurant = df_travel_visitor_restaurant.to_dict(orient='records')
+    shopping = df_travel_visitor_shopping.to_dict(orient='records')
+    tourist = df_travel_visitor_tourist.to_dict(orient='records')
+    other = df_travel_visitor_other.to_dict(orient='records')
+    
+    #travel, cafe, restaurant, shopping, tourist, other를 하나의 dict로 합침
+    travel_dict = {
+        "travel": travel,
+        "cafe": cafe,
+        "restaurant": restaurant,
+        "shopping": shopping,
+        "tourist": tourist,
+        "other": other,
+    }
+
+    return travel_dict
 
 def generate_response(msg):
     model = "gpt-3.5-turbo"
@@ -459,8 +663,6 @@ def generate_response(msg):
     
     print(df_travel)
     
-    
-    
     #travel_id가 같은 데이터끼리 리스트로 묶음
     df_travel = df_travel.groupby('travel_id').agg(lambda x: x.tolist()).reset_index()
     
@@ -471,6 +673,5 @@ def generate_response(msg):
     
     #df_travel을 json으로 변환
     df_travel_json = df_travel.to_json(orient='records')
-
 
     return travels
