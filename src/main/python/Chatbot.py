@@ -427,6 +427,11 @@ def generate_response(msg):
 
     #travel_id만 추출
     travel_id = df_travel['id'].tolist()
+    
+    #createAt, modifiedAt, folderName 컬럼을 제거
+    df_travel = df_travel.drop(['createdAt', 'modifiedAt', 'folderName'], axis=1)
+    
+    travels = df_travel.to_dict(orient='records')
 
     #TB_AI_CREATE_TRAVEL_LIST를 초기화
     dbconn.execute(f"DELETE FROM TB_AI_CREATE_TRAVEL_LIST")
@@ -468,4 +473,4 @@ def generate_response(msg):
     df_travel_json = df_travel.to_json(orient='records')
 
 
-    return travel_id
+    return travels
