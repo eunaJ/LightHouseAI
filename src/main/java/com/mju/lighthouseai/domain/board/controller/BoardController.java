@@ -81,7 +81,6 @@ public class BoardController {
                 .body(boardService.readAllBoards());
     }
 
-
     @GetMapping("/boards/{boardId}")
     public ResponseEntity<?> readBoard(
             @PathVariable Long boardId
@@ -89,8 +88,12 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boardService.readBoard(boardId));
     }
+
+    @GetMapping("/boards/user")
+    public ResponseEntity<?> readAllUserBoards(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(boardService.readUserBoards(userDetails.user()));
+    }
 }
-
-
-
-

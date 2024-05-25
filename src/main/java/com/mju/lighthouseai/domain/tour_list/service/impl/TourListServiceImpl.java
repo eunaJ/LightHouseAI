@@ -83,7 +83,12 @@ public class TourListServiceImpl implements TourListService {
     public List<TourListReadAllServiceResponseDto> readAllTourLists(){
         List<TourList> tourLists = tourListRepository.findAll();
         return tourListEntityMapper.toTourListReadAllResponseDto(tourLists);
-
+    }
+    public List<TourListReadAllServiceResponseDto> readConstituencyTourLists(Long id){
+        Constituency constituency = constituencyRepository.findById(id)
+            .orElseThrow(()->new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
+        List<TourList> tourLists = tourListRepository.findByConstituencyId(constituency.getId());
+        return tourListEntityMapper.toTourListReadAllResponseDto(tourLists);
     }
     public TourListReadAllServiceResponseDto readTourList(Long id){
         TourList tourList =tourListRepository.findById(id)

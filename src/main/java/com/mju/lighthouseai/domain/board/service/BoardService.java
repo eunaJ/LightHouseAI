@@ -4,6 +4,7 @@ import com.mju.lighthouseai.domain.board.dto.service.request.BoardCreateServiceR
 import com.mju.lighthouseai.domain.board.dto.service.request.BoardUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.board.dto.service.respone.BoardReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.cafe.dto.service.response.CafeReadAllServiceResponseDto;
+import com.mju.lighthouseai.domain.travel.dto.service.response.TravelReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.user.entity.User;
 import java.io.IOException;
 import java.util.List;
@@ -15,11 +16,8 @@ public interface BoardService {
     void updateBoard (Long id, BoardUpdateServiceRequestDto requestDto, User user,MultipartFile multipartFile)
         throws IOException;
     void deleteBoard(Long id, User user);
-
     BoardReadAllServiceResponseDto readBoard(Long id);
     List<BoardReadAllServiceResponseDto> readAllBoard(final Integer page);
     List<BoardReadAllServiceResponseDto> readAllBoards();
-
-
-
+    List<BoardReadAllServiceResponseDto> readUserBoards(User user);
 }

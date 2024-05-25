@@ -102,4 +102,10 @@ public class RestaurantServiceImpl implements RestaurantService {
             throw new NotFoundUserException(UserErrorCode.NOT_ADMIN);
         }
     }
+    public List<RestaurantReadAllServiceResponseDto> readConstituencyRestaurants(Long id){
+        Constituency constituency = constituencyRepository.findById(id)
+            .orElseThrow(()->new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
+        List<Restaurant> restaurants = restaurantRepository.findByConstituencyId(constituency.getId());
+        return restaurantEntityMapper.toRestaurantReadAllResponseDto(restaurants);
+    }
 }

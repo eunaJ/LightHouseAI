@@ -65,5 +65,6 @@ public class ShoppingMallController {
     ){
         return ResponseEntity.status(HttpStatus.OK).
             body(shoppingMallService.readConstituencyShoppingMalls(constituency_id));
+
     }
  }

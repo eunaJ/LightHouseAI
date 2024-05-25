@@ -45,6 +45,7 @@ public class RestaurantController {
 
     @DeleteMapping("/restaurants/{restaurantId}")
     public ResponseEntity<?> deleteRestaurant(
+
             @PathVariable Long restaurantId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ){

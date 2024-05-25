@@ -52,7 +52,7 @@ public class OtherServiceController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping("/")
+    @GetMapping("/otherServices")
     public ResponseEntity<?> readAllOtherServices(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(otherService.readAllOtherServices());

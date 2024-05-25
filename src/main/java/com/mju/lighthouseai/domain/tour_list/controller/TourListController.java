@@ -70,7 +70,7 @@ public class TourListController {
             .body(tourListService.readTourList(tourListId));
     }
     @GetMapping("/{constituency_id}/tourLists")
-    public ResponseEntity<?> readConstituencyTourList(
+    public ResponseEntity<?> readConstituencyTourLists(
         @PathVariable Long constituency_id
     ){
         return ResponseEntity.status(HttpStatus.OK)

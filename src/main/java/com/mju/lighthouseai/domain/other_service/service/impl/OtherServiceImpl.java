@@ -83,6 +83,13 @@ public class OtherServiceImpl implements OtherService {
         return otherServiceEntityMapper.toOtherServiceReadAllResponseDto(otherServices);
     }
 
+    public List<OtherServiceReadAllServiceResponseDto> readConstituencyOtherServices(Long id){
+        Constituency constituency =constituencyRepository.findById(id)
+            .orElseThrow(()->new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
+        List<OtherServiceEntity> otherServices = otherServiceRepository.findByConstituencyId(constituency.getId());
+        return otherServiceEntityMapper.toOtherServiceReadAllResponseDto(otherServices);
+    }
+
     public OtherServiceReadAllServiceResponseDto readOtherService(Long id){
         OtherServiceEntity otherServiceEntity = otherServiceRepository.findById(id)
                 .orElseThrow(()->new NotFoundOtherServiceException(OtherServiceErrorCode.NOT_FOUND_OtherService));

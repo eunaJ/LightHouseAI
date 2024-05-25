@@ -11,12 +11,15 @@ import com.mju.lighthouseai.domain.board.service.BoardService;
 import com.mju.lighthouseai.domain.board.dto.service.respone.BoardReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.cafe.exception.NotFoundCafeException;
 import com.mju.lighthouseai.domain.review.entity.Review;
+import com.mju.lighthouseai.domain.travel.dto.service.response.TravelReadAllServiceResponseDto;
+import com.mju.lighthouseai.domain.travel.entity.Travel;
 import com.mju.lighthouseai.domain.user.entity.UserRole;
 import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
 import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import com.mju.lighthouseai.global.s3.S3Provider;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.buf.Utf8Encoder;
@@ -131,8 +134,9 @@ public class BoardServiceImpl implements BoardService {
             throw new NotFoundUserException(UserErrorCode.NOT_ADMIN);
         }
     }
+
+    public List<BoardReadAllServiceResponseDto> readUserBoards(User user){
+        List<Board> boards = boardRepository.findByUser(user);
+        return boardEntityMapper.toBoardReadAllResponseDto(boards);
+    }
 }
-
-
-
-
