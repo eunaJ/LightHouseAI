@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void signUp(final UserSignUpServiceRequestDto serviceRequestDto,
-                       MultipartFile multipartFile) throws IOException {
+        MultipartFile multipartFile) throws IOException {
         // 이메일 중복 체크
         if (userRepository.existsByEmail(serviceRequestDto.email())) {
             throw new AlreadyExistsEmailException(UserErrorCode.ALREADY_EXIST_EMAIL);
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserLoginResponseDto login(final UserLoginServiceRequestDto userLoginServiceRequestDto) {
         User user = userRepository.findByEmail(userLoginServiceRequestDto.email())
-                .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
         if(!passwordEncoder.matches(userLoginServiceRequestDto.password(),user.getPassword())){
             throw new NotMatchPasswordException(UserErrorCode.NOT_MATCH_PASSWORD);
         }
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
             }
             else {
                 String imageName = s3Provider.updateImage(user.getProfile_img_url(),
-                        user.getFolderName(), multipartFile);
+                    user.getFolderName(), multipartFile);
                 user.updateProfile_img_url(imageName);
             }
         }
@@ -132,11 +132,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserLoginResponseDto refreshAccessToken(final String refreshTokenCookie,
-                                                   final HttpServletResponse response) {
+        final HttpServletResponse response) {
         String refresh = refreshTokenCookie.substring(13);
         // 애초에 다르면 검증에 오류
         RefreshToken refreshToken = refreshTokenRepository.findByRefreshToken(refresh)
-                .orElseThrow(() -> new ExpiredJwtRefreshTokenException(JwtErrorCode.EXPIRED_JWT_REFRESH_TOKEN));
+            .orElseThrow(() -> new ExpiredJwtRefreshTokenException(JwtErrorCode.EXPIRED_JWT_REFRESH_TOKEN));
         if (!jwtUtil.validateRefreshToken(refreshToken.getRefreshToken())) {
             throw new FailedJwtTokenException(JwtErrorCode.FAILED_JWT_TOKEN);
         }
@@ -171,18 +171,19 @@ public class UserServiceImpl implements UserService {
         }
         String email = jwtUtil.getUserInfoFromToken(token).getSubject();
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
         return userEntityMapper.toUserLoginResponseDto(user);
     }
 
     @Override
-    public void logout(final String token){
+    public void logout(final String token, final HttpServletResponse response){
         if (jwtUtil.isExpiredAccessToken(token)) {
             throw new ExpiredJwtAccessTokenException(JwtErrorCode.EXPIRED_JWT_ACCESS_TOKEN);
         }
         String email = jwtUtil.getUserInfoFromToken(token).getSubject();
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        jwtUtil.deleteCookie("refreshToken", response);
         refreshTokenRepository.deleteById(String.valueOf(user.getId()));
     }
 }

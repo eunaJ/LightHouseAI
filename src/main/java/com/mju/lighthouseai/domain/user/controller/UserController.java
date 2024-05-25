@@ -29,17 +29,17 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(
-            @RequestPart UserSignUpControllerRequestDto controllerRequestDto,
-            @RequestPart(required=false) MultipartFile multipartFile) throws IOException {
+        @RequestPart UserSignUpControllerRequestDto controllerRequestDto,
+        @RequestPart(required=false) MultipartFile multipartFile) throws IOException {
         UserSignUpServiceRequestDto serviceRequestDto = userDtoMapper.toUserSignUpServiceRequestDto(
-                controllerRequestDto);
+            controllerRequestDto);
         userService.signUp(serviceRequestDto, multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(
-            @RequestBody UserLoginControllerRequestDto controllerRequestDto
+        @RequestBody UserLoginControllerRequestDto controllerRequestDto
     ) {
         UserLoginServiceRequestDto serviceRequestDto = userDtoMapper.toUserLoginServiceRequestDto(controllerRequestDto);
         userService.login(serviceRequestDto);
@@ -48,10 +48,10 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(
-            @RequestPart UpdateUserControllerRequestDto controllerRequestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+        @RequestPart UpdateUserControllerRequestDto controllerRequestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
         @RequestPart(required=false) MultipartFile multipartFile) throws IOException
-     {
+    {
         UpdateUserServiceRequestDto serviceRequestDto = userDtoMapper.toUpdateUserServiceRequestDto(controllerRequestDto);
         userService.updateUser(userDetailsImpl.user(), serviceRequestDto,multipartFile);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -59,8 +59,8 @@ public class UserController {
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAccessToken(
-            @RequestHeader("Cookie") String refreshToken,
-            HttpServletResponse httpServletResponse
+        @RequestHeader("Cookie") String refreshToken,
+        HttpServletResponse httpServletResponse
     ) {
         userService.refreshAccessToken(refreshToken, httpServletResponse);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -68,7 +68,7 @@ public class UserController {
 
     @PostMapping("/isnotdupemail")
     public ResponseEntity<?> isNotDupEmail(
-            @RequestBody isNotDupUserEmailServiceRequestDto serviceRequestDto
+        @RequestBody isNotDupUserEmailServiceRequestDto serviceRequestDto
     ){
         userService.isNotDupUserEmail(serviceRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -76,7 +76,7 @@ public class UserController {
 
     @PostMapping("/isnotdupnick")
     public ResponseEntity<?> isNotDupNickname(
-            @RequestBody isNotDupUserNickServiceRequestDto serviceRequestDto
+        @RequestBody isNotDupUserNickServiceRequestDto serviceRequestDto
     ){
         userService.isNotDupUserNick(serviceRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -84,7 +84,7 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<UserLoginResponseDto> getUser(
-            @RequestHeader("Authorization") String token
+        @RequestHeader("Authorization") String token
     ){
         UserLoginResponseDto responseDto = userService.getUser(token);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
@@ -92,9 +92,10 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(
-            @RequestHeader("Authorization") String token
+        @RequestHeader("Authorization") String token,
+        HttpServletResponse httpServletResponse
     ){
-        userService.logout(token);
+        userService.logout(token, httpServletResponse);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
