@@ -620,7 +620,6 @@ def find_using_id(travel_id):
             'closetime',
             'location',
             'opentime',
-            'price',
             'title',
             'constituency_id',
             'user_id',
