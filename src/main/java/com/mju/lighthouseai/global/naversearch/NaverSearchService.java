@@ -21,7 +21,7 @@ public class NaverSearchService {
         URI uri = UriComponentsBuilder.fromUriString("https://openapi.naver.com/")
             .path("v1/search/local.json")
             .queryParam("query", query)
-            .queryParam("display", 5)  // display 값을 100으로 설정
+            .queryParam("display", 5)
             .queryParam("start", 1)
             .queryParam("sort", "random")
             .encode()

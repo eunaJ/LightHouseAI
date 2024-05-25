@@ -14,13 +14,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/restaurants")
+@RequestMapping("/api/v1")
 @RestController
 public class RestaurantController {
     private final RestaurantDtoMapper restaurantDtoMapper;
     private final RestaurantService restaurantService;
 
-    @PostMapping("/create")
+    @PostMapping("/restaurants/create")
     public ResponseEntity<?> createRestaurant(
         @RequestBody RestaurantCreateControllerRequestDto controllerRequestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -31,7 +31,7 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/{restaurantId}")
+    @PutMapping("/restaurants/{restaurantId}")
     public ResponseEntity<?> updateRestaurant(
             @PathVariable Long restaurantId,
             @RequestBody RestaurantUpdateControllerRequestDto controllerRequestDto,
@@ -43,8 +43,8 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/{restaurantId}")
-    public ResponseEntity<?> deleteRestaurnat(
+    @DeleteMapping("/restaurants/{restaurantId}")
+    public ResponseEntity<?> deleteRestaurant(
             @PathVariable Long restaurantId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
@@ -52,17 +52,24 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping("/")
+    @GetMapping("/restaurants")
     public ResponseEntity<?> readAllRestaurants(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(restaurantService.readAllRestaurants());
     }
 
-    @GetMapping("/{restaurantId}")
+    @GetMapping("/restaurants/{restaurantId}")
     public ResponseEntity<?> readRestaurant(
             @PathVariable Long restaurantId
     ){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(restaurantService.readRestaurant(restaurantId));
+    }
+    @GetMapping("/{constituency_id}/restaurants")
+    public ResponseEntity<?> readConstituencyRestaurant(
+        PathVariable Long
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(restaurantService.readAllRestaurants());
     }
  }

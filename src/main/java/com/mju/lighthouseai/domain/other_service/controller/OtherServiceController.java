@@ -2,8 +2,8 @@ package com.mju.lighthouseai.domain.other_service.controller;
 
 import com.mju.lighthouseai.domain.other_service.dto.controller.OtherServiceCreateControllerRequestDto;
 import com.mju.lighthouseai.domain.other_service.dto.controller.OtherServiceUpdateControllerRequestDto;
-import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.request.OtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.request.OtherServiceUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.other_service.mapper.dto.OtherServiceDtoMapper;
 import com.mju.lighthouseai.domain.other_service.service.OtherService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
@@ -14,13 +14,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/otherServices")
+@RequestMapping("/api/v1")
 @RestController
 public class OtherServiceController {
     private final OtherServiceDtoMapper otherServiceDtoMapper;
     private final OtherService otherService;
 
-    @PostMapping("/create")
+    @PostMapping("/otherServices/create")
     public ResponseEntity<?> createOtherService(
             @RequestBody OtherServiceCreateControllerRequestDto controllerRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -31,7 +31,7 @@ public class OtherServiceController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/{otherServiceId}")
+    @PutMapping("/otherServices/{otherServiceId}")
     public ResponseEntity<?> updateOtherService(
             @PathVariable Long otherServiceId,
             @RequestBody OtherServiceUpdateControllerRequestDto controllerRequestDto,
@@ -43,7 +43,7 @@ public class OtherServiceController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/{otherServiceId}")
+    @DeleteMapping("/otherServices/{otherServiceId}")
     public ResponseEntity<?> deleteOtherService(
             @PathVariable Long otherServiceId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -58,11 +58,18 @@ public class OtherServiceController {
                 .body(otherService.readAllOtherServices());
     }
 
-    @GetMapping("/{otherServiceId}")
+    @GetMapping("/otherServices/{otherServiceId}")
     public ResponseEntity<?> readOtherService(
             @PathVariable Long otherServiceId
     ){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(otherService.readOtherService(otherServiceId));
+    }
+    @GetMapping("/{constituency_id}/otherServices")
+    public ResponseEntity<?> readConstituencyOtherServices(
+        @PathVariable Long constituency_id
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(otherService.readConstituencyOtherServices(constituency_id));
     }
  }

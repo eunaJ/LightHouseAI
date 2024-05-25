@@ -8,15 +8,18 @@ import com.mju.lighthouseai.domain.restaurant.dto.service.request.RestaurantCrea
 import com.mju.lighthouseai.domain.restaurant.dto.service.request.RestaurantUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.restaurant.dto.service.response.RestaurantReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
-import com.mju.lighthouseai.domain.restaurant.exceoption.NotFoundRestaurantException;
-import com.mju.lighthouseai.domain.restaurant.exceoption.RestaurantErrorCode;
+import com.mju.lighthouseai.domain.restaurant.exception.NotFoundRestaurantException;
+import com.mju.lighthouseai.domain.restaurant.exception.RestaurantErrorCode;
 import com.mju.lighthouseai.domain.restaurant.mapper.service.RestaurantEntityMapper;
 import com.mju.lighthouseai.domain.restaurant.repository.RestaurantRepository;
 import com.mju.lighthouseai.domain.restaurant.service.RestaurantService;
+import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.domain.user.entity.UserRole;
 import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
 import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
+import com.mju.lighthouseai.global.naversearch.NaverSearchItem;
+import com.mju.lighthouseai.global.naversearch.NaverSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +33,31 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final RestaurantEntityMapper restaurantEntityMapper;
     private final ConstituencyRepository constituencyRepository;
+    private final NaverSearchService naverSearchService;
 
     public void createRestaurant(RestaurantCreateServiceRequestDto requestDto, User user){
         Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name())
             .orElseThrow(()->new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
-        Restaurant restaurant = restaurantEntityMapper.toRestaurant(requestDto,user,constituency);
-        restaurantRepository.save(restaurant);
+        List<NaverSearchItem> naverSearchItems = naverSearchService.searchLocal(constituency.getConstituency()+requestDto.title());
+        if (naverSearchItems.get(Math.toIntExact(requestDto.item_id())).getAddress()
+            .matches("(.*)"+constituency.getConstituency()+"(.*)")){
+            String title = naverSearchItems.get(Math.toIntExact(requestDto.item_id())).getTitle()
+                .replace("<b>", "");
+            title = title.replace("</b>","");
+            String location = naverSearchItems.get(Math.toIntExact(requestDto.item_id())).getAddress();
+            Restaurant restaurant = Restaurant.builder()
+                .title(title)
+                .constituency(constituency)
+                .location(location)
+                .closetime(requestDto.closetime())
+                .opentime(requestDto.opentime())
+                .user(user)
+                .build();
+            restaurantRepository.save(restaurant);
+        } else{
+            Restaurant restaurant = restaurantEntityMapper.toRestaurant(requestDto,user,constituency);
+            restaurantRepository.save(restaurant);
+        }
     }
 
     @Transactional
@@ -64,6 +86,10 @@ public class RestaurantServiceImpl implements RestaurantService {
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(()->new NotFoundRestaurantException(RestaurantErrorCode.NOT_FOUND_Restaurant));
         return restaurantEntityMapper.toRestaurantReadResponseDto(restaurant);
+    }
+    public List<RestaurantReadAllServiceResponseDto> readConstituencyRestaurants(Long id){
+        List<Restaurant> restaurants = restaurantRepository.findByConstituencyId(id);
+        return restaurantEntityMapper.toRestaurantReadAllResponseDto(restaurants);
     }
 
     private Restaurant findRestaurant(Long id){

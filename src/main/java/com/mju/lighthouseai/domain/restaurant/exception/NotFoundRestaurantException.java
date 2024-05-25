@@ -1,4 +1,4 @@
-package com.mju.lighthouseai.domain.restaurant.exceoption;
+package com.mju.lighthouseai.domain.restaurant.exception;
 
 
 import com.mju.lighthouseai.global.exception.CustomException;

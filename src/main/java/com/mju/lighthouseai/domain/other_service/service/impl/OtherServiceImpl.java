@@ -4,19 +4,22 @@ import com.mju.lighthouseai.domain.constituency.entity.Constituency;
 import com.mju.lighthouseai.domain.constituency.exception.ConstituencyErrorCode;
 import com.mju.lighthouseai.domain.constituency.exception.NotFoundConstituencyException;
 import com.mju.lighthouseai.domain.constituency.repository.ConstituencyRepository;
-import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceReadAllServiceResponseDto;
-import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.request.OtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.response.OtherServiceReadAllServiceResponseDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.request.OtherServiceUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.other_service.entity.OtherServiceEntity;
 import com.mju.lighthouseai.domain.other_service.exception.NotFoundOtherServiceException;
 import com.mju.lighthouseai.domain.other_service.mapper.service.OtherServiceEntityMapper;
 import com.mju.lighthouseai.domain.other_service.repository.OtherServiceRepository;
 import com.mju.lighthouseai.domain.other_service.service.OtherService;
 import com.mju.lighthouseai.domain.other_service.exception.OtherServiceErrorCode;
+import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.domain.user.entity.UserRole;
 import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
 import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
+import com.mju.lighthouseai.global.naversearch.NaverSearchItem;
+import com.mju.lighthouseai.global.naversearch.NaverSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +33,32 @@ public class OtherServiceImpl implements OtherService {
     private final OtherServiceRepository otherServiceRepository;
     private final OtherServiceEntityMapper otherServiceEntityMapper;
     private final ConstituencyRepository constituencyRepository;
+    private final NaverSearchService naverSearchService;
 
     public void createOtherService(OtherServiceCreateServiceRequestDto requestDto, User user){
         Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
         ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
-        OtherServiceEntity otherServiceEntity = otherServiceEntityMapper.toOtherService(requestDto, user, constituency);
-        otherServiceRepository.save(otherServiceEntity);
+        List<NaverSearchItem> naverSearchItems = naverSearchService.searchLocal(constituency.getConstituency()+requestDto.title());
+        if (naverSearchItems.get(Math.toIntExact(requestDto.item_id())).getAddress()
+            .matches("(.*)"+constituency.getConstituency()+"(.*)")){
+            String title = naverSearchItems.get(Math.toIntExact(requestDto.item_id())).getTitle()
+                .replace("<b>", "");
+            title = title.replace("</b>","");
+            String location = naverSearchItems.get(Math.toIntExact(requestDto.item_id())).getAddress();
+            OtherServiceEntity otherServiceEntity = OtherServiceEntity.builder()
+                .title(title)
+                .constituency(constituency)
+                .location(location)
+                .closetime(requestDto.closetime())
+                .opentime(requestDto.opentime())
+                .user(user)
+                .build();
+            otherServiceRepository.save(otherServiceEntity);
+        } else {
+            OtherServiceEntity otherServiceEntity = otherServiceEntityMapper.toOtherService(
+                requestDto, user, constituency);
+            otherServiceRepository.save(otherServiceEntity);
+        }
     }
 
     @Transactional
@@ -44,7 +67,7 @@ public class OtherServiceImpl implements OtherService {
         OtherServiceEntity otherServiceEntity = findOtherService(id);
         Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name()
         ).orElseThrow(()-> new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
-        otherServiceEntity.updateOtherService(requestDto.title(), requestDto.location(), requestDto.price(),
+        otherServiceEntity.updateOtherService(requestDto.title(), requestDto.location(),
                 requestDto.opentime(), requestDto.closetime(),constituency);
     }
 
@@ -69,6 +92,10 @@ public class OtherServiceImpl implements OtherService {
     private OtherServiceEntity findOtherService(Long id){
         return otherServiceRepository.findById(id)
                 .orElseThrow(()-> new NotFoundOtherServiceException(OtherServiceErrorCode.NOT_FOUND_OtherService));
+    }
+    public List<OtherServiceReadAllServiceResponseDto> readConstituencyOtherServices(Long id){
+        List<OtherServiceEntity> otherServices = otherServiceRepository.findByConstituencyId(id);
+        return otherServiceEntityMapper.toOtherServiceReadAllResponseDto(otherServices);
     }
 
     private void checkUserRole(User user) {

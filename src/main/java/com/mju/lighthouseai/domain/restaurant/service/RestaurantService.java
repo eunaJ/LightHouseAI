@@ -13,4 +13,5 @@ public interface RestaurantService {
     void deleteRestaurant(Long id, User user);
     List<RestaurantReadAllServiceResponseDto> readAllRestaurants();
     RestaurantReadAllServiceResponseDto readRestaurant(Long id);
+    List<RestaurantReadAllServiceResponseDto> readConstituencyRestaurants(Long id);
 }
