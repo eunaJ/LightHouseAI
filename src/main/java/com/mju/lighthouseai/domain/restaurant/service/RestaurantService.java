@@ -14,5 +14,4 @@ public interface RestaurantService {
     List<RestaurantReadAllServiceResponseDto> readAllRestaurants();
     RestaurantReadAllServiceResponseDto readRestaurant(Long id);
     List<RestaurantReadAllServiceResponseDto> readConstituencyRestaurants(Long id);
-
 }

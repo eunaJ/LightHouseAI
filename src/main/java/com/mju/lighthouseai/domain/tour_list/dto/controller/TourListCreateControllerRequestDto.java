@@ -6,10 +6,10 @@ import com.mju.lighthouseai.domain.user.entity.User;
 public record TourListCreateControllerRequestDto(
     String title,
     String location,
-    int price,
     String opentime,
     String closetime,
-    String constituency_name
+    String constituency_name,
+    Long item_id
 ) {
 
 }

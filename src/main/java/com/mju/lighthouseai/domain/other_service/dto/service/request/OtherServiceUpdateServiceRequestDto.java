@@ -1,13 +1,10 @@
-package com.mju.lighthouseai.domain.other_service.dto.service;
+package com.mju.lighthouseai.domain.other_service.dto.service.request;
 
-public record OtherServiceCreateServiceRequestDto(
+public record OtherServiceUpdateServiceRequestDto(
         String title,
         String location,
-        int price,
         String opentime,
         String closetime,
         String constituency_name
-
 ) {
-
 }

@@ -44,7 +44,8 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/restaurants/{restaurantId}")
-    public ResponseEntity<?> deleteRestaurnat(
+    public ResponseEntity<?> deleteRestaurant(
+
             @PathVariable Long restaurantId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
@@ -66,10 +67,10 @@ public class RestaurantController {
                 .body(restaurantService.readRestaurant(restaurantId));
     }
     @GetMapping("/{constituency_id}/restaurants")
-    public ResponseEntity<?> readConstituencyRestaurants(
-        @PathVariable Long constituency_id
+    public ResponseEntity<?> readConstituencyRestaurant(
+        PathVariable Long
     ){
         return ResponseEntity.status(HttpStatus.OK)
-            .body(restaurantService.readConstituencyRestaurants(constituency_id));
+            .body(restaurantService.readAllRestaurants());
     }
  }

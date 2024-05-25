@@ -1,15 +1,13 @@
 package com.mju.lighthouseai.domain.travel_visitor_restaurant.service.impl;
 
 import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
-import com.mju.lighthouseai.domain.restaurant.exceoption.NotFoundRestaurantException;
-import com.mju.lighthouseai.domain.restaurant.exceoption.RestaurantErrorCode;
+import com.mju.lighthouseai.domain.restaurant.exception.NotFoundRestaurantException;
+import com.mju.lighthouseai.domain.restaurant.exception.RestaurantErrorCode;
 import com.mju.lighthouseai.domain.restaurant.repository.RestaurantRepository;
 import com.mju.lighthouseai.domain.travel.entity.Travel;
 import com.mju.lighthouseai.domain.travel.exception.NotFoundTravelException;
 import com.mju.lighthouseai.domain.travel.exception.TravelErrorCode;
 import com.mju.lighthouseai.domain.travel.repository.TravelRepository;
-import com.mju.lighthouseai.domain.travel_visitor_other_service.dto.service.response.TravelVisitorOtherServiceReadAllServiceResponseDto;
-import com.mju.lighthouseai.domain.travel_visitor_other_service.entity.TravelVisitorOtherServiceEntity;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantCreateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.request.TravelVisitorRestaurantUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.travel_visitor_restaurant.dto.service.response.TravelVisitorRestaurantReadAllServiceResponseDto;

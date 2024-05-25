@@ -8,6 +8,5 @@ import java.util.Optional;
 
 public interface ShoppingMallRepository extends JpaRepository<ShoppingMall,Long> {
     Optional<ShoppingMall> findShoppingMallByTitle(String shoppingMall_title);
-
-    List<ShoppingMall> findByConstituencyId(Long id);
+    List<ShoppingMall> findByConstituencyId(long id);
 }

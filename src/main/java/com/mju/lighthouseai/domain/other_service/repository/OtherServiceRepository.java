@@ -8,6 +8,5 @@ import java.util.Optional;
 
 public interface OtherServiceRepository extends JpaRepository<OtherServiceEntity,Long> {
     Optional<OtherServiceEntity> findOtherServiceEntitieByTitle(String otherService_title);
-
     List<OtherServiceEntity> findByConstituencyId(Long id);
 }
