@@ -378,52 +378,51 @@ def find_using_id(travel_id):
     result = dbconn.fetchall()
 
     df_travel_visitor_cafe = pd.DataFrame(result)
-    df_travel_visitor_cafe.columns = [
-        'id',
-        'createdAt',
-        'modifiedAt',
-        'closetime', 
-        'content',
-        'image_url',
-        'location',
-        'menu',
-        'opentime',
-        'price',
-        'cafe_id',
-        'travel_id',
-        'user_id',       
-    ]
+    if len(result) != 0:
+        df_travel_visitor_cafe.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'closetime', 
+            'content',
+            'image_url',
+            'location',
+            'menu',
+            'opentime',
+            'price',
+            'cafe_id',
+            'travel_id',
+            'user_id',       
+        ]
 
-    #createAT, modifiedAt 컬럼을 제거
-    df_travel_visitor_cafe = df_travel_visitor_cafe.drop(['createdAt', 'modifiedAt'], axis=1)
+        #createAT, modifiedAt 컬럼을 제거
+        df_travel_visitor_cafe = df_travel_visitor_cafe.drop(['createdAt', 'modifiedAt'], axis=1)
 
-    #id를 TRAVEL_CAFE_ID로 변경
-    df_travel_visitor_cafe = df_travel_visitor_cafe.rename(columns={'id': 'travel_cafe_id'})
+        #id를 TRAVEL_CAFE_ID로 변경
+        df_travel_visitor_cafe = df_travel_visitor_cafe.rename(columns={'id': 'travel_cafe_id'})
     
-    #TB_CAFE에서 cafe_id가 cafe_id인 데이터를 추출해 title을 추출하여 df_travel_visitor_cafe에 추가
-    dbconn = conn.cursor()
-    dbconn.execute(f"SELECT * FROM TB_CAFE WHERE id = {df_travel_visitor_cafe['cafe_id'].values[0]}")
-    
-    result = dbconn.fetchall()
+        #TB_CAFE에서 cafe_id가 cafe_id인 데이터를 추출해 title을 추출하여 df_travel_visitor_cafe에 추가
+        dbconn = conn.cursor()
+        dbconn.execute(f"SELECT * FROM TB_CAFE WHERE id = {df_travel_visitor_cafe['cafe_id'].values[0]}")
+        
+        result = dbconn.fetchall()
 
-    print(result)
+        df_cafe = pd.DataFrame(result)
+        df_cafe.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'closetime',
+            'location',
+            'opentime',
+            'title',
+            'constituency_id',
+            'user_id',
+        ]
     
-    df_cafe = pd.DataFrame(result)
-    df_cafe.columns = [
-        'id',
-        'createdAt',
-        'modifiedAt',
-        'closetime',
-        'location',
-        'opentime',
-        'title',
-        'constituency_id',
-        'user_id',
-    ]
-    
-    #title만 df_travel_visitor_cafe에 추가
-    df_travel_visitor_cafe['title'] = df_cafe['title'].values[0]
-    
+        #title만 df_travel_visitor_cafe에 추가
+        df_travel_visitor_cafe['title'] = df_cafe['title'].values[0]
+        
     #TB_TRAVEL_VISITOR_RESTAURANT에서 travel_id가 travel_id인 데이터를 추출
     dbconn = conn.cursor()
     dbconn.execute(f"SELECT * FROM TB_TRAVEL_VISITOR_RESTAURANT WHERE travel_id = {travel_id}")
@@ -431,49 +430,50 @@ def find_using_id(travel_id):
     result = dbconn.fetchall()
 
     df_travel_visitor_restaurant = pd.DataFrame(result)
-    df_travel_visitor_restaurant.columns = [
-        'id',
-        'createdAt',
-        'modifiedAt',
-        'closetime', 
-        'content',
-        'image_url',
-        'location',
-        'menu',
-        'opentime',
-        'price',
-        'restaurant_id',
-        'travel_id',
-        'user_id',       
-    ]
+    if len(result) != 0:
+        df_travel_visitor_restaurant.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'closetime', 
+            'content',
+            'image_url',
+            'location',
+            'menu',
+            'opentime',
+            'price',
+            'restaurant_id',
+            'travel_id',
+            'user_id',       
+        ]
 
-    #createAT, modifiedAt 컬럼을 제거
-    df_travel_visitor_restaurant = df_travel_visitor_restaurant.drop(['createdAt', 'modifiedAt'], axis=1)
+        #createAT, modifiedAt 컬럼을 제거
+        df_travel_visitor_restaurant = df_travel_visitor_restaurant.drop(['createdAt', 'modifiedAt'], axis=1)
 
-    #id를 TRAVEL_RESTAURANT_ID로 변경
-    df_travel_visitor_restaurant = df_travel_visitor_restaurant.rename(columns={'id': 'travel_restaurant_id'})
+        #id를 TRAVEL_RESTAURANT_ID로 변경
+        df_travel_visitor_restaurant = df_travel_visitor_restaurant.rename(columns={'id': 'travel_restaurant_id'})
 
-    #TB_RESTAURANT에서 restaurant_id가 restaurant_id인 데이터를 추출해 title을 추출하여 df_travel_visitor_restaurant에 추가
-    dbconn = conn.cursor()
-    dbconn.execute(f"SELECT * FROM TB_RESTAURANT WHERE id = {df_travel_visitor_restaurant['restaurant_id'].values[0]}")
+        #TB_RESTAURANT에서 restaurant_id가 restaurant_id인 데이터를 추출해 title을 추출하여 df_travel_visitor_restaurant에 추가
+        dbconn = conn.cursor()
+        dbconn.execute(f"SELECT * FROM TB_RESTAURANT WHERE id = {df_travel_visitor_restaurant['restaurant_id'].values[0]}")
 
-    result = dbconn.fetchall()
+        result = dbconn.fetchall()
 
-    df_restaurant = pd.DataFrame(result)
-    df_restaurant.columns = [
-        'id',
-        'createdAt',
-        'modifiedAt',
-        'closetime',
-        'location',
-        'opentime',
-        'title',
-        'constituency_id',
-        'user_id',
-    ]
+        df_restaurant = pd.DataFrame(result)
+        df_restaurant.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'closetime',
+            'location',
+            'opentime',
+            'title',
+            'constituency_id',
+            'user_id',
+        ]
 
-    #title만 df_travel_visitor_restaurant에 추가
-    df_travel_visitor_restaurant['title'] = df_restaurant['title'].values[0]
+        #title만 df_travel_visitor_restaurant에 추가
+        df_travel_visitor_restaurant['title'] = df_restaurant['title'].values[0]
 
     #TB_TRAVEL_VISITOR_SHOPPINGMALL에서 travel_id가 travel_id인 데이터를 추출
     dbconn = conn.cursor()
@@ -482,48 +482,49 @@ def find_using_id(travel_id):
     result = dbconn.fetchall()
 
     df_travel_visitor_shopping = pd.DataFrame(result)
-    df_travel_visitor_shopping.columns = [
-        'id',
-        'createdAt',
-        'modifiedAt',
-        'closetime', 
-        'content',
-        'image_url',
-        'location',
-        'opentime',
-        'price',
-        'shoppingmall_id',
-        'travel_id',
-        'user_id',       
-    ]
+    if len(result) != 0:
+        df_travel_visitor_shopping.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'closetime', 
+            'content',
+            'image_url',
+            'location',
+            'opentime',
+            'price',
+            'shoppingmall_id',
+            'travel_id',
+            'user_id',       
+        ]
 
-    #createAT, modifiedAt 컬럼을 제거
-    df_travel_visitor_shopping = df_travel_visitor_shopping.drop(['createdAt', 'modifiedAt'], axis=1)
+        #createAT, modifiedAt 컬럼을 제거
+        df_travel_visitor_shopping = df_travel_visitor_shopping.drop(['createdAt', 'modifiedAt'], axis=1)
 
-    #id를 TRAVEL_SHOPPING_ID로 변경
-    df_travel_visitor_shopping = df_travel_visitor_shopping.rename(columns={'id': 'travel_shoppingmall_id'})
+        #id를 TRAVEL_SHOPPING_ID로 변경
+        df_travel_visitor_shopping = df_travel_visitor_shopping.rename(columns={'id': 'travel_shoppingmall_id'})
 
-    #TB_SHOPPINGMALL에서 shoppingmall_id가 shoppingmall_id인 데이터를 추출해 title을 추출하여 df_travel_visitor_shopping에 추가
-    dbconn = conn.cursor()
-    dbconn.execute(f"SELECT * FROM TB_SHOPPINGMALL WHERE id = {df_travel_visitor_shopping['shoppingmall_id'].values[0]}")
+        #TB_SHOPPINGMALL에서 shoppingmall_id가 shoppingmall_id인 데이터를 추출해 title을 추출하여 df_travel_visitor_shopping에 추가
+        dbconn = conn.cursor()
+        dbconn.execute(f"SELECT * FROM TB_SHOPPINGMALL WHERE id = {df_travel_visitor_shopping['shoppingmall_id'].values[0]}")
 
-    result = dbconn.fetchall()
+        result = dbconn.fetchall()
 
-    df_shopping = pd.DataFrame(result)
-    df_shopping.columns = [
-        'id',
-        'createdAt',
-        'modifiedAt',
-        'closetime',
-        'location',
-        'opentime',
-        'title',
-        'constituency_id',
-        'user_id',
-    ]
+        df_shopping = pd.DataFrame(result)
+        df_shopping.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'closetime',
+            'location',
+            'opentime',
+            'title',
+            'constituency_id',
+            'user_id',
+        ]
 
-    #title만 df_travel_visitor_shopping에 추가
-    df_travel_visitor_shopping['title'] = df_shopping['title'].values[0]
+        #title만 df_travel_visitor_shopping에 추가
+        df_travel_visitor_shopping['title'] = df_shopping['title'].values[0]
 
     #TB_TRAVEL_VISITOR_TOUR_LIST에서 travel_id가 travel_id인 데이터를 추출
     dbconn = conn.cursor()
@@ -532,48 +533,49 @@ def find_using_id(travel_id):
     result = dbconn.fetchall()
 
     df_travel_visitor_tourist = pd.DataFrame(result)
-    df_travel_visitor_tourist.columns = [
-        'id',
-        'createdAt',
-        'modifiedAt',
-        'closetime', 
-        'content',
-        'image_url',
-        'location',
-        'opentime',
-        'price',
-        'tourlist_id',
-        'travel_id',
-        'user_id',       
-    ]
+    if len(result) != 0:
+        df_travel_visitor_tourist.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'closetime', 
+            'content',
+            'image_url',
+            'location',
+            'opentime',
+            'price',
+            'tourlist_id',
+            'travel_id',
+            'user_id',       
+        ]
 
-    #createAT, modifiedAt 컬럼을 제거
-    df_travel_visitor_tourist = df_travel_visitor_tourist.drop(['createdAt', 'modifiedAt'], axis=1)
+        #createAT, modifiedAt 컬럼을 제거
+        df_travel_visitor_tourist = df_travel_visitor_tourist.drop(['createdAt', 'modifiedAt'], axis=1)
 
-    #id를 TRAVEL_TOUR_ID로 변경
-    df_travel_visitor_tourist = df_travel_visitor_tourist.rename(columns={'id': 'travel_tourlist_id'})
+        #id를 TRAVEL_TOUR_ID로 변경
+        df_travel_visitor_tourist = df_travel_visitor_tourist.rename(columns={'id': 'travel_tourlist_id'})
 
-    #TB_TOUR_LIST에서 tourlist_id가 tourlist_id인 데이터를 추출해 title을 추출하여 df_travel_visitor_tourist에 추가
-    dbconn = conn.cursor()
-    dbconn.execute(f"SELECT * FROM TB_TOURLIST WHERE id = {df_travel_visitor_tourist['tourlist_id'].values[0]}")
+        #TB_TOUR_LIST에서 tourlist_id가 tourlist_id인 데이터를 추출해 title을 추출하여 df_travel_visitor_tourist에 추가
+        dbconn = conn.cursor()
+        dbconn.execute(f"SELECT * FROM TB_TOURLIST WHERE id = {df_travel_visitor_tourist['tourlist_id'].values[0]}")
 
-    result = dbconn.fetchall()
+        result = dbconn.fetchall()
 
-    df_tourist = pd.DataFrame(result)
-    df_tourist.columns = [
-        'id',
-        'createdAt',
-        'modifiedAt',
-        'closetime',
-        'location',
-        'opentime',
-        'title',
-        'constituency_id',
-        'user_id',
-    ]
-    
-    #title만 df_travel_visitor_tourist에 추가
-    df_travel_visitor_tourist['title'] = df_tourist['title'].values[0]
+        df_tourist = pd.DataFrame(result)
+        df_tourist.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'closetime',
+            'location',
+            'opentime',
+            'title',
+            'constituency_id',
+            'user_id',
+        ]
+        
+        #title만 df_travel_visitor_tourist에 추가
+        df_travel_visitor_tourist['title'] = df_tourist['title'].values[0]
 
     #TB_TRAVEL_VISITOR_OTHER_SERVICE에서 travel_id가 travel_id인 데이터를 추출
     dbconn = conn.cursor()
@@ -582,49 +584,50 @@ def find_using_id(travel_id):
     result = dbconn.fetchall()
 
     df_travel_visitor_other = pd.DataFrame(result)
-    df_travel_visitor_other.columns = [
-        'id',
-        'createdAt',
-        'modifiedAt',
-        'closetime', 
-        'content', 
-        'image_url',
-        'location',
-        'opentime',
-        'price',
-        'otherservice_id',
-        'travel_id',
-        'user_id',      
-    ]
+    if len(result) != 0:
+        df_travel_visitor_other.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'closetime', 
+            'content', 
+            'image_url',
+            'location',
+            'opentime',
+            'price',
+            'otherservice_id',
+            'travel_id',
+            'user_id',      
+        ]
 
-    #createAT, modifiedAt 컬럼을 제거
-    df_travel_visitor_other = df_travel_visitor_other.drop(['createdAt', 'modifiedAt'], axis=1)
+        #createAT, modifiedAt 컬럼을 제거
+        df_travel_visitor_other = df_travel_visitor_other.drop(['createdAt', 'modifiedAt'], axis=1)
 
-    #id를 TRAVEL_OTHER_ID로 변경
-    df_travel_visitor_other = df_travel_visitor_other.rename(columns={'id': 'travel_otherservice_id'})
-    
-    #TB_OTHER_SERVICE에서 otherservice_id가 otherservice_id인 데이터를 추출해 title을 추출하여 df_travel_visitor_other에 추가
-    dbconn = conn.cursor()
-    dbconn.execute(f"SELECT * FROM TB_OTHER_SERVICE WHERE id = {df_travel_visitor_other['otherservice_id'].values[0]}")
+        #id를 TRAVEL_OTHER_ID로 변경
+        df_travel_visitor_other = df_travel_visitor_other.rename(columns={'id': 'travel_otherservice_id'})
+        
+        #TB_OTHER_SERVICE에서 otherservice_id가 otherservice_id인 데이터를 추출해 title을 추출하여 df_travel_visitor_other에 추가
+        dbconn = conn.cursor()
+        dbconn.execute(f"SELECT * FROM TB_OTHER_SERVICE WHERE id = {df_travel_visitor_other['otherservice_id'].values[0]}")
 
-    result = dbconn.fetchall()
+        result = dbconn.fetchall()
 
-    df_other = pd.DataFrame(result)
-    df_other.columns = [
-        'id',
-        'createdAt',
-        'modifiedAt',
-        'closetime',
-        'location',
-        'opentime',
-        'price',
-        'title',
-        'constituency_id',
-        'user_id',
-    ]
+        df_other = pd.DataFrame(result)
+        df_other.columns = [
+            'id',
+            'createdAt',
+            'modifiedAt',
+            'closetime',
+            'location',
+            'opentime',
+            'price',
+            'title',
+            'constituency_id',
+            'user_id',
+        ]
 
-    #title만 df_travel_visitor_other에 추가
-    df_travel_visitor_other['title'] = df_other['title'].values[0]
+        #title만 df_travel_visitor_other에 추가
+        df_travel_visitor_other['title'] = df_other['title'].values[0]
 
     #df_travel, df_travel_visitor_cafe, df_travel_visitor_restaurant, df_travel_visitor_shopping, df_travel_visitor_tourist, df_travel_visitor_other을 dict로 변환
     travel = df_travel.to_dict(orient='records')
@@ -702,8 +705,19 @@ def generate_response(msg):
     else:
         travel_id = other_cheap(location)
 
+    print("travel_id : ", travel_id)
     #TB_TRAVEL에서 travel_id가 travel_id에 포함되는 데이터를 10개 추출
-    dbconn.execute(f"SELECT * FROM TB_TRAVEL WHERE id IN {tuple(travel_id)}")
+    #dbconn.execute(f"SELECT * FROM TB_TRAVEL WHERE id IN {tuple(travel_id)}")
+    
+    query = "SELECT * FROM TB_TRAVEL WHERE id IN %s"
+    formatted_ids = tuple(travel_id)  # (3,)와 같은 형식이 됩니다.
+    print(query % (formatted_ids,))  # 디버깅용 출력
+    # 파라미터 전달
+    dbconn.execute(query, (formatted_ids,))
+
+
+
+    #dbconn.execute(f"SELECT * FROM TB_TRAVEL WHERE id IN {tuple(travel_id)}")
     result = dbconn.fetchall()
 
     df_travel = pd.DataFrame(result)
