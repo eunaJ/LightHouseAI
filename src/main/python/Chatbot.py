@@ -703,7 +703,10 @@ def generate_response(msg):
         travel_id = other_cheap(location)
 
     #TB_TRAVEL에서 travel_id가 travel_id에 포함되는 데이터를 10개 추출
-    dbconn.execute(f"SELECT * FROM TB_TRAVEL WHERE id IN {tuple(travel_id)}")
+    #dbconn.execute(f"SELECT * FROM TB_TRAVEL WHERE id IN {tuple(travel_id)}")
+    query = "SELECT * FROM TB_TRAVEL WHERE id IN %s"
+    formatted_ids = tuple(travel_id)
+    dbconn.execute(query, (formatted_ids,))
     result = dbconn.fetchall()
 
     df_travel = pd.DataFrame(result)
