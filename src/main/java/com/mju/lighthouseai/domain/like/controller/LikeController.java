@@ -45,4 +45,13 @@ public class LikeController {
         return ResponseEntity.status(HttpStatus.OK).
                 body(likeService.getAllLikes(boardId));
     }
+
+    @GetMapping("/boards/{boardId}/like")
+    public ResponseEntity<Boolean> readIsLike(
+            @PathVariable Long boardId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        return ResponseEntity.status(HttpStatus.OK).
+                body(likeService.isLike(boardId, userDetails.user()));
+    }
 }
