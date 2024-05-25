@@ -67,10 +67,10 @@ public class RestaurantController {
                 .body(restaurantService.readRestaurant(restaurantId));
     }
     @GetMapping("/{constituency_id}/restaurants")
-    public ResponseEntity<?> readConstituencyRestaurant(
-        PathVariable Long
+    public ResponseEntity<?> readConstituencyRestaurants(
+        @PathVariable Long  constituency_id
     ){
         return ResponseEntity.status(HttpStatus.OK)
-            .body(restaurantService.readAllRestaurants());
+            .body(restaurantService.readConstituencyRestaurants(constituency_id));
     }
  }

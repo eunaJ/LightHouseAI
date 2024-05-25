@@ -100,11 +100,6 @@ public class OtherServiceImpl implements OtherService {
         return otherServiceRepository.findById(id)
                 .orElseThrow(()-> new NotFoundOtherServiceException(OtherServiceErrorCode.NOT_FOUND_OtherService));
     }
-    public List<OtherServiceReadAllServiceResponseDto> readConstituencyOtherServices(Long id){
-        List<OtherServiceEntity> otherServices = otherServiceRepository.findByConstituencyId(id);
-        return otherServiceEntityMapper.toOtherServiceReadAllResponseDto(otherServices);
-    }
-
     private void checkUserRole(User user) {
         if (!(user.getRole().equals(UserRole.ADMIN))) {
             throw new NotFoundUserException(UserErrorCode.NOT_ADMIN);

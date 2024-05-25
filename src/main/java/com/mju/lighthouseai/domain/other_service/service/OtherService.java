@@ -17,5 +17,4 @@ public interface OtherService {
     List<OtherServiceReadAllServiceResponseDto> readAllOtherServices();
     List<OtherServiceReadAllServiceResponseDto> readConstituencyOtherServices(Long id);
     OtherServiceReadAllServiceResponseDto readOtherService(Long id);
-    List<OtherServiceReadAllServiceResponseDto> readConstituencyOtherServices(Long id);
 }

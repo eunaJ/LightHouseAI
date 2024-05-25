@@ -39,6 +39,8 @@ public class RestaurantServiceImpl implements RestaurantService {
         Constituency constituency = constituencyRepository.findByConstituency(requestDto.constituency_name())
             .orElseThrow(()->new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
         List<NaverSearchItem> naverSearchItems = naverSearchService.searchLocal(constituency.getConstituency()+requestDto.title());
+        System.out.println(naverSearchItems.size());
+        System.out.println(requestDto.item_id());
         if (naverSearchItems.get(Math.toIntExact(requestDto.item_id())).getAddress()
             .matches("(.*)"+constituency.getConstituency()+"(.*)")){
             String title = naverSearchItems.get(Math.toIntExact(requestDto.item_id())).getTitle()
@@ -87,11 +89,6 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .orElseThrow(()->new NotFoundRestaurantException(RestaurantErrorCode.NOT_FOUND_Restaurant));
         return restaurantEntityMapper.toRestaurantReadResponseDto(restaurant);
     }
-    public List<RestaurantReadAllServiceResponseDto> readConstituencyRestaurants(Long id){
-        List<Restaurant> restaurants = restaurantRepository.findByConstituencyId(id);
-        return restaurantEntityMapper.toRestaurantReadAllResponseDto(restaurants);
-    }
-
     private Restaurant findRestaurant(Long id){
         return restaurantRepository.findById(id)
                 .orElseThrow(()-> new NotFoundRestaurantException(RestaurantErrorCode.NOT_FOUND_Restaurant));
