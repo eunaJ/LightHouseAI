@@ -53,7 +53,7 @@ def cafe_cheap(location):
     ]
 
     #cafe_id가 중복되는 데이터를 제거
-    df_travel_visitor_cafe = df_travel_visitor_cafe.drop_duplicates('cafe_id')
+    df_travel_visitor_cafe = df_travel_visitor_cafe.drop_duplicates('travel_id')
 
     #travel_id를 10개 추출
     travel_id = df_travel_visitor_cafe['travel_id'].tolist()
@@ -86,7 +86,7 @@ def restaurant_cheap(location):
     ]
 
     #restaurant_id가 중복되는 데이터를 제거
-    df_travel_visitor_restaurant = df_travel_visitor_restaurant.drop_duplicates('restaurant_id')
+    df_travel_visitor_restaurant = df_travel_visitor_restaurant.drop_duplicates('travel_id')
 
     #travel_id를 추출
     travel_id = df_travel_visitor_restaurant['travel_id'].tolist()
@@ -116,7 +116,7 @@ def shopping_cheap(location):
     ]
 
     #shopping_id가 중복되는 데이터를 제거
-    df_travel_visitor_shopping = df_travel_visitor_shopping.drop_duplicates('shopping_id')
+    df_travel_visitor_shopping = df_travel_visitor_shopping.drop_duplicates('travel_id')
 
     #travel_id를 추출
     travel_id = df_travel_visitor_shopping['travel_id'].tolist()
@@ -147,7 +147,7 @@ def tourist_cheap(location):
     ]
 
     #tourist_id가 중복되는 데이터를 제거
-    df_travel_visitor_tourist = df_travel_visitor_tourist.drop_duplicates('tourist_id')
+    df_travel_visitor_tourist = df_travel_visitor_tourist.drop_duplicates('travel_id')
 
     #travel_id를 추출
     travel_id = df_travel_visitor_tourist['travel_id'].tolist()
@@ -177,7 +177,7 @@ def other_cheap(location):
     ]
 
     #other_id가 중복되는 데이터를 제거
-    df_travel_visitor_other = df_travel_visitor_other.drop_duplicates('otherservice_id')
+    df_travel_visitor_other = df_travel_visitor_other.drop_duplicates('travel_id')
 
     #travel_id를 추출
     travel_id = df_travel_visitor_other['travel_id'].tolist()
