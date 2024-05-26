@@ -35,9 +35,6 @@ public class OtherServiceEntity extends BaseEntity
     private String location;
 
     @Column
-    private int price;
-
-    @Column
     private String opentime;
 
     @Column
@@ -56,7 +53,6 @@ public class OtherServiceEntity extends BaseEntity
     public OtherServiceEntity(
             final String title,
             final String location,
-            final int price,
             final String opentime,
             final String closetime,
             final User user,
@@ -64,7 +60,6 @@ public class OtherServiceEntity extends BaseEntity
     ) {
         this.title = title;
         this.location = location;
-        this.price = price;
         this.opentime = opentime;
         this.closetime = closetime;
         this.user = user;
@@ -72,11 +67,10 @@ public class OtherServiceEntity extends BaseEntity
     }
 
     public void updateOtherService(
-            String title, String location, int price,
+            String title, String location,
             String opentime, String closetime, Constituency constituency){
         this.title = title;
         this.location = location;
-        this.price = price;
         this.opentime = opentime;
         this.closetime = closetime;
         this.constituency = constituency;

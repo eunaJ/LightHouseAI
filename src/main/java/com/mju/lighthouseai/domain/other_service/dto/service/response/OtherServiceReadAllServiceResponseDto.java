@@ -1,9 +1,8 @@
-package com.mju.lighthouseai.domain.other_service.dto.service;
+package com.mju.lighthouseai.domain.other_service.dto.service.response;
 
 public record OtherServiceReadAllServiceResponseDto(
         String title,
         String location,
-        int price,
         String opentime,
         String closetime,
         String constituency_name,

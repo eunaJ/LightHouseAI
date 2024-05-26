@@ -17,6 +17,8 @@ import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.domain.user.entity.UserRole;
 import com.mju.lighthouseai.domain.user.exception.NotFoundUserException;
 import com.mju.lighthouseai.domain.user.exception.UserErrorCode;
+import com.mju.lighthouseai.global.naversearch.NaverSearchItem;
+import com.mju.lighthouseai.global.naversearch.NaverSearchService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,12 +31,31 @@ public class CafeServiceImpl implements CafeService {
     private final CafeRepository cafeRepository;
     private final CafeEntityMapper cafeEntityMapper;
     private final ConstituencyRepository constituencyRepository;
+    private final NaverSearchService naverSearchService;
 
-    public void createCafe(CafeCreateServiceRequestDto requestDto, User user){
+    public void createCafe(CafeCreateServiceRequestDto requestDto,User user){
         Constituency constituency =constituencyRepository.findByConstituency(requestDto.constituency_name())
             .orElseThrow(()->new NotFoundConstituencyException(ConstituencyErrorCode.NOT_FOUND_CONSTITUENCY));
-        Cafe cafe = cafeEntityMapper.tocafe(requestDto,user,constituency);
-        cafeRepository.save(cafe);
+        List<NaverSearchItem> naverSearchItems = naverSearchService.searchLocal(constituency.getConstituency()+requestDto.title());
+        if (naverSearchItems.get(Math.toIntExact(requestDto.item_id())).getAddress().matches("(.*)"+constituency.getConstituency()+"(.*)")&&
+        naverSearchItems.get(Math.toIntExact(requestDto.item_id())).getCategory().matches("(.*)카페(.*)")) {
+            String title = naverSearchItems.get(Math.toIntExact(requestDto.item_id())).getTitle()
+                .replace("<b>", "");
+            title = title.replace("</b>","");
+            String location = naverSearchItems.get(Math.toIntExact(requestDto.item_id())).getAddress();
+            Cafe cafe = Cafe.builder()
+                .title(title)
+                .constituency(constituency)
+                .location(location)
+                .closetime(requestDto.closetime())
+                .opentime(requestDto.opentime())
+                .user(user)
+                .build();
+            cafeRepository.save(cafe);
+        }else{
+            Cafe cafe = cafeEntityMapper.tocafe(requestDto,user,constituency);
+            cafeRepository.save(cafe);
+        }
     }
 
     @Transactional

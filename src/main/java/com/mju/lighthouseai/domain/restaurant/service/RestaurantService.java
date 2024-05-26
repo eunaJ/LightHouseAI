@@ -8,11 +8,16 @@ import com.mju.lighthouseai.domain.user.entity.User;
 import java.util.List;
 
 public interface RestaurantService {
-    void createRestaurant(RestaurantCreateServiceRequestDto requestDto, User user);
-    void updateRestaurant(Long id, RestaurantUpdateServiceRequestDto requestDto, User user);
-    void deleteRestaurant(Long id, User user);
-    List<RestaurantReadAllServiceResponseDto> readAllRestaurants();
-    RestaurantReadAllServiceResponseDto readRestaurant(Long id);
-    List<RestaurantReadAllServiceResponseDto> readConstituencyRestaurants(Long id);
 
+    void createRestaurant(RestaurantCreateServiceRequestDto requestDto, User user);
+
+    void updateRestaurant(Long id, RestaurantUpdateServiceRequestDto requestDto, User user);
+
+    void deleteRestaurant(Long id, User user);
+
+    List<RestaurantReadAllServiceResponseDto> readAllRestaurants();
+
+    RestaurantReadAllServiceResponseDto readRestaurant(Long id);
+
+    List<RestaurantReadAllServiceResponseDto> readConstituencyRestaurants(Long id);
 }

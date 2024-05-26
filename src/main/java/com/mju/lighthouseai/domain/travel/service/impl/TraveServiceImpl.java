@@ -13,8 +13,8 @@ import com.mju.lighthouseai.domain.other_service.exception.NotFoundOtherServiceE
 import com.mju.lighthouseai.domain.other_service.exception.OtherServiceErrorCode;
 import com.mju.lighthouseai.domain.other_service.repository.OtherServiceRepository;
 import com.mju.lighthouseai.domain.restaurant.entity.Restaurant;
-import com.mju.lighthouseai.domain.restaurant.exceoption.NotFoundRestaurantException;
-import com.mju.lighthouseai.domain.restaurant.exceoption.RestaurantErrorCode;
+import com.mju.lighthouseai.domain.restaurant.exception.NotFoundRestaurantException;
+import com.mju.lighthouseai.domain.restaurant.exception.RestaurantErrorCode;
 import com.mju.lighthouseai.domain.restaurant.repository.RestaurantRepository;
 import com.mju.lighthouseai.domain.shoppingmall.entity.ShoppingMall;
 import com.mju.lighthouseai.domain.shoppingmall.exception.NotFoundShoppingMallException;
@@ -51,7 +51,6 @@ import com.mju.lighthouseai.domain.travel_visitor_tour_list.mapper.service.Trave
 import com.mju.lighthouseai.domain.user.entity.User;
 import com.mju.lighthouseai.domain.user.repository.UserRepository;
 import com.mju.lighthouseai.global.s3.S3Provider;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,6 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;

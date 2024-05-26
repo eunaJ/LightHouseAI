@@ -47,24 +47,24 @@ public class JwtUtil {
     public String createAccessToken(String email, UserRole role) {
         Date date = new Date();
         return BEARER_PREFIX +
-                Jwts.builder()
-                        .subject(email)
-                        .claim(AUTHORIZATION_KEY, role)
-                        .expiration(new Date(date.getTime() + accessTokenExpirationPeriod))
-                        .issuedAt(date)
-                        .signWith(key, Jwts.SIG.HS256)
-                        .compact();
+            Jwts.builder()
+                .subject(email)
+                .claim(AUTHORIZATION_KEY, role)
+                .expiration(new Date(date.getTime() + accessTokenExpirationPeriod))
+                .issuedAt(date)
+                .signWith(key, Jwts.SIG.HS256)
+                .compact();
     }
 
     public String createRefreshToken(String email, UserRole role) {
         Date date = new Date();
         return Jwts.builder()
-                        .subject(email)
-                        .claim(AUTHORIZATION_KEY, role)
-                        .expiration(new Date(date.getTime() + refreshTokenExpirationPeriod))
-                        .issuedAt(date)
-                        .signWith(key, Jwts.SIG.HS256)
-                        .compact();
+            .subject(email)
+            .claim(AUTHORIZATION_KEY, role)
+            .expiration(new Date(date.getTime() + refreshTokenExpirationPeriod))
+            .issuedAt(date)
+            .signWith(key, Jwts.SIG.HS256)
+            .compact();
     }
 
     public boolean validateToken(String token) {
@@ -135,6 +135,14 @@ public class JwtUtil {
         cookie.setMaxAge(Math.toIntExact(refreshTokenExpirationPeriod));
         cookie.setHttpOnly(true);
         return cookie;
+    }
+
+    public void deleteCookie(String key, final HttpServletResponse httpServletResponse) {
+        Cookie cookie = new Cookie(key, null);
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        logger.info(cookie.getName());
+        httpServletResponse.addCookie(cookie);
     }
 
     public Boolean isExpiredAccessToken(String token) {

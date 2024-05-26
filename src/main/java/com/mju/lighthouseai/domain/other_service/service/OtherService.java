@@ -1,8 +1,8 @@
 package com.mju.lighthouseai.domain.other_service.service;
 
-import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceReadAllServiceResponseDto;
-import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.request.OtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.response.OtherServiceReadAllServiceResponseDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.request.OtherServiceUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.user.entity.User;
 
 import java.util.List;

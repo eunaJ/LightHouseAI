@@ -5,7 +5,8 @@ public record ShoppingMallCreateControllerRequestDto(
     String location,
     String opentime,
     String closetime,
-    String constituency_name
+    String constituency_name,
+    Long item_id
 ) {
 
 }

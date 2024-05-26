@@ -2,8 +2,8 @@ package com.mju.lighthouseai.domain.other_service.controller;
 
 import com.mju.lighthouseai.domain.other_service.dto.controller.OtherServiceCreateControllerRequestDto;
 import com.mju.lighthouseai.domain.other_service.dto.controller.OtherServiceUpdateControllerRequestDto;
-import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceUpdateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.request.OtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.request.OtherServiceUpdateServiceRequestDto;
 import com.mju.lighthouseai.domain.other_service.mapper.dto.OtherServiceDtoMapper;
 import com.mju.lighthouseai.domain.other_service.service.OtherService;
 import com.mju.lighthouseai.global.security.UserDetailsImpl;
@@ -66,7 +66,7 @@ public class OtherServiceController {
                 .body(otherService.readOtherService(otherServiceId));
     }
     @GetMapping("/{constituency_id}/otherServices")
-    public ResponseEntity<?> readConstituencyOtherService(
+    public ResponseEntity<?> readConstituencyOtherServices(
         @PathVariable Long constituency_id
     ){
         return ResponseEntity.status(HttpStatus.OK)

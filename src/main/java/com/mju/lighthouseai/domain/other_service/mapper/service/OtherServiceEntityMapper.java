@@ -3,8 +3,8 @@ package com.mju.lighthouseai.domain.other_service.mapper.service;
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 import com.mju.lighthouseai.domain.constituency.entity.Constituency;
-import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceCreateServiceRequestDto;
-import com.mju.lighthouseai.domain.other_service.dto.service.OtherServiceReadAllServiceResponseDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.request.OtherServiceCreateServiceRequestDto;
+import com.mju.lighthouseai.domain.other_service.dto.service.response.OtherServiceReadAllServiceResponseDto;
 import com.mju.lighthouseai.domain.other_service.entity.OtherServiceEntity;
 import com.mju.lighthouseai.domain.region.entity.Region;
 import com.mju.lighthouseai.domain.user.entity.User;
