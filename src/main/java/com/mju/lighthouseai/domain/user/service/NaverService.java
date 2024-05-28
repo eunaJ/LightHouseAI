@@ -134,7 +134,7 @@ public class NaverService {
         NaverUserInfoJson.put("email", jsonNode.get("response").get("email").asText());
 //        NaverUserInfoJson.put("birth", jsonNode.get("response").get("birthyear").asText()+"-"
 //                +jsonNode.get("response").get("birthday").asText());
-        NaverUserInfoJson.put("birth", "0000-00-00");
+        NaverUserInfoJson.put("birth", "");
         NaverUserInfoJson.put("profile_img_url", jsonNode.get("response").get("profile_image").asText());
         return new ObjectMapper().readValue(NaverUserInfoJson.toJSONString(), NaverUserInfoDto.class);
     }
