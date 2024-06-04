@@ -108,8 +108,15 @@ public class KakaoService {
 //        String birth = jsonNode.get("kakao_account").get("birthyear").asText()+"-"
 //                +jsonNode.get("kakao_account").get("birthday").asText().substring(0,2)+"-"
 //                +jsonNode.get("kakao_account").get("birthday").asText().substring(2);
-        String birth = "0000-00-00";
-        String profile_img_url = jsonNode.get("kakao_account").get("profile").get("profile_image_url").asText();
+        String birth = "";
+//      String profile_img_url = jsonNode.get("kakao_account").get("profile").get("profile_image_url").asText();
+        String profile_img_url;
+        if(jsonNode.get("kakao_account").get("profile").get("profile_image_url") != null){
+            profile_img_url = jsonNode.get("kakao_account").get("profile").get("profile_image_url").asText();
+        }
+        else {
+            profile_img_url = "";
+        }
         return new KakaoUserInfoDto(email, nickname, birth, profile_img_url);
     }
 
