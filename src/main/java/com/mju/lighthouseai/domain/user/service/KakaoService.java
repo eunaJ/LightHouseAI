@@ -109,7 +109,7 @@ public class KakaoService {
 //                +jsonNode.get("kakao_account").get("birthday").asText().substring(0,2)+"-"
 //                +jsonNode.get("kakao_account").get("birthday").asText().substring(2);
         String birth = "";
-        String profile_img_url = jsonNode.get("kakao_account").get("profile").get("profile_image_url").asText();
+//      String profile_img_url = jsonNode.get("kakao_account").get("profile").get("profile_image_url").asText();
         String profile_img_url;
         if(jsonNode.get("kakao_account").get("profile").get("profile_image_url") != null){
             profile_img_url = jsonNode.get("kakao_account").get("profile").get("profile_image_url").asText();
