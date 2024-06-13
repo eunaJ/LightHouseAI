@@ -12,4 +12,5 @@ public interface TravelRepository extends JpaRepository<Travel,Long> {
     Optional<Travel> findByIdAndUser(Long id, User user);
     List<Travel> findByUser(User user);
     Page<Travel> findAll(Pageable pageable);
+    void deleteAllByUser(User user);
 }

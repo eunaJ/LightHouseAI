@@ -1,7 +1,6 @@
 package com.mju.lighthouseai.domain.board.repository;
 
 import com.mju.lighthouseai.domain.board.entity.Board;
-
 import com.mju.lighthouseai.domain.user.entity.User;
 
 import java.util.List;
@@ -14,4 +13,5 @@ public interface BoardRepository extends JpaRepository< Board, Long> {
     Page<Board> findAll(Pageable pageable);
     Optional<Board> findBoardByIdAndUser(Long id, User user);
     List<Board> findByUser(User user);
+    void deleteAllByUser(User user);
 }
