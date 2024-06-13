@@ -98,4 +98,13 @@ public class UserController {
         userService.logout(token, httpServletResponse);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUser(
+            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+            HttpServletResponse httpServletResponse
+    ) {
+        userService.deleteUser(userDetailsImpl.user(), httpServletResponse);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
