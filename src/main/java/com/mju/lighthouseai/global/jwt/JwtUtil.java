@@ -155,4 +155,8 @@ public class JwtUtil {
             throw new ExpiredJwtAccessTokenException(JwtErrorCode.EXPIRED_JWT_ACCESS_TOKEN);
         }
     }
+
+    public void expireAccessTokenToHeader(final User user, final HttpServletResponse httpServletResponse) {
+        httpServletResponse.setHeader(ACCESS_TOKEN_HEADER, "");
+    }
 }

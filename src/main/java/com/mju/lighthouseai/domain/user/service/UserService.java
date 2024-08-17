@@ -24,4 +24,6 @@ public interface UserService {
     UserLoginResponseDto getUser(String token);
 
     void logout(String token, HttpServletResponse httpServletResponse);
+
+    void deleteUser(User user, HttpServletResponse httpServletResponse);
 }

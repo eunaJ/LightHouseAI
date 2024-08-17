@@ -1,5 +1,7 @@
 package com.mju.lighthouseai.domain.user.service.impl;
 
+import com.mju.lighthouseai.domain.board.repository.BoardRepository;
+import com.mju.lighthouseai.domain.travel.repository.TravelRepository;
 import com.mju.lighthouseai.domain.user.dto.service.request.*;
 import com.mju.lighthouseai.domain.user.dto.service.response.UserLoginResponseDto;
 import com.mju.lighthouseai.domain.user.entity.User;
@@ -38,6 +40,8 @@ public class UserServiceImpl implements UserService {
     private final HttpServletResponse httpServletResponse;
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final TravelRepository travelRepository;
+    private final BoardRepository boardRepository;
 
     @Value("${spring.jwt.refresh.expiration-period}")
     private Long timeToLive;
@@ -185,5 +189,22 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
         jwtUtil.deleteCookie("refreshToken", response);
         refreshTokenRepository.deleteById(String.valueOf(user.getId()));
+    }
+
+    @Transactional
+    public void deleteUser(final User user, final HttpServletResponse response){
+        userRepository.findById(user.getId())
+                .orElseThrow(()->new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        // 제약 조건에 걸리지 않기 위해서
+        if(travelRepository.findByUser(user) != null){
+            travelRepository.deleteAllByUser(user);
+        }
+        if(boardRepository.findByUser(user) != null){
+            boardRepository.deleteAllByUser(user);
+        }
+        jwtUtil.expireAccessTokenToHeader(user, response);
+        jwtUtil.deleteCookie("refreshToken", response);
+        refreshTokenRepository.deleteById(String.valueOf(user.getId()));
+        userRepository.deleteById(user.getId());
     }
 }
