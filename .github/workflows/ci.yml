@@ -58,3 +58,4 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_REPO }}
             sudo chmod +x ./deploy.sh
             ./deploy.sh
+             docker image prune -f
