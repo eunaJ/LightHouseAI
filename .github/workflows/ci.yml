@@ -59,7 +59,6 @@ jobs:
             docker rm ${{ secrets.CONTAINER_NAME }}
             docker image rm $(docker images -q)
             sudo docker pull ${{ secrets.DOCKER_REPO }}
-            chmod 777 ./deploy.sh
-            ./deploy.sh
+            sudo chmod +x /home/ubuntu/deploy.sh
+            sudo /home/ubuntu/deploy.sh
 #            docker run -d --name ${{ secrets.CONTAINER_NAME }} -p 8080:8080 ${{ secrets.DOCKER_REPO }}
-            docker image prune -f
