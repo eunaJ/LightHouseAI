@@ -16,7 +16,7 @@ jobs:
       - name: yml 생성
         run: touch application-deploy.yml
 
-      - name: yml에 덮어쓰기
+      - name: yml에다 덮어쓰기
         run: |
           echo "${{ secrets.PROPERTIES }}" > ./src/main/resource/application-deploy.yml
 
