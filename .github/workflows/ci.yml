@@ -13,12 +13,11 @@ jobs:
       - name: 저장소 checkout
         uses: actions/checkout@v3
 
-      - name: yml 생성
-        run: touch application-deploy.yml
-
-      - name: yml에다 덮어쓰기
+      - name: Make properties
         run: |
-          echo "${{ secrets.PROPERTIES }}" > ./src/main/resource/application-deploy.yml
+          cd ./src/main/resources
+          touch ./application.properties
+          echo "${{ secrets.PROPERTIES }}" > ./application.properties
 
       - name: Build with Gradle
         run: |
