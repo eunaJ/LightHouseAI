@@ -23,7 +23,13 @@ jobs:
         run: |
           cd ./src/main/resources
           touch ./application.properties
-          echo "${{ secrets.PROPERTIES }}" > ./application.properties
+          echo "${{ secrets.PROPERTIES }}" > ./application-cicd.yml
+
+      - name: yml 업로드
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: application-cicd.yml
+          path: ./src/main/resources/
 
       - name: Build with Gradle
         run: |
