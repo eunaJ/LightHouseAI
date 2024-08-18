@@ -48,12 +48,6 @@ jobs:
       - name: Docker Hub push
         run: docker push ${{ secrets.DOCKER_REPO }}
 
-      - name: Upload deploy.sh
-        uses: actions/upload-artifact@v3
-        with:
-          name: deploy-script
-          path: ./deploy.sh
-
       - name: Deploy to server
         uses: appleboy/ssh-action@master
         with:
@@ -64,4 +58,3 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_REPO }}
             sudo chmod +x ./deploy.sh
             ./deploy.sh
-             docker image prune -f
