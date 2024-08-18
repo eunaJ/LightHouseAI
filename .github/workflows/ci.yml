@@ -55,6 +55,8 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            sudo docker rm -f $(docker ps -qa) 
+            docker stop ${{ secrets.CONTAINER_NAME }}
+            docker rm ${{ secrets.CONTAINER_NAME }}
+            docker image rm $(docker images -q)
             sudo docker pull ${{ secrets.DOCKER_REPO }}
-            docker-compose up -d
+            docker run -d --name ${{ secrets.CONTAINER_NAME }} -p 8080:8080 ${{ secrets.DOCKER_REPO }}
