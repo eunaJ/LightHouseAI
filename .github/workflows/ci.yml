@@ -25,7 +25,7 @@ jobs:
           touch ./application-cicd.yml
           echo "${{ secrets.PROPERTIES }}" > ./application-cicd.yml
 
-      - name: yml 업로드
+      - name: Upload yml
         uses: actions/upload-artifact@v3.1.2
         with:
           name: application-cicd.yml
