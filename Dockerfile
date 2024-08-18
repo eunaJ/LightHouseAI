@@ -6,4 +6,4 @@ ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} adopp.jar
 
 # 실행할 명령어 정의
-ENTRYPOINT ["java", "-jar", "LightHouseAI-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/build/libs/LightHouseAI-0.0.1-SNAPSHOT.jar"]
