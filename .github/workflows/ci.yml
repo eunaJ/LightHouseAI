@@ -22,7 +22,7 @@ jobs:
       - name: Make properties
         run: |
           cd ./src/main/resources
-          touch ./application.properties
+          touch ./application-cicd.yml
           echo "${{ secrets.PROPERTIES }}" > ./application-cicd.yml
 
       - name: yml 업로드
