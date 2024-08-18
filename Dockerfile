@@ -3,7 +3,7 @@ FROM openjdk:17-jdk-alpine
 
 # 애플리케이션 JAR 파일 복사
 ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} adopp.jar
+COPY ${JAR_FILE} ./app.jar
 
 # 실행할 명령어 정의
-ENTRYPOINT ["java", "-jar", "/build/libs/LightHouseAI-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "./app.jar"]
