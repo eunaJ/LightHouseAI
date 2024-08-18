@@ -48,6 +48,16 @@ jobs:
       - name: Docker Hub push
         run: docker push ${{ secrets.DOCKER_REPO }}
 
+      - name: Send deploy.sh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.KEY }}
+          port: 22
+          source: "./deploy.sh"
+          target: "/home/ubuntu/"
+
       - name: Deploy to server
         uses: appleboy/ssh-action@master
         with:
