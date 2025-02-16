@@ -1,5 +1,5 @@
 # 프로젝트 소개
----
+
 > AI로 여행 코스를 추천해주는 웹서비스입니다.
 > 
 > 사용자는 AI와 대화한 후 개인 맞춤 여행지들을 추천받을 수 있습니다.
@@ -12,14 +12,18 @@
 >
 > 개발 인원: BE 3명, AI 1명
 >
+> [협업 repo는 여기](https://github.com/pangseon/LightHouseAI) (Issue와 PR 확인 가능)
+> 
+> 현재 repo에서는 협업 후 fork되어 개인 배포 및 CI/CD 구축만 진행되었습니다.
+> 
 > [프론트엔드 Github](https://github.com/eunaJ/LightHouseAI-front)
 
 # ERD 구조
----
+
 ![등대 ERD](https://github.com/user-attachments/assets/fe317326-fda6-49aa-8db9-6b3a4ad70db4)
 
 # 시스템 아키텍처
----
+
 ![등대 아키텍처](https://github.com/user-attachments/assets/8e247c81-db30-44b4-8ee9-1a3298d87fa8)
 
 # 주요 기능
@@ -31,3 +35,4 @@
   - 회원만 댓글, 좋아요가 가능하다. 
 4. 여행지
   - 여행 인원, 별점, 장소별 후기 등을 등록할 수 있다.
+  - 장소는 총 5개의 카테고리(카페, 음식점, 쇼핑몰, 관광지, 기타서비스)로 나누어 등록한다.
